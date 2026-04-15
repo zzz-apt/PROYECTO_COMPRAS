@@ -1,0 +1,332 @@
+
+ -------   CERRÓ EL MERCADO  :  0:4
+
+ -------   CERRÓ EL MERCADO  :  0:7
+
+ -------   CERRÓ EL MERCADO  :  0:9
+
+ -------    SIN DIVISAS  :  6:5
+
+ -------    SIN DIVISAS  :  6:13
+
+ -------    SIN DIVISAS  :  6:14
+
+ -------    SIN DIVISAS  :  6:15
+
+ -------    SIN DIVISAS  :  6:16
+
+ -------    SIN DIVISAS  :  6:16
+
+ -------    SIN DIVISAS  :  6:17
+
+ -------    SIN DIVISAS  :  6:18
+
+ -------    SIN DIVISAS  :  6:20
+
+ -------    SIN DIVISAS  :  6:21
+
+ -------    SIN DIVISAS  :  6:22
+
+ -------    SIN DIVISAS  :  6:22
+
+ -------    SIN DIVISAS  :  6:23
+
+ -------    SIN DIVISAS  :  6:24
+
+ -------    SIN DIVISAS  :  6:25
+
+ -------    SIN DIVISAS  :  6:27
+
+ -------    SIN DIVISAS  :  6:28
+
+ -------    SIN DIVISAS  :  6:29
+
+ -------    SIN DIVISAS  :  6:29
+
+ -------    SIN DIVISAS  :  6:30
+
+ -------    SIN DIVISAS  :  6:31
+
+ -------    SIN DIVISAS  :  6:32
+
+ -------    SIN DIVISAS  :  6:33
+
+ -------   Formulario Abierto ------ MENUDEO :  6:33
+
+ -------    SIN DIVISAS  :  6:34
+
+ -------    SIN DIVISAS  :  6:35
+
+ -------    SIN DIVISAS  :  6:36
+
+ -------    SIN DIVISAS  :  6:38
+
+ -------    SIN DIVISAS  :  6:39
+
+ -------    SIN DIVISAS  :  6:39
+
+ -------    SIN DIVISAS  :  6:40
+
+ -------    SIN DIVISAS  :  6:41
+
+ -------    SIN DIVISAS  :  6:42
+
+ -------    SIN DIVISAS  :  6:43
+
+ -------    SIN DIVISAS  :  6:44
+
+ -------    SIN DIVISAS  :  6:44
+
+ -------    SIN DIVISAS  :  6:45
+
+ -------    SIN DIVISAS  :  6:46
+
+ -------    SIN DIVISAS  :  6:47
+
+ -------    SIN DIVISAS  :  6:48
+
+ -------    SIN DIVISAS  :  6:49
+
+ -------    SIN DIVISAS  :  6:49
+
+ -------    SIN DIVISAS  :  6:50
+
+ -------    SIN DIVISAS  :  6:51
+
+ -------    SIN DIVISAS  :  6:52
+
+ -------    SIN DIVISAS  :  6:53
+
+ -------    SIN DIVISAS  :  6:53
+
+ -------    SIN DIVISAS  :  6:54
+
+ -------    SIN DIVISAS  :  6:55
+
+ -------    SIN DIVISAS  :  6:56
+
+ -------    SIN DIVISAS  :  6:57
+
+ -------    SIN DIVISAS  :  6:58
+
+ -------    SIN DIVISAS  :  6:58
+
+ -------    SIN DIVISAS  :  6:59
+
+ -------    SIN DIVISAS  :  7:1
+
+ -------    SIN DIVISAS  :  7:2
+
+ -------    SIN DIVISAS  :  7:2
+
+ -------    SIN DIVISAS  :  7:3
+
+ -------    SIN DIVISAS  :  7:4
+
+ -------    SIN DIVISAS  :  7:5
+
+ -------    SIN DIVISAS  :  7:6
+
+ -------    SIN DIVISAS  :  7:7
+
+ -------    SIN DIVISAS  :  7:8
+
+ -------    SIN DIVISAS  :  7:8
+
+ -------    SIN DIVISAS  :  7:9
+
+ -------    SIN DIVISAS  :  7:10
+
+ -------    SIN DIVISAS  :  7:11
+
+ -------    SIN DIVISAS  :  7:12
+
+ -------   Formulario Abierto ------ MENUDEO :  7:13
+
+ -------    SIN DIVISAS  :  7:14
+
+ -------    SIN DIVISAS  :  7:15
+
+ -------    SIN DIVISAS  :  7:15
+
+ -------    SIN DIVISAS  :  7:16
+
+ -------    SIN DIVISAS  :  7:17
+
+ -------    SIN DIVISAS  :  7:18
+
+ -------    SIN DIVISAS  :  7:31
+
+ -------    SIN DIVISAS  :  7:32
+
+ -------    SIN DIVISAS  :  7:33
+
+ -------    SIN DIVISAS  :  7:34
+
+ -------    SIN DIVISAS  :  7:35
+
+ -------    SIN DIVISAS  :  7:35
+
+ -------    SIN DIVISAS  :  7:41
+
+ -------    SIN DIVISAS  :  7:42
+
+ -------    SIN DIVISAS  :  7:44
+
+ -------    SIN DIVISAS  :  7:45
+
+ -------    SIN DIVISAS  :  7:46
+
+ -------    SIN DIVISAS  :  7:46
+
+ -------    SIN DIVISAS  :  7:47
+
+ -------    SIN DIVISAS  :  7:48
+
+ -------    SIN DIVISAS  :  7:51
+
+ -------    SIN DIVISAS  :  7:52
+
+ -------    SIN DIVISAS  :  7:53
+
+ -------    SIN DIVISAS  :  7:54
+
+ -------    SIN DIVISAS  :  8:11
+
+ -------    SIN DIVISAS  :  8:12
+
+ -------    SIN DIVISAS  :  8:13
+
+ -------    SIN DIVISAS  :  8:15
+
+ -------    SIN DIVISAS  :  8:16
+
+ -------    SIN DIVISAS  :  8:17
+
+ -------    SIN DIVISAS  :  8:22
+
+ -------    SIN DIVISAS  :  8:26
+
+ -------    SIN DIVISAS  :  8:27
+
+ -------    SIN DIVISAS  :  8:29
+
+ -------    SIN DIVISAS  :  8:30
+
+ -------    SIN DIVISAS  :  8:32
+
+ -------    SIN DIVISAS  :  8:33
+
+ -------    SIN DIVISAS  :  8:36
+
+ -------    SIN DIVISAS  :  8:39
+
+ -------    SIN DIVISAS  :  8:40
+
+ -------    SIN DIVISAS  :  8:41
+
+ -------    SIN DIVISAS  :  8:42
+
+ -------    SIN DIVISAS  :  8:42
+
+ -------    SIN DIVISAS  :  8:43
+
+ -------    SIN DIVISAS  :  8:44
+
+ -------    SIN DIVISAS  :  8:45
+
+ -------    SIN DIVISAS  :  8:46
+
+ -------    SIN DIVISAS  :  8:47
+
+ -------    SIN DIVISAS  :  8:47
+
+ -------    SIN DIVISAS  :  8:48
+
+ -------    SIN DIVISAS  :  8:52
+
+ -------    SIN DIVISAS  :  8:52
+
+ -------    SIN DIVISAS  :  8:53
+
+ -------    SIN DIVISAS  :  8:54
+
+ -------    SIN DIVISAS  :  8:55
+
+ -------    SIN DIVISAS  :  8:56
+
+ -------    SIN DIVISAS  :  8:57
+
+ -------    SIN DIVISAS  :  8:58
+
+ -------    SIN DIVISAS  :  8:58
+
+ -------    SIN DIVISAS  :  8:59
+
+ -------    SIN DIVISAS  :  9:0
+
+ -------    SIN DIVISAS  :  9:1
+
+ -------    SIN DIVISAS  :  9:3
+
+ -------    SIN DIVISAS  :  9:4
+
+ -------    SIN DIVISAS  :  9:12
+
+ -------    SIN DIVISAS  :  9:17
+
+ -------    SIN DIVISAS  :  9:18
+
+ -------    SIN DIVISAS  :  9:19
+
+ -------    SIN DIVISAS  :  9:20
+
+ -------    SIN DIVISAS  :  9:25
+
+ -------    SIN DIVISAS  :  9:26
+
+ -------    SIN DIVISAS  :  9:28
+
+ -------    SIN DIVISAS  :  9:30
+
+ -------    SIN DIVISAS  :  9:31
+
+ -------    SIN DIVISAS  :  9:32
+
+ -------    SIN DIVISAS  :  9:33
+
+ -------    SIN DIVISAS  :  9:34
+
+ -------    SIN DIVISAS  :  9:37
+
+ -------    SIN DIVISAS  :  9:50
+
+ -------    SIN DIVISAS  :  9:51
+
+ -------    SIN DIVISAS  :  9:52
+
+ -------    SIN DIVISAS  :  9:53
+
+ -------    SIN DIVISAS  :  9:54
+
+ -------    SIN DIVISAS  :  9:57
+
+ -------    SIN DIVISAS  :  10:9
+
+ -------    SIN DIVISAS  :  10:19
+
+ -------    SIN DIVISAS  :  10:27
+
+ -------    SIN DIVISAS  :  10:28
+
+ -------    SIN DIVISAS  :  10:28
+
+ -------    SIN DIVISAS  :  10:29
+
+ -------    SIN DIVISAS  :  10:30
+
+ -------    SIN DIVISAS  :  10:33
+
+ -------    SIN DIVISAS  :  10:34
+
+ -------    SIN DIVISAS  :  10:35
