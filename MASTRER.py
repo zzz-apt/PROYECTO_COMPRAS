@@ -474,19 +474,3 @@ while True:
         Telegram(f'hubo un error al ejecutar el programa {e}')
         Telegram(f'se ha detenido el programa')
         break
-
-
-     
-    
-    
-
-
-
-
-    
-
-    
-    
-
-
-    
