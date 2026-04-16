@@ -20,6 +20,7 @@ from fake_useragent import UserAgent
 from colorama import init, Fore, Back, Style
 import sys
 Tiempo = 60
+rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/'
 init()
 
 
@@ -200,20 +201,20 @@ def preguntas_seguridad(Preguntas):
 
 def txt(mensaje):
     try:
-        with open(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/{datetime.now().date()}.txt', 'a', encoding='utf-8') as archivo:
+        with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'a', encoding='utf-8') as archivo:
             archivo.write(f'\n{mensaje}\n')
     except Exception as e:
         print(f'error al escribir el archivo: {e}')
 
 def excluir(usuario):
-    with open(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/DATABASE.txt', "a", encoding="utf-8") as f:
+    with open(rf'{rutaGlobal}/usuariosListos.txt', "a", encoding="utf-8") as f:
         f.write(f"{usuario}\n")
         print(f"✅ {usuario} ha sido guardado en la base de datos y será excluido.")
 
 def check(usuario):
   
     try:
-        with open(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/DATABASE.txt', "r", encoding="utf-8") as f:
+        with open(rf'{rutaGlobal}/usuariosListos.txt', "r", encoding="utf-8") as f:
             excluidos = [linea.strip() for linea in f.readlines()]
             return usuario in excluidos
     except FileNotFoundError:
@@ -227,7 +228,7 @@ def Cierre_Programa():
 
 def img(Datos):
 
-    img = cv2.imread(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}.png')
+    img = cv2.imread(rf'{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}.png')
     
     y_inicio, y_fin = 190, 750 # alto
     x_inicio, x_fin = 300, 1210 # ancho
@@ -236,13 +237,13 @@ def img(Datos):
     img = img[y_inicio:y_fin, x_inicio:x_fin]
 
 
-    cv2.imwrite(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}t.png', img)
+    cv2.imwrite(rf'{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}t.png', img)
 
 
     # --- Telegram ---
     TOKEN = '8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs' 
     CHAT_ID = Datos['CHAT_ID']    
-    RUTA_IMAGEN = rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}t.png' 
+    RUTA_IMAGEN = rf'{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}t.png' 
     TEXTO_DESCRIPCION = f'💲 Compra Exitosa 💲'
 
     url = f'https://api.telegram.org/bot{TOKEN}/sendPhoto'
@@ -331,7 +332,7 @@ def Formulario():
     nombre_archivo = "mi_documento.txt"
     texto_parcial = "Formulario Abierto"
 
-    with open(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/{datetime.now().date()}.txt', 'r') as archivo:
+    with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'r') as archivo:
         contenido = archivo.read()
 
     patron = r"Formulario Abierto.*:\s*(\d+:\d+)"
@@ -346,7 +347,7 @@ def Formulario():
  
 def contador(txt):
 
-    with open(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/{datetime.now().date()}.txt', 'r') as archivo:
+    with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'r') as archivo:
         contenido = archivo.read()
 
     contenido_lower = contenido.lower()
@@ -358,7 +359,7 @@ def contador(txt):
 
 
 def intentos():
-    with open(rf'/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/{datetime.now().date()}.txt', 'r') as f:
+    with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'r') as f:
         line_count = sum(1 for _ in f)
     return int(line_count /2)
 
@@ -691,7 +692,7 @@ def compra(Datos):
                 segundos_transcurridos = (datetime.now() - fecha_inicio).total_seconds()
                 print(f"Segundos transcurridos: {segundos_transcurridos} segundos")
                 print(f"{Fore.GREEN} - - - - la compra con {Datos['nombre']} fue exitosa {Style.RESET_ALL} - - - - {datetime.now().hour}:{datetime.now().minute} - - - - ")
-                driver.save_screenshot(rf"/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/COMPRAS_EXITOSAS/{Datos['nombre']} {datetime.now().date()}.png")  
+                driver.save_screenshot(rf"{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos['nombre']} {datetime.now().date()}.png")  
                 Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
                 Telegram(f"ip:{ip} agente{US}")
                 img(Datos)
