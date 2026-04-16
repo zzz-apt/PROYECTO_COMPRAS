@@ -20,7 +20,12 @@ from fake_useragent import UserAgent
 from colorama import init, Fore, Back, Style
 import sys
 Tiempo = 60
-rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS/HISTORIAL/'
+# rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
+rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS' # Linux
+
+rutaHistorial = rutaGlobal + r'/HISTORIAL'
+rutaComprasExitosas = rutaHistorial + r'/COMPRAS_EXITOSAS'
+
 init()
 
 
@@ -201,7 +206,7 @@ def preguntas_seguridad(Preguntas):
 
 def txt(mensaje):
     try:
-        with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'a', encoding='utf-8') as archivo:
+        with open(rf'{rutaHistorial}/{datetime.now().date()}.txt', 'a', encoding='utf-8') as archivo:
             archivo.write(f'\n{mensaje}\n')
     except Exception as e:
         print(f'error al escribir el archivo: {e}')
@@ -228,7 +233,7 @@ def Cierre_Programa():
 
 def img(Datos):
 
-    img = cv2.imread(rf'{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}.png')
+    img = cv2.imread(rf'{rutaComprasExitosas}/{Datos["nombre"]} {datetime.now().date()}.png')
     
     y_inicio, y_fin = 190, 750 # alto
     x_inicio, x_fin = 300, 1210 # ancho
@@ -237,13 +242,13 @@ def img(Datos):
     img = img[y_inicio:y_fin, x_inicio:x_fin]
 
 
-    cv2.imwrite(rf'{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}t.png', img)
+    cv2.imwrite(rf'{rutaComprasExitosas}/{Datos["nombre"]} {datetime.now().date()}t.png', img)
 
 
     # --- Telegram ---
     TOKEN = '8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs' 
     CHAT_ID = Datos['CHAT_ID']    
-    RUTA_IMAGEN = rf'{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos["nombre"]} {datetime.now().date()}t.png' 
+    RUTA_IMAGEN = rf'{rutaComprasExitosas}/{Datos["nombre"]} {datetime.now().date()}t.png' 
     TEXTO_DESCRIPCION = f'💲 Compra Exitosa 💲'
 
     url = f'https://api.telegram.org/bot{TOKEN}/sendPhoto'
@@ -332,7 +337,7 @@ def Formulario():
     nombre_archivo = "mi_documento.txt"
     texto_parcial = "Formulario Abierto"
 
-    with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'r') as archivo:
+    with open(rf'{rutaHistorial}/{datetime.now().date()}.txt', 'r') as archivo:
         contenido = archivo.read()
 
     patron = r"Formulario Abierto.*:\s*(\d+:\d+)"
@@ -347,7 +352,7 @@ def Formulario():
  
 def contador(txt):
 
-    with open(rf'{rutaGlobal}/HISTORIAL/{datetime.now().date()}.txt', 'r') as archivo:
+    with open(rf'{rutaHistorial}/{datetime.now().date()}.txt', 'r') as archivo:
         contenido = archivo.read()
 
     contenido_lower = contenido.lower()
@@ -692,7 +697,7 @@ def compra(Datos):
                 segundos_transcurridos = (datetime.now() - fecha_inicio).total_seconds()
                 print(f"Segundos transcurridos: {segundos_transcurridos} segundos")
                 print(f"{Fore.GREEN} - - - - la compra con {Datos['nombre']} fue exitosa {Style.RESET_ALL} - - - - {datetime.now().hour}:{datetime.now().minute} - - - - ")
-                driver.save_screenshot(rf"{rutaGlobal}/HISTORIAL/COMPRAS_EXITOSAS/{Datos['nombre']} {datetime.now().date()}.png")  
+                driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")  
                 Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
                 Telegram(f"ip:{ip} agente{US}")
                 img(Datos)
