@@ -20,8 +20,8 @@ from fake_useragent import UserAgent
 from colorama import init, Fore, Back, Style
 import sys
 Tiempo = 60
-# rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
-rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS' # Linux
+rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
+# rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS' # Linux
 
 rutaHistorial = rutaGlobal + r'/HISTORIAL'
 rutaComprasExitosas = rutaHistorial + r'/COMPRAS_EXITOSAS'
@@ -54,6 +54,8 @@ driver = Driver(
 )
 
 wait = WebDriverWait(driver, MAX_WAIT_TIME)
+
+from funciones_app import *
 
 Estadisticas = {
 
@@ -125,18 +127,18 @@ def inicio_sesion(Inicio):
         None
 
     try:
-        wait.until(EC.presence_of_element_located((By.ID, "username"))).send_keys(Inicio['usuario'])
-        wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(Inicio['contrasena'])
-        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "button-wrapper__btn-primary"))).click()
+        escribir("#username", Inicio['usuario'])
+        escribir("#password", Inicio['contrasena'])
+        hacerClick(".button-wrapper__btn-primary")
     except:
         print('no se encontro el objeto para ingresar el usuario')
         try:
             driver.get("https://www30.mercantilbanco.com/login")
         except:
             print("no se pudo acceder al sitio")
-        wait.until(EC.presence_of_element_located((By.ID, "username"))).send_keys(Inicio['usuario'])
-        wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(Inicio['contrasena'])
-        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "button-wrapper__btn-primary"))).click()
+        escribir("#username", Inicio['usuario'])
+        escribir("#password", Inicio['contrasena'])
+        hacerClick(".button-wrapper__btn-primary")
         return
 
     try:
@@ -145,15 +147,15 @@ def inicio_sesion(Inicio):
     except:
         None   
 
-def preguntas_seguridad(Preguntas):
+def ResolverPreguntasSeguridad(Preguntas):
 
     try:
     
         try:
 
             if Preguntas['PreguntaUnica'] == True:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['RespuestaUnica'])
-                WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['RespuestaUnica'])
+                escribir("#mat-input-3", Preguntas['RespuestaUnica'])
+                escribir("#mat-input-2", Preguntas['RespuestaUnica'])
 
             else:
 
@@ -288,39 +290,38 @@ def img(Datos):
 
 def Telegram(MSG):
     token = "8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs"
-    chat_id = "6231499420"
+    chat_id = "7781699329"
+    chat_idFernando = "6231499420"
     mensaje = MSG
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
     payload = {
+        "chat_id": chat_idFernando,
+        "text": mensaje
+    }
+    payloadRaymond = {
         "chat_id": chat_id,
         "text": mensaje
     }
 
     response = requests.post(url, data=payload)
+    response = requests.post(url, data=payloadRaymond)
     #print(response.json())
 
 def mantenimiento():
     driver.find_element(By.XPATH, "//*[text()='En este momento no podemos realizar tu operación']")
     print(Fore.RED + '------        VAYA         ------' + Style.RESET_ALL)
     Cerrado = False
-    cerrar()
+    cerrarSesion()
     return False
     
-def vaya():
-    global Cerrado
-    driver.find_element(By.XPATH, "//*[text()='¡Vaya! En este momento no podemos realizar tu operación']")
-    print(Fore.RED + '------        VAYA         ------' + Style.RESET_ALL)
-    Cerrado = False
-    cerrar()
-    return False
    
 def ups():
 
     global Cerrado, Tiempo
     driver.find_element(By.XPATH, "//*[text()='Algo ha salido mal...']")
     print(Fore.RED + '------        UPS         ------' + Style.RESET_ALL)
-    cerrar()
+    cerrarSesion()
     return False 
                          
 def NoDivisas():
@@ -329,7 +330,7 @@ def NoDivisas():
     driver.find_element(By.XPATH, "//*[text()='En estos momentos no hay disponibilidad de divisas para realizar la operación.']") 
     print(f'{Fore.RED} ------    SIN DIVISAS    ------ {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
     txt(f' -------    SIN DIVISAS  :  {datetime.now().hour}:{datetime.now().minute}')
-    cerrar()
+    cerrarSesion()
   
     return True
 
@@ -385,337 +386,146 @@ def MercadoCerrado():
     global Cerrado
     Cerrado = True
     Tiempo = 1
-    cerrar()
+    cerrarSesion()
 
     return True
 
-def cerrar():
-    try:
-        wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/melp-header/div/div[3]/div/div/span'))).click()
-        time.sleep(3)
-        wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/melp-sidebar/div[2]/melp-sidebar-logout/melp-button-menu/div/span'))).click()
-        
-    except:
-        print('no se encontro algun objeto en cerrar()')
 
-def Ingreso():
-    
 
+def MercadoDivisas():
     global ErrorMD, Datos
     
+    # --- PASO 1: Clic en el Menú Principal ---
     try:
-    
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@id='step1']/div/div[1]/div[6]/div[2]//*[contains(text(), 'Mercado de divisas')]"))).click() 
-    except: 
-        print('no se pudo dar click mercado de divisas')
-        try:
-            ups()
-        except:
-            print('no se encontro el ups')
-        return True 
+        xpath_mercado = "//*[contains(text(), 'Mercado de divisas')]"
+        boton_mercado = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, xpath_mercado))
+        )
+        # Clic forzado para desplegar opciones
+        driver.execute_script("arguments[0].click();", boton_mercado)
+        print(f'{Fore.CYAN}Desplegado: Mercado de Divisas{Style.RESET_ALL}')
+
         
-
-                                            
-
-    time.sleep(2)
-
-    try:
-        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//*[@id='step1']/div/div[1]/div[12]/div/div[2]//*[contains(text(), 'Compra de divisas')]"))).click()
+    except Exception as e:
+        print(f'{Fore.RED}Fallo en menú principal: {e}{Style.RESET_ALL}')
+        try: ups()
+        except: pass
         return False
-    except:
-        print('no se pudo dar click compra')
-        ups()
-        return True 
-    
+
+    # Pequeña pausa para que el submenú se renderice en el DOM
+    time.sleep(1.5)
+
+    # --- PASO 2: Clic en la Opción Específica ---
+    try:
+        xpath_compra = "//*[contains(text(), 'Compra de divisas')]"
+        boton_compra = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, xpath_compra))
+        )
+        # Clic forzado para entrar al formulario
+        driver.execute_script("arguments[0].click();", boton_compra)
+        print(f'{Fore.GREEN}Éxito: Entrando a Compra de Divisas{Style.RESET_ALL}')
+        
+        return True  # Indica que TODO SALIÓ BIEN (ErrorMD = False)
+
+    except Exception as e:
+        print(f'{Fore.RED}No se pudo dar click en el botón de compra: {e}{Style.RESET_ALL}')
+        try: ups()
+        except: pass
+        return True # Indica que hubo un error
 
 
 def compra(Datos):
-    print(Fore.GREEN + ' ------ INTENTANDO COMPRA ------' + Style.RESET_ALL)
-    xpath_dolares = "//*[contains(text(), 'Dólares')]"
-    try:
-        boton = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, xpath_dolares))
-        )
+    print(f"{Fore.GREEN} ------ INTENTANDO COMPRA: {Datos['nombre']} ------ {Style.RESET_ALL}")
+    
+    # 1. Ingresar Monto y seleccionar divisa
+    if ingresarMonto(Datos) == False:
+        return False
 
-        driver.execute_script("arguments[0].click();", boton)
+    fecha_inicio = datetime.now()
+    
+    try:
+        # 2. Esperar y detectar el porcentaje/método (Usando tu XPath original)
+        xpath_comision = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[4]/div[1]'
+        
+        elemento_porcentaje = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, xpath_comision))
+        )
+        porcentaje = elemento_porcentaje.text
+        print(f"Porcentaje detectado: {porcentaje}")
+
+        # Mapeo de métodos según el texto capturado
+        metodos_dict = {
+            'Comisión (0.2%) (Bs.)': 'MENUDEO',
+            'Comisión (0.12%) (Bs.)': 'MESA DE CAMBIO',
+            'Comisión (0.15%) (Bs.)': 'INTERVENCIÓN'
+        }
+        metodo = metodos_dict.get(porcentaje, 'DESCONOCIDO')
+        
+        # Registro en estadísticas y logs
+        if metodo not in Estadisticas['metodos']:
+            Estadisticas['metodos'].append(metodo)
+
+        txt(f' ------- Abierto ------ {metodo} : {datetime.now().hour}:{datetime.now().minute}')
+        Telegram(f'------ Formulario Abierto ------ {metodo} ------ Texto porcentaje: {porcentaje}')
+        print(f'{Fore.YELLOW} ----------- DATOS DE LA COMPRA ------ {metodo} ----- {Style.RESET_ALL}')
+
+        # 3. Llenar Formulario de compra (Cuentas, Origen, Motivo)
+        llenarFormularioCompra(Datos)
+        
+        # 4. Secuencia de Clicks Finales (Usando tus XPaths exactos)
+        # Primer Click: Botón de continuar después de llenar formulario
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')
+        
+        # Segundo Click: Confirmación
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')
+
+        # Tercer Click: Checkbox de términos (ID)
+        # hacerClick('#mat-mdc-checkbox-0-input')
+        wait.until(EC.presence_of_element_located((By.ID, 'mat-mdc-checkbox-0-input'))).click()
+
+        
+
+        # Cuarto Click: Botón final de compra
+        hacerClick('.button-wrapper__btn-primary')
+
+        # 5. Verificación de resultados (Éxito o Fracaso)
+        return verificar_finalizacion(Datos, fecha_inicio)
 
     except Exception as e:
-        #print(f"No se pudo hacer clic en Dólares: {e}")
-        driver.save_screenshot("error_click.png")
-        ups() 
+        print(f"Error en flujo de compra: {e}")
+        obtenerMensajeError()
         return False
 
+def verificar_finalizacion(Datos, fecha_inicio):
+    """Verifica si la compra fue exitosa o rechazada usando tus validaciones."""
     try:
-        driver.find_element(By.XPATH, '//input[starts-with(@id, "mat-input-")]').send_keys(Datos['Monto'])
-    except:
-        print('no se pudo ingresar el monto')
-    
+        # Intentar detectar ÉXITO (Wait corto para no perder tiempo)
+        WebDriverWait(driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Tu compra fue exitosa.')]"))
+        )
+        segundos = (datetime.now() - fecha_inicio).total_seconds()
+        print(f"{Fore.GREEN} ¡ÉXITO! {Datos['nombre']} compró en {segundos}s {Style.RESET_ALL}")
+        
+        driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
+        Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
+        img(Datos)
+        excluir(Datos['nombre'])
+        cerrarSesion()
+        return True
 
-    try:
-        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button'))).click()
     except:
-        print('no se pudo dar click en el segundo boton')
+        # Si no fue exitosa, buscamos el mensaje de error de COMPRA NO EXITOSA
+        try:
+            # Usamos tus XPaths de error
+            xpath_err_1 = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'
+            tipo_error = driver.find_element(By.XPATH, xpath_err_1).text
+            print(f"{Fore.RED} Compra no exitosa para {Datos['nombre']}: {tipo_error} {Style.RESET_ALL}")
+            Telegram(f"Compra no exitosa para {Datos['nombre']}: {tipo_error}")
+        except:
+            print("No se pudo capturar el texto del error final.")
+            
+        cerrarSesion()
         return False
-        
-
-
-    ############################### COMPROBANDO ###############################################################################
-    try:
-        WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[4]/div[1]')))
-        print(f'{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second}')
-        fecha_inicio = datetime.now()
-        
-    except:
-        try:
-            ups()
-            return False
-        except:
-            try:
-                NoDivisas()
-                return True
-            except:
-                try:
-                    MercadoCerrado()
-                    driver.quit()
-                    return False
-                except:
-                    try:
-                        vaya()
-                        return False
-                    except:
-                        None
-
-############################################################################################################################ 
-
-
-    try:
-        try:
-            try:
-                porcentaje = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[4]/div[1]'))).text  
-                print(porcentaje)
-            except:
-                print('no se encontro el porcentaje :(')
-            
-            try:
-                metodo = ''
-
-                if porcentaje == 'Comisión (0.2%) (Bs.)':
-                    metodo = 'MENUDEO'
-                    print('Activo Menudeo, 0,2')
-                if porcentaje == 'Comisión (0.12%) (Bs.)':
-                    metodo = 'MESA DE CAMBIO'
-                    print('Activo Mesa de Cambio, 0.12')
-                if porcentaje == 'Comisión (0.15%) (Bs.)':
-                    metodo = 'INTERVENCIÓN'
-                    print('Activo INTERVENCIÓN, 0.15')
-                if porcentaje == None:
-                    metodo = 'error'
-
-            except:
-                cerrar()
-                print('no se hicieron las comprobaciones')
-                return
-
-            if metodo not in Estadisticas['metodos']:
-                    Estadisticas['metodos'].append(metodo)
-            if metodo not in Estadisticas['metodos']:
-                    Estadisticas['metodos'].append(metodo)
-            if metodo not in Estadisticas['metodos']:
-                    Estadisticas['metodos'].append(metodo)
-
-            txt(f' -------   Formulario Abierto ------ {metodo} :  {datetime.now().hour}:{datetime.now().minute}')
-            Telegram(f'------ Formulario Abierto ------ {metodo} ------')
-            print(f'{Fore.YELLOW} -----------  DATOS DE LA COMPRA  ------ {metodo} ----- {Style.RESET_ALL}')
-                 
-            
-            
-            try:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-0'))).click()
-            except:
-                print('no se selecciono la primera casilla')
-
-
-            if Datos['cuenta'] == 'corriente':
-                try:
-                    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]"))).click()
-                except:
-                        print('no se selecciono cuenta corriente')
-                        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-0'))).click()
-
-            if Datos['cuenta'] == 'ahorro':
-                try:
-                    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]"))).click()
-                    print('se selecciono cuenta ahorro')
-                except:
-                    print('no se selecciono cuenta ahorro')
-                    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-0'))).click()
-
-
-            ################        ORIGREN DE LOS FONDOS        ################  
-            
-
-            try:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-2'))).click()
-            except:
-                print('no se selecciono la segunda casilla')
-
-            try:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='mat-select-2-panel']//*[contains(text(), 'Fondos Propios')]"))).click()
-            except:
-                print('no se selecciono la opcion de la segunda casilla  ')
-
-            ################        MOTIVO DE LA COMPRA        ################  
-
-
-            try:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-3'))).click()
-            except:
-                print('no se selecciono la tercera casilla')
-
-            try:
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='mat-select-3-panel']//*[contains(text(), 'Materia Prima')]"))).click()
-            except:
-                print('no se selecciono la opcion de la tercera casilla ')
-
-                    
-            ######             ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA             ######
-            try:
-                if driver.find_element(By.XPATH, '//*[@id="mat-mdc-error-13"]').text == 'El monto a comprar es mayor al saldo disponible de tu cuenta.':
-                    print(f"{Fore.RED} ------ El monto a comprar es mayor al saldo disponible de tu cuenta {Datos['cuenta']} ------ {Style.RESET_ALL}")
-                    print(Fore.YELLOW + '------ Cambiando Cuenta ------' + Style.RESET_ALL)
-                        
-                    try:
-                        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-0'))).click()
-                    except:
-                        print('no se selecciono la primera casilla')
-
-                    
-                    if Datos['cuenta'] == 'corriente':
-                        try:
-                            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]"))).click()
-                            print('se selecciono cuenta Ahorro')
-                        except:
-                            print('no se selecciono cuenta Ahorro')
-
-                    if Datos['cuenta'] == 'ahorro':
-                        try:
-                            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]"))).click()
-                            print('se selecciono cuenta Corriente')
-                        except:
-                            print('no se selecciono cuenta corriente')
-            except:
-                print(1)
-            
-            try:
-                    driver.save_screenshot('PRUEBA_DE_Monto.png')
-            except:
-                    print("no se pudo hacer la captura")
-            try:
-                wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'))).click()
-            except:
-                print('no se presionó el boton1')
-                Telegram('ERROR CON FORMULARIO ABIERTO')
-                time.sleep(60)
-                
-                
-            try:
-                wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'))).click()
-            except:
-                print('no se presionó el boton2')
-                Telegram('ERROR CON FORMULARIO ABIERTO')
-                time.sleep(60)
-
-                
-            driver.save_screenshot('PRUEBA DE ESTATUS.png')
-            try:
-                wait.until(EC.presence_of_element_located((By.ID, 'mat-mdc-checkbox-0-input'))).click()
-            except Exception as e:
-                print('no se presionó el boton3')
-                Telegram('ERROR CON FORMULARIO ABIERTO')
-                Telegram(e)
-                time.sleep(60)
-
-            try:
-                wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'))).click()
-            except:
-                print('no se presionó el boton4')
-                Telegram('ERROR CON FORMULARIO ABIERTO')
-                time.sleep(60)
-
-
-            segundos_transcurridos = (datetime.now() - fecha_inicio).total_seconds()
-            print(f"Segundos transcurridos relleno formulario: {segundos_transcurridos} segundos")
-            try:
-                driver.save_screenshot('PRUEBA_DE_ESTATUS2.png')
-            except:
-                print("no se pudo hacer la captura")
-
-            try:
-                ups()
-                Telegram("error UPS al llenar formulario, se recomienda cambiar de ip")
-                print("error UPS al llenar formulario, se recomienda cambiar de ip")
-                return False
-            except:
-                None
-            ##### COMPRA NO EXITOSA #####
-            try:
-                global Tiempo
-                wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'La compra no fue exitosa.')]")))
-                segundos_transcurridos = (datetime.now() - fecha_inicio).total_seconds()
-                print(f"Segundos transcurridos: {segundos_transcurridos} segundos")
-                print(f'{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second}')
-                #'En este momento no es posible realizar tu operación de Mercado de Divisas. Código 10'
-                #'La operación no se pudo realizar. Has alcanzado el límite de transacciones permitidas. Código 15'
-                try:
-                    Tipo_Error = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'))).text
-                    print(Tipo_Error)
-                except:
-                    print('la primera ubicacion es incorrecta')
-                    try:
-                        Tipo_Error = wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div/div"))).text
-                        print(Tipo_Error)
-                    except:
-                        print('la segunda ubicacion es incorrecta')
-                
-                print(f"{Fore.RED} ---- la compra con {Datos['nombre']} no fue exitosa:{Fore.YELLOW}{Tipo_Error} - - - - {datetime.now().hour}:{datetime.now().minute} - - - -    {Style.RESET_ALL}")
-                Telegram(f"---- la compra con {Datos['nombre']} no fue exitosa:{Tipo_Error} - - - - ")   
-                Telegram(f"ip:{ip} agente{US}")
-                Tiempo = 1
-                cerrar()
-                # CloneMac()
-                return False
-                
-            except:
-                None
-
-            driver.save_screenshot('PRUEBA DE ESTATUS3.png')
-
-            ##### COMPRA EXITOSA #####
-            try:
-                WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Tu compra fue exitosa.')]")))
-                print(f'{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second}')
-                segundos_transcurridos = (datetime.now() - fecha_inicio).total_seconds()
-                print(f"Segundos transcurridos: {segundos_transcurridos} segundos")
-                print(f"{Fore.GREEN} - - - - la compra con {Datos['nombre']} fue exitosa {Style.RESET_ALL} - - - - {datetime.now().hour}:{datetime.now().minute} - - - - ")
-                driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")  
-                Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
-                Telegram(f"ip:{ip} agente{US}")
-                img(Datos)
-                excluir(Datos['nombre'])  
-                cerrar()
-                # CloneMac()
-                return True
-
-            except:
-                cerrar()
-        except:
-            print(Fore.RED +  '______ ERROR AL SELECCIONAR CUENTAS _______' + Style.RESET_ALL)
-            
-            return
-    except:
-        print('hubo problema con la pagina de compra')
-        print('cerrando sesion')
-        cerrar()
 
 MACid = 0
 
