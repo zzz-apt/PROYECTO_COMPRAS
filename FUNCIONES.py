@@ -51,6 +51,7 @@ driver = Driver(
     pls="eager",
     #user_data_dir="./cache",
     #ad_block=True,
+    driver_version="keep",
 )
 
 wait = WebDriverWait(driver, MAX_WAIT_TIME)
@@ -440,37 +441,25 @@ def compra(Datos):
     # 1. Ingresar Monto y seleccionar divisa
     if ingresarMonto(Datos) == False:
         return False
+    
+    clickComprar()
+
 
     fecha_inicio = datetime.now()
+    hora = fecha_inicio.hour
+    minutos = fecha_inicio.minute
+    segundos = fecha_inicio.second
+    milesimas = fecha_inicio.microsecond // 1000
     
     try:
-        # 2. Esperar y detectar el porcentaje/método (Usando tu XPath original)
-        xpath_comision = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[4]/div[1]'
-        
-        elemento_porcentaje = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, xpath_comision))
-        )
-        porcentaje = elemento_porcentaje.text
-        print(f"Porcentaje detectado: {porcentaje}")
+       ##tipoMercado()
 
-        # Mapeo de métodos según el texto capturado
-        metodos_dict = {
-            'Comisión (0.2%) (Bs.)': 'MENUDEO',
-            'Comisión (0.12%) (Bs.)': 'MESA DE CAMBIO',
-            'Comisión (0.15%) (Bs.)': 'INTERVENCIÓN'
-        }
-        metodo = metodos_dict.get(porcentaje, 'DESCONOCIDO')
-        
-        # Registro en estadísticas y logs
-        if metodo not in Estadisticas['metodos']:
-            Estadisticas['metodos'].append(metodo)
-
-        txt(f' ------- Abierto ------ {metodo} : {datetime.now().hour}:{datetime.now().minute}')
-        Telegram(f'------ Formulario Abierto ------ {metodo} ------ Texto porcentaje: {porcentaje}')
-        print(f'{Fore.YELLOW} ----------- DATOS DE LA COMPRA ------ {metodo} ----- {Style.RESET_ALL}')
 
         # 3. Llenar Formulario de compra (Cuentas, Origen, Motivo)
         llenarFormularioCompra(Datos)
+        segundosLlenadoFormulario = segundos - datetime.now().second
+        milesimasLlenadoFormulario = milesimas - (datetime.now().microsecond // 1000)
+        
         
         # 4. Secuencia de Clicks Finales (Usando tus XPaths exactos)
         # Primer Click: Botón de continuar después de llenar formulario
@@ -487,6 +476,13 @@ def compra(Datos):
 
         # Cuarto Click: Botón final de compra
         hacerClick('.button-wrapper__btn-primary')
+
+        segundosProcesoCompleto = segundos - datetime.now().second
+        milesimasProcesoCompleto = milesimas - (datetime.now().microsecond // 1000)
+
+
+        Telegram(f' ------- Formulario Abierto ------ {datetime.now().hour}:{datetime.now().minute} -- Lleno en {segundosLlenadoFormulario}.{milesimasLlenadoFormulario} segundos')
+        Telegram(f' ------- Formulario Abierto ------ {datetime.now().hour}:{datetime.now().minute} -- Procesado en {segundosProcesoCompleto}.{milesimasProcesoCompleto} segundos')
 
         # 5. Verificación de resultados (Éxito o Fracaso)
         return verificar_finalizacion(Datos, fecha_inicio)

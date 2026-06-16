@@ -75,6 +75,20 @@ CUENTAS = [
             'pregunta5': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta5': 'Chayanne'
         }
     },
+    ## Karen
+    {
+        'nombre_id': 'KAREN',
+        'activo': True,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
+            'CHAT_ID': '@none', 'Monto': 2000
+        },
+        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Yesua.123', 'id': 'KAREN'},
+        'preguntas': {
+            'PreguntaUnica': True,
+            'RespuestaUnica': "karen"
+        }
+    },
     ## Maye
     {
         'nombre_id': 'MAYE',
@@ -110,7 +124,7 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Deleit',
-            'CHAT_ID': None, 'Monto': 2000
+            'CHAT_ID': None, 'Monto': 1200
         },
         'inicio': {'usuario': 'deleitmolina08', 'contrasena': 'Asterisc0*', 'id': 'Deleit'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Gera"}
@@ -129,7 +143,7 @@ CUENTAS = [
     ## RAymond
     {
         'nombre_id': 'RAY',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAY',
             'CHAT_ID': '@none', 'Monto': 2000

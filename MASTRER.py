@@ -12,9 +12,12 @@ init()
 # --- BUCLE PRINCIPAL ---
 ahora = datetime.now()
 horaActual = ahora.hour
+minutoActual = ahora.minute
+modoMadrugadita = True 
+ 
 
-# MODO MADRUGADITA
-if horaActual <= 5 or horaActual >= 22:
+# MODO MADRUGADITA  
+if modoMadrugadita and (horaActual <= 5 or horaActual >= 22):
 
     print(Fore.CYAN + 'Modo Madrugadita Activo (06:04/06:05)' + Style.RESET_ALL)
 
@@ -25,5 +28,3 @@ if horaActual <= 5 or horaActual >= 22:
 # HORARIO NORMAL
 else:
     ejecutarCicloCuentas()
-
-       

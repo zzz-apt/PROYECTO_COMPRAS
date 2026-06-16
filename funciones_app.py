@@ -4,19 +4,31 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import FUNCIONES  
 
+## Se usa para ingresar el monto y seleccionar las divisas en el modo madrugadita
+montoIngresado = False
+
 
 def seleccionarElemento(selector):
     # 1. Identifica si usa XPATH o CSS
     by = selenium.webdriver.common.by.By.XPATH if (selector.startswith('/') or selector.startswith('(')) else selenium.webdriver.common.by.By.CSS_SELECTOR
     
+    try:
+        # Se busca el overlay
+        selenium.webdriver.support.ui.WebDriverWait(FUNCIONES.driver, 3).until(
+            EC.invisibility_of_element_located((selenium.webdriver.common.by.By.CLASS_NAME, "overlay"))
+        )
+    except:
+        # Si no existe el overlay o ya se quitó
+        pass
+
     # 2. Espera que el elemento sea visible y lo selecciona
     elemento = FUNCIONES.wait.until(EC.visibility_of_element_located((by, selector)))
     
     # 3. Hace scroll para simular humano
-    FUNCIONES.driver.execute_script(
-        "arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", 
-        elemento
-    )
+    # FUNCIONES.driver.execute_script(
+    #    "arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", 
+    #    elemento
+    #)
 
     # 4. Verifica si es clickeable
     elemento = FUNCIONES.wait.until(EC.element_to_be_clickable((by, selector)))
@@ -60,12 +72,13 @@ def cerrarSesion():
         print(f"No se pudo cerrar sesión: {e}")
 
 def llenarFormularioCompra(Datos):
+            '''
             try:
                 ## Abre Select Desde Mi Cuenta
                 hacerClick("#mat-select-0")
             except:
                 print('no se presionó Select Desde Mi Cuenta')
-
+            
 
             if Datos['cuenta'] == 'corriente':
                 try:
@@ -85,7 +98,7 @@ def llenarFormularioCompra(Datos):
                     ## Abre nuevamente Select Desde Mi Cuenta
                     hacerClick("#mat-select-3")
                     ##hacerClick("//mat-option//span[contains(text(), 'Fondos Propios')]")
-
+            '''
 
             ################        ORIGREN DE LOS FONDOS        ################  
             
@@ -163,27 +176,35 @@ def seleccionarTipoDivisas():
         return False
     
 def ingresarMonto(Datos):
-    # Primero selecciona el tipo de moneda o divisa
-    seleccionarTipoDivisas()
-    try:
-        escribir("#buy-foreign-currency-form-first input", Datos['Monto'])
-        
-    except:
-        print('no se pudo ingresar el monto')
+    global montoIngresado
+    if montoIngresado == False:
     
-
+        # Primero selecciona el tipo de moneda o divisa
+        seleccionarTipoDivisas()
+        try:
+            escribir("#buy-foreign-currency-form-first input", Datos['Monto'])
+            return True
+            
+        except:
+            print('no se pudo ingresar el monto')
+            return False
+    
+    return True
+        
+        
+def clickComprar():
     try:
         hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button')
         return True
     except:
-        print('no se pudo dar click el botón luego de colocar el monto')
-        return False
-    try:
-    
-        obtenerMensajeError()
-    except Exception as e:
-        print(f"no se pudo obtener el error {e}")
-        return False
+        print('no se pudo dar click en el botón luego de colocar el monto')
+        try:
+            obtenerMensajeError()
+            return False
+        except Exception as e:
+            print(f"no se pudo obtener el error {e}")
+            return False
+
     
 
 from cuentas import CUENTAS
@@ -191,6 +212,8 @@ from cuentas import CUENTAS
 def ejecutarCicloCuentas():
     """Procesa las cuentas activas siguiendo la lógica de éxito (True) y error (False)."""
     cuentasActivas = [c for c in CUENTAS if c.get('activo', False)]
+
+    global montoIngresado
     
     if not cuentasActivas:
         return
@@ -214,10 +237,19 @@ def ejecutarCicloCuentas():
                 print(f"Error al entrar a Mercado Divisas para {nombre}")
                 cerrarSesion() 
                 continue 
+            
+            montoIngresado = False
 
             # 3. Sincronización de horario 
             ahora = FUNCIONES.datetime.now()
             if ahora.hour == 6 and ahora.minute < 5:
+
+                ## Se ingresa el monto y se selecciona el tipo de divisa
+                if ingresarMonto(cuenta['datos']) == False:
+                    return False
+                
+                montoIngresado = True
+
                 print(f"Esperando apertura (06:05) para {nombre}...")
                 while FUNCIONES.datetime.now().minute < 5:
                     time.sleep(1)
@@ -243,6 +275,7 @@ def ejecutarCicloCuentas():
     print(f"\n{FUNCIONES.Fore.CYAN}--- Finalizado Ciclo de Cuentas ---{FUNCIONES.Style.RESET_ALL}")
     ejecutarCicloCuentas()
 
+
 def obtenerMensajeError():
     error = seleccionarElemento(".title").text
     try:
@@ -254,3 +287,29 @@ def obtenerMensajeError():
     print(f"Error: {error} {codigoError}")
     cerrarSesion()
     return True 
+
+def tipoMercado():
+    # 2. Esperar y detectar el porcentaje/método (Usando tu XPath original)
+    xpath_comision = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[4]/div[1]'
+        
+    elemento_porcentaje = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, xpath_comision))
+    )
+    porcentaje = elemento_porcentaje.text
+    print(f"Porcentaje detectado: {porcentaje}")
+
+    # Mapeo de métodos según el texto capturado
+    metodos_dict = {
+        'Comisión (0,20%) (Bs.)': 'MENUDEO',
+        'Comisión (0,12%) (Bs.)': 'MESA DE CAMBIO',
+        'Comisión (0,15%) (Bs.)': 'INTERVENCIÓN'
+    }
+    metodo = metodos_dict.get(porcentaje, 'DESCONOCIDO')
+        
+    # Registro en estadísticas y logs
+    if metodo not in Estadisticas['metodos']:
+        Estadisticas['metodos'].append(metodo)
+
+    txt(f' ------- Abierto ------ {metodo} : {datetime.now().hour}:{datetime.now().minute}')
+    Telegram(f'------ Formulario Abierto ------ {metodo} ------ Texto porcentaje: {porcentaje}')
+    print(f'{Fore.YELLOW} ----------- DATOS DE LA COMPRA ------ {metodo} ----- {Style.RESET_ALL}')
