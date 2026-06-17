@@ -49,12 +49,12 @@ CUENTAS = [
     ## Fernando
     {
         'nombre_id': 'Fernando',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
             'CHAT_ID': '6231499420', 'Monto': 2000
         },
-        'inicio': {'usuario': 'fernandovj7', 'contrasena': 'H600*diefer*', 'id': 'Fer'},
+        'inicio': {'usuario': 'fernandovj7', 'contrasena': 'H700*diefer*', 'id': 'Fer'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Salsa"}
     },
     ## Elizabeth
@@ -78,7 +78,7 @@ CUENTAS = [
     ## Karen
     {
         'nombre_id': 'KAREN',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000
@@ -92,7 +92,7 @@ CUENTAS = [
     ## Maye
     {
         'nombre_id': 'MAYE',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
             'CHAT_ID': '@none', 'Monto': 2000
@@ -143,7 +143,7 @@ CUENTAS = [
     ## RAymond
     {
         'nombre_id': 'RAY',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAY',
             'CHAT_ID': '@none', 'Monto': 2000

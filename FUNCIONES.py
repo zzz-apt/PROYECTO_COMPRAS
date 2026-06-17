@@ -118,17 +118,13 @@ def inicio_sesion(Inicio):
     driver.execute_script("document.body.style.zoom='50%'")
 
     
-    try:
-        if  WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, '//*[@id="system-error"]/div/div[1]/div[1]'))).text == '¡Lamentamos las molestias ocasionadas!':
-            try:
-                wait.until(EC.presence_of_element_located((By.ID, '//*[@id="system-error"]/div/div[1]/div[3]/button'))).click()
-            except:
-                print('no se encontro el boton')
-    except:
-        None
+
+        
+   
 
     try:
-        escribir("#username", Inicio['usuario'])
+        if escribir("#username", Inicio['usuario']) == False:
+            return False
         escribir("#password", Inicio['contrasena'])
         hacerClick(".button-wrapper__btn-primary")
     except:
@@ -153,6 +149,8 @@ def ResolverPreguntasSeguridad(Preguntas):
     try:
     
         try:
+
+            seleccionarElemento("#mat-input-3") #verificando si esta en la pantalla de Preguntas de seguridad, si no esta, se va al except y se salta esta parte
 
             if Preguntas['PreguntaUnica'] == True:
                 escribir("#mat-input-3", Preguntas['RespuestaUnica'])
@@ -200,7 +198,8 @@ def ResolverPreguntasSeguridad(Preguntas):
 
         except:
             print('no encontro el elemento')
-            return
+            VerMensaje()
+            return False
      
         wait.until(EC.presence_of_element_located((By.XPATH, "/html/body/app/melp-standard-layout/div/div/melp-secure-access/melp-standard-card-layout/div/div/div[1]/div/div/melp-connection-type/form/div/div[2]"))).click()
 
@@ -434,6 +433,24 @@ def MercadoDivisas():
         except: pass
         return True # Indica que hubo un error
 
+def VerMensaje():
+    Mensaje = WebDriverWait(driver, 1).until(EC.any_of(
+        EC.presence_of_element_located((By.XPATH, "/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/melp-in-card-error/div[1]/div[1]")),
+        EC.presence_of_element_located((By.XPATH, "//*[@id='system-error']/div/div[1]/div[1]"))
+    )).text
+    print(f'{Fore.RED} {Mensaje} {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
+    
+    if Mensaje == 'En estos momentos no hay disponibilidad de divisas para realizar la operación. Código 9021' or Mensaje == 'Algo ha salido mal...':
+        cerrarSesion()
+
+    if Mensaje == 'El tiempo de tu sesión ha finalizado.' or Mensaje == '¡Lamentamos las molestias ocasionadas!':
+        try:
+            return True
+        except:
+            print('no se encontro el boton')
+    
+    return True
+
 
 def compra(Datos):
     print(f"{Fore.GREEN} ------ INTENTANDO COMPRA: {Datos['nombre']} ------ {Style.RESET_ALL}")
@@ -443,6 +460,15 @@ def compra(Datos):
         return False
     
     clickComprar()
+    
+    try:
+        seleccionarElemento('//*[contains(text(), "Datos de la compra")]')
+    except:
+        if VerMensaje() == True:
+            return False
+
+
+    
 
 
     fecha_inicio = datetime.now()
@@ -460,23 +486,6 @@ def compra(Datos):
         segundosLlenadoFormulario = segundos - datetime.now().second
         milesimasLlenadoFormulario = milesimas - (datetime.now().microsecond // 1000)
         
-        
-        # 4. Secuencia de Clicks Finales (Usando tus XPaths exactos)
-        # Primer Click: Botón de continuar después de llenar formulario
-        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')
-        
-        # Segundo Click: Confirmación
-        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')
-
-        # Tercer Click: Checkbox de términos (ID)
-        # hacerClick('#mat-mdc-checkbox-0-input')
-        wait.until(EC.presence_of_element_located((By.ID, 'mat-mdc-checkbox-0-input'))).click()
-
-        
-
-        # Cuarto Click: Botón final de compra
-        hacerClick('.button-wrapper__btn-primary')
-
         segundosProcesoCompleto = segundos - datetime.now().second
         milesimasProcesoCompleto = milesimas - (datetime.now().microsecond // 1000)
 

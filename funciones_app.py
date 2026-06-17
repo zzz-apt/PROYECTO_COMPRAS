@@ -49,6 +49,7 @@ def hacerClick(selector):
     except Exception as e:
         print(f"Error al hacerClick en {selector}: {e}")
         obtenerMensajeError()
+        return False
 
 def escribir(selector, texto):
     try:
@@ -61,6 +62,7 @@ def escribir(selector, texto):
         elemento.send_keys(texto)
     except Exception as e:
         print(f"Error al escribir en {selector}: {e}")
+        return False
 
 def cerrarSesion():
     try:
@@ -71,64 +73,86 @@ def cerrarSesion():
     except Exception as e:
         print(f"No se pudo cerrar sesión: {e}")
 
+
+
 def llenarFormularioCompra(Datos):
-            '''
-            try:
-                ## Abre Select Desde Mi Cuenta
-                hacerClick("#mat-select-0")
-            except:
-                print('no se presionó Select Desde Mi Cuenta')
-            
 
-            if Datos['cuenta'] == 'corriente':
-                try:
-                    ## Selecciona Cuenta Corriente
-                    hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
-                except:
-                    print('no se selecciono cuenta corriente')
-                    ## Abre nuevamente Select Desde Mi Cuenta
-                    hacerClick("#mat-select-0")
+    try:
+        hacerClick('//*[@id="mat-select-value-0"]/span') #hace click para elegir cuentas
+    except:
+        print('no se selecciono la primera casilla')
 
-            if Datos['cuenta'] == 'ahorro':
-                try:
-                    ## Selecciona Cuenta Ahorro
-                    hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Ahorro')]")
-                except:
-                    print('no se selecciono cuenta Ahorro')
-                    ## Abre nuevamente Select Desde Mi Cuenta
-                    hacerClick("#mat-select-3")
-                    ##hacerClick("//mat-option//span[contains(text(), 'Fondos Propios')]")
-            '''
+    if Datos['cuenta'] == 'corriente': #verifica si en Datos tiene el tipo de cuenta corriente o ahorro y la seleeciona
+        try:
+            hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
+        except:
+                print('no se selecciono cuenta corriente')
+                hacerClick('mat-select-0')
+
+    if Datos['cuenta'] == 'ahorro':
+        try:
+            hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]")
+            print('se selecciono cuenta ahorro')
+        except:
+            print('no se selecciono cuenta ahorro')
+            hacerClick('mat-select-0')
+
+
 
             ################        ORIGREN DE LOS FONDOS        ################  
             
 
-            try:
-                ## Abre Select ORIGREN DE LOS FONDOS
-                print("abre Origen de fondos")
-                hacerClick('#mat-select-1')
-            except:
-                print('no se abrió Select ORIGREN DE LOS FONDOS')
+    try:
+        ## Abre Select ORIGREN DE LOS FONDOS
+        print("abre Origen de fondos")
+        hacerClick('#mat-select-1')
+    except:
+        print('no se abrió Select ORIGREN DE LOS FONDOS')
 
-            try:
-                ## Selecciona Fondos Propios
-                hacerClick("#mat-option-3")
-            except:
-                print('no se selecciono la opcion de Fondos Propios')
+    try:
+        ## Selecciona Fondos Propios
+        hacerClick("#mat-option-3")
+    except:
+        print('no se selecciono la opcion de Fondos Propios')
 
-            ################        MOTIVO DE LA COMPRA        ################  
+    ################        MOTIVO DE LA COMPRA        ################  
 
 
-            try:
-                ## Abre Select MOTIVO DE LA COMPRA 
-                hacerClick('#mat-select-2')
-            except:
-                print('no se abrió select MOTIVO DE LA COMPRA ')
+    try:
+        ## Abre Select MOTIVO DE LA COMPRA 
+        hacerClick('#mat-select-2')
+    except:
+        print('no se abrió select MOTIVO DE LA COMPRA ')
 
-            try:
-                hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
-            except:
-                print('no se selecciono la opcion de Materia Prima')
+    try:
+        hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
+    except:
+        print('no se selecciono la opcion de Materia Prima')
+
+    try:
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') # btn continuar
+    except:
+        print('no se presionó el boton')
+        input()
+
+    try:
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') #btn aceptar
+    except:
+        print('no se presionó el boton')
+        input()
+        
+
+    try:
+        seleccionarElemento('//*[@id="mat-mdc-checkbox-0"]').click() #Casilla para marcar
+    except:
+        print('no se presionó el boton')
+        input()
+
+    try:
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') #ultimo btn aceptar
+    except:
+        print('no se presionó el boton')
+        input() 
 
                  
 def validarDineroSuficiente(Datos):
@@ -163,7 +187,9 @@ def validarDineroSuficiente(Datos):
 def seleccionarTipoDivisas():
     xpath_dolares = "//*[contains(text(), 'Dólares')]"
     try:
-        hacerClick(xpath_dolares)
+        if hacerClick(xpath_dolares) == False:
+            time.sleep(1)
+            hacerClick(xpath_dolares) #intenta hacer click nuevamente si la primera vez falla
 
     except Exception as e:
         print(f"No se pudo hacer clic en Dólares: {e}")
@@ -229,8 +255,11 @@ def ejecutarCicloCuentas():
    
         try:
             # 2. Proceso de entrada (Inicio de sesión y navegación)
-            FUNCIONES.inicio_sesion(cuenta['inicio'])
-            FUNCIONES.ResolverPreguntasSeguridad(cuenta['preguntas'])
+            if FUNCIONES.inicio_sesion(cuenta['inicio']) == False:
+                continue
+            if FUNCIONES.ResolverPreguntasSeguridad(cuenta['preguntas']) == False:
+                continue
+                
             
             # Si MercadoDivisas devuelve False, algo falló (ej: botón no clicable o página caída)
             if not FUNCIONES.MercadoDivisas():
