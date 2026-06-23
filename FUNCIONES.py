@@ -41,17 +41,24 @@ US = ""
 ### CAMBIO DE CONFIGURACION SEGUN SISTEMA OPERATIVO y Kernel ###
 
 if platform.system() != "Windows":
-    print("Ejecutando version linux32. Forzando modo Headless local...")
+    print("[Bot] Ejecutando version linux32. Forzando modo Headless local...")
     modo_headless = True  
     modo_uc = False           
     version_driver = "system" 
 
+    # Agregamos flags críticos para optimizar RAM y evitar colapsos de pestañas
     argumentos_extra = (
-        "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
-        "--disable-remote-fonts,--enable-data-reduction-proxy-dev,--no-sandbox,"
-        "--disable-dev-shm-usage"
+        "--no-sandbox,"
+        "--disable-dev-shm-usage,"       # Obliga a usar disco/swap si la RAM es baja
+        "--disable-gpu,"                 # Apaga la aceleración gráfica por hardware
+        "--disable-software-rasterizer," # Evita renderizado pesado en CPUs viejas
+        "--memory-pressure-off,"         # Ignora alertas de baja memoria
+        "--ignore-certificate-errors,"
+        "--ignore-ssl-errors,"
+        "--disable-web-security,"
+        "--disable-remote-fonts"
     )
-    os_binary_location = "/usr/bin/chromium" 
+    os_binary_location = "/usr/bin/chromium"
 else:
     print("Ejecutando en Windows")
     modo_headless = False 
@@ -70,12 +77,12 @@ driver = Driver(
     uc=modo_uc,               
     block_images=True,
     window_size=f"{N1},{N2}",  
-    headless=modo_headless,  
+    headless1=modo_headless,  
     chromium_arg=argumentos_extra, 
     binary_location=os_binary_location, 
     disable_csp=True,       
     incognito=True,       
-    mobile=True,
+    mobile=False,
     pls="eager",
     driver_version=version_driver  # ("system" en Linux, "keep" en Windows)
 )
