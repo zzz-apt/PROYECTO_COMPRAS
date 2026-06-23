@@ -19,6 +19,7 @@ from fake_useragent import UserAgent
 import platform
 from colorama import init, Fore, Back, Style
 import sys
+import os
 Tiempo = 60
 rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
 # rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS' # Linux
@@ -40,8 +41,10 @@ US = ""
 ### CAMBIO DE CONFIGURACION SEGUN SISTEMA OPERATIVO y Kernel ###
 
 if platform.system() != "Windows":
-    print("[Bot] Ejecutando version linux32. Forzando modo Headless local...")
+    print("Ejecutando version linux32. Forzando modo Headless local...")
     modo_headless = True  
+    modo_uc = False           
+    version_driver = "system" 
 
     argumentos_extra = (
         "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
@@ -52,6 +55,8 @@ if platform.system() != "Windows":
 else:
     print("Ejecutando en Windows")
     modo_headless = False 
+    modo_uc = True            
+    version_driver = "keep"
     argumentos_extra = (
         "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
         "--disable-remote-fonts,--enable-data-reduction-proxy-dev"
@@ -61,20 +66,19 @@ else:
 ##########################################################################################
 
 driver = Driver(
-    undetectable=True,
-    uc=True,                # Activa undetected-chromedriver    
+    undetectable=modo_uc,     
+    uc=modo_uc,               
     block_images=True,
     window_size=f"{N1},{N2}",  
     headless=modo_headless,  
     chromium_arg=argumentos_extra, 
     binary_location=os_binary_location, 
-    disable_csp=True,       # políticas de seguridad
+    disable_csp=True,       
     incognito=True,       
     mobile=True,
     pls="eager",
-    driver_version="keep"  
+    driver_version=version_driver  # ("system" en Linux, "keep" en Windows)
 )
-
 
 
 # driver = Driver(
