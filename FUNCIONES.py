@@ -49,17 +49,26 @@ if platform.system() != "Windows":
 
     # Agregamos flags críticos para optimizar RAM y evitar colapsos de pestañas
     argumentos_extra = (
-        "--no-sandbox,"
-        "--disable-dev-shm-usage,"
-        "--disable-gpu,"
-        "--disable-extensions,"          # Desactiva extensiones del navegador
-        "--disable-blink-features=AutomationControlled,"
-        "--dns-prefetch-disable,"         # Evita resoluciones DNS en segundo plano
-        "--disable-site-isolation-trials," # Ahorra procesos internos de Chromium
-        "--ignore-certificate-errors,"
-        "--ignore-ssl-errors,"
-        "--disable-web-security,"
-        "--disable-remote-fonts"          
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        # --- ARGUMENTOS EXTREMOS (prueba) ---
+        "--single-process",                 # Forza a Chromium a usar UN SOLO proceso (mata el 97% de CPU)
+        "--disable-site-isolation-trials",  # Evita que aísle cada pestaña consumiendo más hilos
+        "--user-data-dir=/dev/shm/chrome",  # Mueve el perfil temporal directo a la RAM (no lee disco duro)
+        "--disk-cache-dir=/dev/shm/cache",  # Caché directo a la RAM
+        "--disable-renderer-backgrounding", # Mantiene la prioridad de CPU al máximo en el login
+        "--disable-background-timer-throttling",
+        "--disable-component-update",        # No busca actualizaciones de Google al arrancar
+        "--mute-audio",                      # Desactiva el módulo de sonido para ahorrar interrupciones}
+        "--blink-settings=imagesEnabled=false",    # Bloquea la descarga de imágenes completamente
+        "--disable-software-rasterizer",          # Evita que la CPU intente dibujar gráficos por software
+        "--disable-extensions",                   # Desactiva cualquier extensión de fondo
+        "--disable-features=AsmJsToWebAssembly",  # Desactiva traducciones pesadas de JS que ahogan CPUs viejas
+        "--disable-features=WebAssembly",         # Corta scripts avanzados si el banco no los exige
+        "--proxy-server=direct://",             # Salta la detección automática de proxies para conectar más rápido
+        "--proxy-bypass-list=*",
+        "--js-flags=--no-expose-wasm --max-semi-space-size=1 --max-old-space-size=256" # Limita la RAM interna de Javascript
     )
     os_binary_location = "/usr/bin/chromium"
 else:
