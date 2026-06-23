@@ -16,7 +16,7 @@ import time
 from datetime import datetime
 import cv2
 from fake_useragent import UserAgent
-
+import platform
 from colorama import init, Fore, Back, Style
 import sys
 Tiempo = 60
@@ -37,22 +37,62 @@ MAX_WAIT_TIME = 10
 US = ""
 
 
+### CAMBIO DE CONFIGURACION SEGUN SISTEMA OPERATIVO y Kernel ###
+
+if platform.system() != "Windows":
+    print("[Bot] Ejecutando version linux32. Forzando modo Headless local...")
+    modo_headless = True  
+
+    argumentos_extra = (
+        "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
+        "--disable-remote-fonts,--enable-data-reduction-proxy-dev,--no-sandbox,"
+        "--disable-dev-shm-usage"
+    )
+    os_binary_location = "/usr/bin/chromium" 
+else:
+    print("Ejecutando en Windows")
+    modo_headless = False 
+    argumentos_extra = (
+        "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
+        "--disable-remote-fonts,--enable-data-reduction-proxy-dev"
+    )
+    os_binary_location = None 
+
+##########################################################################################
+
 driver = Driver(
     undetectable=True,
     uc=True,                # Activa undetected-chromedriver    
     block_images=True,
-    window_size= f"{N1},{N2}",  
-    headless1=False, # INTERFAZ
-    chromium_arg="--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security, --disable-remote-fonts, --enable-data-reduction-proxy-dev",
+    window_size=f"{N1},{N2}",  
+    headless=modo_headless,  
+    chromium_arg=argumentos_extra, 
+    binary_location=os_binary_location, 
     disable_csp=True,       # políticas de seguridad
     incognito=True,       
-    # disable_cookies=True, # Se cuelga
     mobile=True,
     pls="eager",
-    #user_data_dir="./cache",
-    #ad_block=True,
-    driver_version="keep",
+    driver_version="keep"  
 )
+
+
+
+# driver = Driver(
+#     undetectable=True,
+#     uc=True,                # Activa undetected-chromedriver    
+#     block_images=True,
+#     window_size= f"{N1},{N2}",  
+#     headless1=False, # INTERFAZ
+#     chromium_arg="--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security, --disable-remote-fonts, --enable-data-reduction-proxy-dev",
+#     disable_csp=True,       # políticas de seguridad
+#     incognito=True,       
+#     # disable_cookies=True, # Se cuelga
+#     mobile=True,
+#     pls="eager",
+#     #user_data_dir="./cache",
+#     #ad_block=True,
+#     driver_version="keep",
+# )
 
 wait = WebDriverWait(driver, MAX_WAIT_TIME)
 
@@ -407,10 +447,12 @@ def MercadoDivisas():
 
         
     except Exception as e:
-        print(f'{Fore.RED}Fallo en menú principal: {e}{Style.RESET_ALL}')
-        try: ups()
-        except: pass
-        return False
+        try: 
+            ups()
+        except: 
+            print(f'{Fore.RED}Fallo en menú principal: {e}{Style.RESET_ALL}')
+            return False
+        
 
     # Pequeña pausa para que el submenú se renderice en el DOM
     time.sleep(1.5)
@@ -463,6 +505,7 @@ def compra(Datos):
     
     try:
         seleccionarElemento('//*[contains(text(), "Datos de la compra")]')
+        driver.save_screenshot('caps/DATOS DE LA COMPRA.png')
     except:
         if VerMensaje() == True:
             return False
@@ -482,16 +525,11 @@ def compra(Datos):
 
 
         # 3. Llenar Formulario de compra (Cuentas, Origen, Motivo)
+        Minactual = datetime.now().second
         llenarFormularioCompra(Datos)
-        segundosLlenadoFormulario = segundos - datetime.now().second
-        milesimasLlenadoFormulario = milesimas - (datetime.now().microsecond // 1000)
-        
-        segundosProcesoCompleto = segundos - datetime.now().second
-        milesimasProcesoCompleto = milesimas - (datetime.now().microsecond // 1000)
-
-
-        Telegram(f' ------- Formulario Abierto ------ {datetime.now().hour}:{datetime.now().minute} -- Lleno en {segundosLlenadoFormulario}.{milesimasLlenadoFormulario} segundos')
-        Telegram(f' ------- Formulario Abierto ------ {datetime.now().hour}:{datetime.now().minute} -- Procesado en {segundosProcesoCompleto}.{milesimasProcesoCompleto} segundos')
+        print(f"Formulario lleno en {datetime.now().second - Minactual} segundos")
+        # Telegram(f' Formulario lleno en {segundosLlenadoFormulario}.{milesimasLlenadoFormulario} segundos')
+        # Telegram(f' formulario procesado en {segundosProcesoCompleto}.{milesimasProcesoCompleto} segundos')
 
         # 5. Verificación de resultados (Éxito o Fracaso)
         return verificar_finalizacion(Datos, fecha_inicio)
@@ -504,8 +542,8 @@ def compra(Datos):
 def verificar_finalizacion(Datos, fecha_inicio):
     """Verifica si la compra fue exitosa o rechazada usando tus validaciones."""
     try:
-        # Intentar detectar ÉXITO (Wait corto para no perder tiempo)
-        WebDriverWait(driver, 2).until(
+        # Intentar detectar ÉXITO (Wait corto para no perder tiempo) se amplió el tiempo de espera para detectar el mensaje de éxito, ya que a veces tarda un poco más en aparecer
+        WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Tu compra fue exitosa.')]"))
         )
         segundos = (datetime.now() - fecha_inicio).total_seconds()
@@ -513,8 +551,8 @@ def verificar_finalizacion(Datos, fecha_inicio):
         
         driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
         Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
-        img(Datos)
-        excluir(Datos['nombre'])
+        #img(Datos)
+        #excluir(Datos['nombre'])
         cerrarSesion()
         return True
 

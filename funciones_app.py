@@ -46,9 +46,10 @@ def hacerClick(selector):
         time.sleep(random.uniform(0.1, 0.3))
         
         elemento.click()
+        return True
     except Exception as e:
         print(f"Error al hacerClick en {selector}: {e}")
-        obtenerMensajeError()
+        #obtenerMensajeError()
         return False
 
 def escribir(selector, texto):
@@ -77,6 +78,10 @@ def cerrarSesion():
 
 def llenarFormularioCompra(Datos):
 
+    ################        DESDE MI CUENTA        ################
+    
+    
+    actual1 = FUNCIONES.datetime.now().second
     try:
         hacerClick('//*[@id="mat-select-value-0"]/span') #hace click para elegir cuentas
     except:
@@ -97,6 +102,23 @@ def llenarFormularioCompra(Datos):
             print('no se selecciono cuenta ahorro')
             hacerClick('mat-select-0')
 
+    
+    ################        A MI CUENTA        ################
+    if FUNCIONES.datetime.now().hour == 8: #seleccionar Cuenta extrajera SOLO cuando es hora de la venta de electronicos
+        
+        try:
+            hacerClick("#mat-select-3") #hace click para elegir cuentas divisas
+            #print('se selecciono btn para elegir cuenta en divisas')
+        except:
+            print('no se pudo abrir el select de A MI CUENTA')
+
+        try:
+            hacerClick('//mat-option//*[contains(text(), "Cuenta Moneda Extranjera USD - •")]') #hace click para elegir cuentas divisas
+            #print('se selecciono cuenta moneda extranjera')
+        except:
+            print('no se pudo seleccionar la cuenta moneda extranjera')
+    
+
 
 
             ################        ORIGREN DE LOS FONDOS        ################  
@@ -104,7 +126,7 @@ def llenarFormularioCompra(Datos):
 
     try:
         ## Abre Select ORIGREN DE LOS FONDOS
-        print("abre Origen de fondos")
+        #print("abre Origen de fondos")
         hacerClick('#mat-select-1')
     except:
         print('no se abrió Select ORIGREN DE LOS FONDOS')
@@ -128,11 +150,58 @@ def llenarFormularioCompra(Datos):
         hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
     except:
         print('no se selecciono la opcion de Materia Prima')
+    
+    print(f"primer formulario lleno en {FUNCIONES.datetime.now().second - actual1} segundos, sin presionar boton")
 
     try:
-        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') # btn continuar
+
+        ################        DATOS DE LA OPERACION        ################  
+        Monto_a_Comprar = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div[1]/div/div[2]/div[2]/div').text
+        Monto_a_Debitar = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[5]/div[2]/div').text
+        TASA = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[1]/div[2]/div[1]').text
+        print(f"{FUNCIONES.Fore.YELLOW}------- FORMULARIO ABIERTO ------ {FUNCIONES.datetime.now().hour}:{FUNCIONES.datetime.now().minute} ---\n {FUNCIONES.Style.RESET_ALL}")
+        print(f"--- DATOS DE LA OPERACION ---\nMonto a Comprar: {Monto_a_Comprar}$\nMonto a Debitar: {Monto_a_Debitar}bs\nTasa: {TASA}bs")
+        try:
+            FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs")
+        except:
+            print("Error al enviar mensaje a Telegram")
+        try:
+            hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') # btn continuar
+        except:
+                ###### ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA ######
+            try:
+                if seleccionarElemento('//*[@id="mat-mdc-error-13"]').text == 'El monto a comprar es mayor al saldo disponible de tu cuenta.':
+                    print(f"{FUNCIONES.Fore.RED} ------ El monto a comprar es mayor al saldo disponible de tu cuenta {Datos['cuenta']} ------ {FUNCIONES.Style.RESET_ALL}")
+                    print(FUNCIONES.Fore.YELLOW + '------ Cambiando Cuenta ------' + FUNCIONES.Style.RESET_ALL)
+                        
+                    try:
+                        seleccionarElemento('//*[@id="mat-select-0"]').click()
+                    except:
+                        print('no se selecciono la primera casilla')
+
+                    
+                    if Datos['cuenta'] == 'corriente':
+                        try:
+                            hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]")
+                            print('se selecciono cuenta Ahorro')
+                        except:
+                            print('no se selecciono cuenta Ahorro')
+
+                    if Datos['cuenta'] == 'ahorro':
+                        try:
+                            hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
+                            print('se selecciono cuenta Corriente')
+                        except:
+                            print('no se selecciono cuenta corriente')
+                    
+                    if seleccionarElemento('//*[@id="mat-mdc-error-13"]').text == 'El monto a comprar es mayor al saldo disponible de tu cuenta.':
+                        seleccionarElemento('//*[@id="pn_id_2_accordioncontent_0"]/div/div[1]').click()
+                        print(seleccionarElemento('//*[@id="summary"]/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[2]/div[2]/div[2]/div/div/div/p[2]').text)
+            except:
+                print(1)
+        
     except:
-        print('no se presionó el boton')
+        print('no se presionó el botonnn')
         input()
 
     try:
@@ -154,51 +223,33 @@ def llenarFormularioCompra(Datos):
         print('no se presionó el boton')
         input() 
 
-                 
-def validarDineroSuficiente(Datos):
-            ###### ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA ######
-            try:
-                if driver.find_element(By.XPATH, '//*[@id="mat-mdc-error-13"]').text == 'El monto a comprar es mayor al saldo disponible de tu cuenta.':
-                    print(f"{Fore.RED} ------ El monto a comprar es mayor al saldo disponible de tu cuenta {Datos['cuenta']} ------ {Style.RESET_ALL}")
-                    print(Fore.YELLOW + '------ Cambiando Cuenta ------' + Style.RESET_ALL)
-                        
-                    try:
-                        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mat-select-0'))).click()
-                    except:
-                        print('no se selecciono la primera casilla')
+def verificacionBalance(Datos):
+    try:
+        FUNCIONES.driver.get("https://www30.mercantilbanco.com/summary")
+        balance = seleccionarElemento('//*[@id="summary"]/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[2]/div[2]/div[2]/div/div/div/p[2]').text
+        print(f"Balance actual: {balance}")
+    except Exception as e:
+        print(f"No se pudo verificar el balance: {e}")
+        return False
 
-                    
-                    if Datos['cuenta'] == 'corriente':
-                        try:
-                            hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]")
-                            print('se selecciono cuenta Ahorro')
-                        except:
-                            print('no se selecciono cuenta Ahorro')
-
-                    if Datos['cuenta'] == 'ahorro':
-                        try:
-                            hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
-                            print('se selecciono cuenta Corriente')
-                        except:
-                            print('no se selecciono cuenta corriente')
-            except:
-                print(1)
 
 def seleccionarTipoDivisas():
     xpath_dolares = "//*[contains(text(), 'Dólares')]"
     try:
-        if hacerClick(xpath_dolares) == False:
+        #print("click en Dólares...")
+        Intentos = 0
+        while not hacerClick(xpath_dolares) and Intentos < 3:
+            print("Reintentado hacer click en Dólares...")
             time.sleep(1)
-            hacerClick(xpath_dolares) #intenta hacer click nuevamente si la primera vez falla
-
+            Intentos += 1
+        return True
+        
     except Exception as e:
         print(f"No se pudo hacer clic en Dólares: {e}")
         #driver.save_screenshot("error_click.png")
-        #ups() 
         elementoError = seleccionarElemento(".sub-title")
         print(f"Error: {elementoError.text}")
-
-        cerrarSesion()
+        FUNCIONES.VerMensaje()
         return False
     
 def ingresarMonto(Datos):
@@ -206,7 +257,8 @@ def ingresarMonto(Datos):
     if montoIngresado == False:
     
         # Primero selecciona el tipo de moneda o divisa
-        seleccionarTipoDivisas()
+        if not seleccionarTipoDivisas():
+            return False
         try:
             escribir("#buy-foreign-currency-form-first input", Datos['Monto'])
             return True
