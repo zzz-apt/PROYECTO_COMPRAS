@@ -45,18 +45,21 @@ if platform.system() != "Windows":
     modo_headless = True  
     modo_uc = False           
     version_driver = "system" 
+    modoPls = "none"  
 
     # Agregamos flags críticos para optimizar RAM y evitar colapsos de pestañas
     argumentos_extra = (
         "--no-sandbox,"
-        "--disable-dev-shm-usage,"       # Obliga a usar disco/swap si la RAM es baja
-        "--disable-gpu,"                 # Apaga la aceleración gráfica por hardware
-        "--disable-software-rasterizer," # Evita renderizado pesado en CPUs viejas
-        "--memory-pressure-off,"         # Ignora alertas de baja memoria
+        "--disable-dev-shm-usage,"
+        "--disable-gpu,"
+        "--disable-extensions,"          # Desactiva extensiones del navegador
+        "--disable-blink-features=AutomationControlled,"
+        "--dns-prefetch-disable,"         # Evita resoluciones DNS en segundo plano
+        "--disable-site-isolation-trials," # Ahorra procesos internos de Chromium
         "--ignore-certificate-errors,"
         "--ignore-ssl-errors,"
         "--disable-web-security,"
-        "--disable-remote-fonts"
+        "--disable-remote-fonts"          
     )
     os_binary_location = "/usr/bin/chromium"
 else:
@@ -64,6 +67,7 @@ else:
     modo_headless = False 
     modo_uc = True            
     version_driver = "keep"
+    modoPls = "eager"
     argumentos_extra = (
         "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
         "--disable-remote-fonts,--enable-data-reduction-proxy-dev"
@@ -83,7 +87,7 @@ driver = Driver(
     disable_csp=True,       
     incognito=True,       
     mobile=False,
-    pls="eager",
+    pls=modoPls,
     driver_version=version_driver  # ("system" en Linux, "keep" en Windows)
 )
 
