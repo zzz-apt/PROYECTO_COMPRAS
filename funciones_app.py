@@ -188,7 +188,7 @@ def llenarFormularioCompra(Datos):
                                 print(f"{FUNCIONES.Fore.RED} ------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------ {FUNCIONES.Style.RESET_ALL}")
                                 verificacionBalance(Datos['nombre'])
                                 cerrarSesion()
-                                return False()
+                                return False
                               
                         except:
                             print('no se selecciono cuenta Ahorro')
