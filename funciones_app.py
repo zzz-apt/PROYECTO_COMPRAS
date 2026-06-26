@@ -239,6 +239,7 @@ def seleccionarTipoDivisas():
         #print("click en Dólares...")
         Intentos = 0
         while not hacerClick(xpath_dolares) and Intentos < 3:
+            FUNCIONES.VerMensaje()
             print("Reintentado hacer click en Dólares...")
             time.sleep(1)
             Intentos += 1
