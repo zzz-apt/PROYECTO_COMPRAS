@@ -165,25 +165,31 @@ def llenarFormularioCompra(Datos):
             FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs")
         except:
             print("Error al enviar mensaje a Telegram")
-        try:
-            hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') # btn continuar
-        except:
+        
+        if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): # btn continuar
+
                 ###### ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA ######
-            try:
-                if seleccionarElemento('//*[@id="mat-mdc-error-13"]').text == 'El monto a comprar es mayor al saldo disponible de tu cuenta.':
-                    print(f"{FUNCIONES.Fore.RED} ------ El monto a comprar es mayor al saldo disponible de tu cuenta {Datos['cuenta']} ------ {FUNCIONES.Style.RESET_ALL}")
+            try:  
+                seleccionarElemento("//*[contains(text(), 'El monto a comprar es mayor al saldo disponible de tu cuenta.')]")
+                print(f"{FUNCIONES.Fore.RED} ------ El monto a comprar es mayor al saldo en la cuenta de {Datos['cuenta']} ------ {FUNCIONES.Style.RESET_ALL}")
+                if Datos['2_Cuentas']: # Verifica si hay otra cuenta para intentar con esa, aprovechando el formulario    
                     print(FUNCIONES.Fore.YELLOW + '------ Cambiando Cuenta ------' + FUNCIONES.Style.RESET_ALL)
                         
                     try:
                         seleccionarElemento('//*[@id="mat-select-0"]').click()
                     except:
                         print('no se selecciono la primera casilla')
-
                     
                     if Datos['cuenta'] == 'corriente':
                         try:
                             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]")
                             print('se selecciono cuenta Ahorro')
+                            if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): #btn aceptar
+                                print(f"{FUNCIONES.Fore.RED} ------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------ {FUNCIONES.Style.RESET_ALL}")
+                                verificacionBalance(Datos['nombre'])
+                                cerrarSesion()
+                                return False()
+                              
                         except:
                             print('no se selecciono cuenta Ahorro')
 
@@ -191,14 +197,23 @@ def llenarFormularioCompra(Datos):
                         try:
                             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
                             print('se selecciono cuenta Corriente')
+                            if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): #btn aceptar
+                                FUNCIONES.Telegram("------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------")
+                                print(f"{FUNCIONES.Fore.RED} ------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------ {FUNCIONES.Style.RESET_ALL}")
+                                verificacionBalance(Datos['nombre'])
+                                cerrarSesion()
+                                return False
                         except:
                             print('no se selecciono cuenta corriente')
-                    
-                    if seleccionarElemento('//*[@id="mat-mdc-error-13"]').text == 'El monto a comprar es mayor al saldo disponible de tu cuenta.':
-                        seleccionarElemento('//*[@id="pn_id_2_accordioncontent_0"]/div/div[1]').click()
-                        print(seleccionarElemento('//*[@id="summary"]/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[2]/div[2]/div[2]/div/div/div/p[2]').text)
-            except:
-                print(1)
+                else:
+                    print(f"{FUNCIONES.Fore.RED} ------ No hay otra cuenta para intentar la compra ------ {FUNCIONES.Style.RESET_ALL}")
+                    verificacionBalance(Datos['nombre'])
+                    cerrarSesion()
+                    return False
+                        
+                
+            except:      
+                print('hay dinero en la cuenta pero hubo un error el formulario')
         
     except:
         print('no se presionó el botonnn')
@@ -223,11 +238,67 @@ def llenarFormularioCompra(Datos):
         print('no se presionó el boton')
         input() 
 
+
+
+
 def verificacionBalance(Datos):
     try:
+        seleccionarElemento("//*[contains(text(), 'Resumen financiero')]")
+    except:
         FUNCIONES.driver.get("https://www30.mercantilbanco.com/summary")
-        balance = seleccionarElemento('//*[@id="summary"]/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[2]/div[2]/div[2]/div/div/div/p[2]').text
-        print(f"Balance actual: {balance}")
+
+    listaBalancesSucios = []
+    Balances = []
+    try:
+        balance1 = seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[2]").text 
+        listaBalancesSucios.append(balance1)
+    except:
+        pass 
+
+    try:
+        balance2 = seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[3]").text
+        listaBalancesSucios.append(balance2)
+    except:
+        pass
+
+    try:
+        balance3 = seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[4]").text
+        listaBalancesSucios.append(balance3)
+    except:
+        pass
+    try:
+        balanceUSD = (seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[2]/div/div[3]").text).strip().split('\n')
+        USD = (f"{balanceUSD[0]} -> Saldo: {balanceUSD[3]} $.")
+    except:
+        pass
+    try: 
+        
+        ####################################
+        '''
+        Cada balance es una lista en donde:
+        [0] = Nombre de la cuenta
+        [1] = 'Más opciones'
+        [2] = 'Bs.'
+        [3] = Monto de la cuenta
+        '''
+        #####################################
+
+        for balance_individual in listaBalancesSucios:
+
+  
+            lineas = [linea.strip() for linea in balance_individual.strip().split('\n') if linea.strip()]
+            
+     
+            nombre_cuenta = lineas[0]
+            monto_cuenta = lineas[3] 
+            
+
+            Balances.append(f"{nombre_cuenta} -> Saldo: {monto_cuenta} Bs.")
+
+        
+        MSJ = f"--- BALANCE DE LA CUENTA {Datos['nombre']}--- \n{"\n".join(Balances)}\n{USD} "
+        print(MSJ)
+        FUNCIONES.Telegram(MSJ)
     except Exception as e:
         print(f"No se pudo verificar el balance: {e}")
         return False
@@ -312,8 +383,7 @@ def ejecutarCicloCuentas():
                 continue
             if FUNCIONES.ResolverPreguntasSeguridad(cuenta['preguntas']) == False:
                 continue
-                
-            
+
             # Si MercadoDivisas devuelve False, algo falló (ej: botón no clicable o página caída)
             if not FUNCIONES.MercadoDivisas():
                 print(f"Error al entrar a Mercado Divisas para {nombre}")
