@@ -51,6 +51,8 @@ if platform.system() != "Windows":
     argumentos_extra = (
         "--no-sandbox",
         "--disable-dev-shm-usage",
+        "--disk-cache-size=1",
+        "--media-cache-size=1",
         "--disable-gpu",
         # --- ARGUMENTOS EXTREMOS (prueba) ---
         "--single-process",                 # Forza a Chromium a usar UN SOLO proceso (mata el 97% de CPU)
