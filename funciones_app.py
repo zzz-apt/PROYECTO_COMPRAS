@@ -295,8 +295,8 @@ def verificacionBalance(Datos):
 
             Balances.append(f"{nombre_cuenta} -> Saldo: {monto_cuenta} Bs.")
 
-        
-        MSJ = f"--- BALANCE DE LA CUENTA {Datos['nombre']}--- \n{"\n".join(Balances)}\n{USD} "
+        balancesTotales = "\n".join(Balances)
+        MSJ = f"--- BALANCE DE LA CUENTA {Datos['nombre']}--- \n{balancesTotales}\n{USD} "
         print(MSJ)
         FUNCIONES.Telegram(MSJ)
     except Exception as e:
