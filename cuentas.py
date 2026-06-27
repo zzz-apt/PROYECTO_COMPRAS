@@ -208,6 +208,28 @@ CUENTAS = [
         },
         'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
+    },
+    ## NIURKARIS
+    {
+        'nombre_id': 'NIURKARIS',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
+            'CHAT_ID': '@none', 'Monto': 2000
+        },
+        'inicio': {'usuario': 'Reyesbarbara13', 'contrasena': 'Martinatini21.', 'id': 'NIURKARIS'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "barbara"}
+    },
+    ## LEOVER
+    {
+        'nombre_id': 'LEOVER',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'LEOVER',
+            'CHAT_ID': '@none', 'Monto': 2000
+        },
+        'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoDom813.', 'id': 'LEOVER'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "leormary"}
     }
     
    
