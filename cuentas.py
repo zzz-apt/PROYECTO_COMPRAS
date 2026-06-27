@@ -9,7 +9,7 @@ CUENTAS = [
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
             'CHAT_ID': '5766960410', 'Monto': 2000
         },
-        'inicio': {'usuario': 'Sharynnel2209', 'contrasena': 'Nicol2209*'},
+        'inicio': {'usuario': 'Sharynnel2209', 'contrasena': 'Shary2209*'},
         'preguntas': {
             'PreguntaUnica': False,
             'pregunta1': '¿Cuál es su marca de carros preferida?', 'respuesta1': 'jeep',
@@ -49,7 +49,7 @@ CUENTAS = [
     ## Fernando
     {
         'nombre_id': 'Fernando',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
             'CHAT_ID': '6231499420', 'Monto': 2000
