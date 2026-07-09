@@ -20,6 +20,9 @@ import platform
 from colorama import init, Fore, Back, Style
 import sys
 import os
+import io
+from io import BytesIO
+import numpy as np
 Tiempo = 60
 rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
 # rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS' # Linux
@@ -156,10 +159,6 @@ def cuenta_regresiva(MIN):
         sys.stdout.flush()
 
 def inicio_sesion(Inicio):
-    driver.get("https://www30.mercantilbanco.com/login")
-
-
-
     # Cambiar el User Agent para la siguiente petición PUEDE QUE AYUDE A MEJORAR LAS COMPRAS
     global ip, US
     US = UserAgent().random
@@ -169,7 +168,7 @@ def inicio_sesion(Inicio):
     print(f'{Fore.YELLOW} IP: {Fore.RED} {IP()}  {Style.RESET_ALL}')
     print(f'{Fore.YELLOW} Ejecutando navegador con Agente: {Style.RESET_ALL} {US} ')
     
-
+    
     driver.execute_cdp_cmd('Network.clearBrowserCookies', {})
     driver.execute_cdp_cmd('Network.clearBrowserCache', {})
     driver.execute_script("window.localStorage.clear();")
@@ -182,6 +181,7 @@ def inicio_sesion(Inicio):
     driver.get("about:blank") 
     driver.get("https://www30.mercantilbanco.com/login")
     driver.execute_script("document.body.style.zoom='50%'")
+
 
     
 
@@ -301,58 +301,57 @@ def Cierre_Programa():
 
 def img(Datos):
 
-    img = cv2.imread(rf'{rutaComprasExitosas}/{Datos["nombre"]} {datetime.now().date()}.png')
-    
-    y_inicio, y_fin = 190, 750 # alto
-    x_inicio, x_fin = 300, 1210 # ancho
-    cv2.line(img, (350, 558), (830, 558), (400, 400, 400), 40)
-    cv2.line(img, (350, 270), (830, 270), (400, 400, 400), 20)
-    img = img[y_inicio:y_fin, x_inicio:x_fin]
+    png_bytes = driver.get_screenshot_as_png()
 
+    # 2. bytes a formato de opencv
+    nparr = np.frombuffer(png_bytes, np.uint8)
+    imagen_cv2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    cv2.imwrite(rf'{rutaComprasExitosas}/{Datos["nombre"]} {datetime.now().date()}t.png', img)
+    # aqui esta parte es para recortar la imagen, pero mientras las pruebas la dejo como esta (captura completa) 
+    # el formato es [Y_inicio:Y_fin, X_inicio:X_fin] Ejemplo: [100:300, 150:650] 
+    imagen_recortada = imagen_cv2  
 
+    # bytes para Telegram
+    is_success, buffer = cv2.imencode(".png", imagen_recortada)
+    imagen_en_bytes = buffer.tobytes()
 
-    # --- Telegram ---
-    TOKEN = '8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs' 
-    CHAT_ID = Datos['CHAT_ID']    
-    RUTA_IMAGEN = rf'{rutaComprasExitosas}/{Datos["nombre"]} {datetime.now().date()}t.png' 
+    # aqui envia la imagen a telegram sin guardarla localmente
+    TOKEN = "8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs"
     TEXTO_DESCRIPCION = f'💲 Compra Exitosa 💲'
+    TEXTO_DESCRIPCION_ADMIN = f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'
+    url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
+    fer = "6231499420"
+    ray = "7781699329"
 
-    url = f'https://api.telegram.org/bot{TOKEN}/sendPhoto'
+    payloadfer = {"chat_id": fer, "caption": f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'}
+    payloadray = {"chat_id": ray, "caption": f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'}
+    payload_User = {"chat_id": Datos["CHAT_ID"], "caption": f'💲 Compra Exitosa 💲'}
 
+    files = {
+        "photo": ("captura.png", io.BytesIO(imagen_en_bytes), "image/png")
+    }
 
-    with open(RUTA_IMAGEN, 'rb') as f:
-        files = {'photo': f}
-        data = {'chat_id': CHAT_ID, 'caption': TEXTO_DESCRIPCION}
+    # Realizamos los envios
+    if not Datos["CHAT_ID"] == fer:
+        try:
+            response = requests.post(url, data=payloadfer, files=files)
+            print(f"Enviado a Fer: {response.json()}")
+        except Exception as e:
+            print(f"Error enviando a Fer: {e}")
 
- 
-        respuesta = requests.post(url, files=files, data=data)
+    if not Datos["CHAT_ID"] == ray:
+        try:
+            response = requests.post(url, data=payloadray, files=files)
+            print(f"Enviado a Ray: {response.json()}")
+        except Exception as e:
+            print(f"Error enviando a Ray: {e}")
+        
+    try:
+        response = requests.post(url, data=payload_User, files=files)
+        print(f"Enviado a {Datos['nombre']}: {response.json()}")
+    except Exception as e:
+        print(f"Error enviando a {Datos['nombre']}: {e}")
 
-
-    if respuesta.status_code == 200:
-        print("Imagen enviada exitosamente")
-        print(respuesta.json())
-    else:
-        print("Error al enviar la imagen")
-        print(respuesta.status_code)
-        print(respuesta.json())
-
-    print()
-
-    if not {Datos["nombre"]} == "Fernando":
-        with open(RUTA_IMAGEN, 'rb') as f:
-            files = {'photo': f}
-            data = {'chat_id': 6231499420, 'caption': TEXTO_DESCRIPCION}
-            respuesta = requests.post(url, files=files, data=data)
-
-        if respuesta.status_code == 200:
-            print("Imagen enviada exitosamente ADMIN")
-            print(respuesta.json())
-        else:
-            print("Error al enviar la imagen")
-            print(respuesta.status_code)
-            print(respuesta.json())
 
 def Telegram(MSG):
     token = "8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs"
@@ -463,6 +462,16 @@ def MercadoDivisas():
     
     # --- PASO 1: Clic en el Menú Principal ---
     try:
+        respuesta = requests.head("https://www30.mercantilbanco.com/")
+
+        horaServidorRaw = respuesta.headers['Date']
+
+        # aqui se convierte a formato de fecha local porque los servidores siempre responden en GMT/UTC
+        hora_servidor = datetime.strptime(horaServidorRaw, '%a, %d %b %Y %H:%M:%S %Z')
+
+        # print(f'Hora del servidor: {hora_servidor}')
+        # print("hora impresa en pagina: " + FUNCIONES.seleccionarElemento('//*[@id="navigation"]/div/div[1]/span[1]').text)
+        # print(f"hora local: {datetime.now()}")
         xpath_mercado = "//*[contains(text(), 'Mercado de divisas')]"
         boton_mercado = WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.XPATH, xpath_mercado))
@@ -474,7 +483,7 @@ def MercadoDivisas():
         
     except Exception as e:
         try: 
-            ups()
+            VerMensaje()
         except: 
             print(f'{Fore.RED}Fallo en menú principal: {e}{Style.RESET_ALL}')
             return False
@@ -510,6 +519,7 @@ def VerMensaje():
     
     if Mensaje == 'En estos momentos no hay disponibilidad de divisas para realizar la operación. Código 9021' or Mensaje == 'Algo ha salido mal...':
         cerrarSesion()
+        return True
 
     if Mensaje == 'El tiempo de tu sesión ha finalizado.' or Mensaje == '¡Lamentamos las molestias ocasionadas!':
         try:
@@ -517,7 +527,7 @@ def VerMensaje():
         except:
             print('no se encontro el boton')
     
-    return True
+    return False
 
 
 def compra(Datos):
@@ -531,31 +541,21 @@ def compra(Datos):
     
     try:
         seleccionarElemento('//*[contains(text(), "Datos de la compra")]')
-        driver.save_screenshot('caps/DATOS DE LA COMPRA.png')
     except:
-        if VerMensaje() == True:
+        if VerMensaje() == False:
             return False
 
-
-    
-
-
-    fecha_inicio = datetime.now()
-    hora = fecha_inicio.hour
-    minutos = fecha_inicio.minute
-    segundos = fecha_inicio.second
-    milesimas = fecha_inicio.microsecond // 1000
     
     try:
-       ##tipoMercado()
 
-
-        # 3. Llenar Formulario de compra (Cuentas, Origen, Motivo)
-        Minactual = datetime.now().second
+        fecha_inicio = datetime.now()
+        hora = fecha_inicio.hour
+        minutos = fecha_inicio.minute
+        segundos = fecha_inicio.second
+        milesimas = fecha_inicio.microsecond // 100
         llenarFormularioCompra(Datos)
-        print(f"Formulario lleno en {datetime.now().second - Minactual} segundos")
-        # Telegram(f' Formulario lleno en {segundosLlenadoFormulario}.{milesimasLlenadoFormulario} segundos')
-        # Telegram(f' formulario procesado en {segundosProcesoCompleto}.{milesimasProcesoCompleto} segundos')
+        Telegram(f"Formulario completo lleno en {datetime.now().second - segundos}.{abs(datetime.now().microsecond // 100 - milesimas)} segundos")
+        print(f"Formulario completo lleno en {datetime.now().second - segundos}.{abs(datetime.now().microsecond // 100 - milesimas)} segundos")
 
         # 5. Verificación de resultados (Éxito o Fracaso)
         return verificar_finalizacion(Datos, fecha_inicio)
@@ -567,34 +567,65 @@ def compra(Datos):
 
 def verificar_finalizacion(Datos, fecha_inicio):
     """Verifica si la compra fue exitosa o rechazada usando tus validaciones."""
-    try:
-        # Intentar detectar ÉXITO (Wait corto para no perder tiempo) se amplió el tiempo de espera para detectar el mensaje de éxito, ya que a veces tarda un poco más en aparecer
-        WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Tu compra fue exitosa.')]"))
-        )
-        segundos = (datetime.now() - fecha_inicio).total_seconds()
-        print(f"{Fore.GREEN} ¡ÉXITO! {Datos['nombre']} compró en {segundos}s {Style.RESET_ALL}")
-        
-        driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
-        Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
-        #img(Datos)
-        #excluir(Datos['nombre'])
-        cerrarSesion()
-        return True
 
-    except:
-        # Si no fue exitosa, buscamos el mensaje de error de COMPRA NO EXITOSA
-        try:
-            # Usamos tus XPaths de error
-            xpath_err_1 = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'
-            tipo_error = driver.find_element(By.XPATH, xpath_err_1).text
-            print(f"{Fore.RED} Compra no exitosa para {Datos['nombre']}: {tipo_error} {Style.RESET_ALL}")
-            Telegram(f"Compra no exitosa para {Datos['nombre']}: {tipo_error}")
-        except:
-            print("No se pudo capturar el texto del error final.")
+    try: ### ver si el elemento de exito o error se encuentra y extraer el texto para determinar el resultado como "resultadoCompra" pero durando la misma cantidad de tiempo en ver si alguno de los dos estan
+        resultadoCompra = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Compra realizada') or contains(text(), 'Compra fue exitosa') or contains(text(), 'no fue exitosa')]"))
+        ).text
+        ###  ya que se extrajo la informacion, procedemos a procesar el texto de "resultadoCompra" para determinar si fue exitoso o no
+        if resultadoCompra == "¡Listo! Compra realizada." or resultadoCompra == "¡Listo! Tu compra fue exitosa.":
+            segundos = (datetime.now() - fecha_inicio).total_seconds()
+            print(f"{Fore.GREEN} ¡ÉXITO! {Datos['nombre']} compró en {segundos}s {Style.RESET_ALL}")
             
-        cerrarSesion()
-        return False
+            driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
+            Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
+            img(Datos)
+            #excluir(Datos['nombre'])
+            cerrarSesion()
+            return True
+        else:
+            try:
+                xpath_err_1 = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'
+                tipo_error = driver.find_element(By.XPATH, xpath_err_1).text
+                print(f"{Fore.RED} Compra no exitosa para {Datos['nombre']}: {tipo_error} {Style.RESET_ALL}")
+                Telegram(f"❌ Compra no exitosa para {Datos['nombre']}: {tipo_error}")
+            except:
+                print("No se pudo capturar el texto del error final.")
+                
+            cerrarSesion()
+            return False
+    except:
+        print("No se encontró el resultado de la compra.")
+        input("Presiona Enter para continuar...")
+
+    # try:
+    #     # Intentar detectar ÉXITO (Wait corto para no perder tiempo) se amplió el tiempo de espera para detectar el mensaje de éxito, ya que a veces tarda un poco más en aparecer
+    #     WebDriverWait(driver, 15).until(
+    #         EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Tu compra fue exitosa.')]"))
+    #     )
+    #     segundos = (datetime.now() - fecha_inicio).total_seconds()
+    #     print(f"{Fore.GREEN} ¡ÉXITO! {Datos['nombre']} compró en {segundos}s {Style.RESET_ALL}")
+        
+    #     driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
+    #     Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
+    #     #img(Datos)
+    #     #excluir(Datos['nombre'])
+    #     cerrarSesion()
+    #     return True
+
+    # except:
+    #     # Si no fue exitosa, buscamos el mensaje de error de COMPRA NO EXITOSA
+    #     try:
+    #         # Usamos tus XPaths de error
+    #         xpath_err_1 = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'
+    #         tipo_error = driver.find_element(By.XPATH, xpath_err_1).text
+    #         print(f"{Fore.RED} Compra no exitosa para {Datos['nombre']}: {tipo_error} {Style.RESET_ALL}")
+    #         Telegram(f"Compra no exitosa para {Datos['nombre']}: {tipo_error}")
+    #     except:
+    #         print("No se pudo capturar el texto del error final.")
+            
+    #     cerrarSesion()
+    #     return False
 
 MACid = 0
 

@@ -80,8 +80,14 @@ def llenarFormularioCompra(Datos):
 
     ################        DESDE MI CUENTA        ################
     
+    fecha_inicio = FUNCIONES.datetime.now()
+    hora = fecha_inicio.hour
+    minutos = fecha_inicio.minute
+    segundos = fecha_inicio.second
+    milesimas = fecha_inicio.microsecond // 1000
+
     
-    actual1 = FUNCIONES.datetime.now().second
+    
     try:
         hacerClick('//*[@id="mat-select-value-0"]/span') #hace click para elegir cuentas
     except:
@@ -122,37 +128,54 @@ def llenarFormularioCompra(Datos):
 
 
             ################        ORIGREN DE LOS FONDOS        ################  
-            
+
 
     try:
-        ## Abre Select ORIGREN DE LOS FONDOS
+        ## Abre Select ORIGREN DE LOS FONDOS y click
         #print("abre Origen de fondos")
-        hacerClick('#mat-select-1')
+        FUNCIONES.driver.execute_script("""
+            document.querySelector('#mat-select-1').click();
+            document.querySelector('#mat-option-3').click();
+        """)
     except:
-        print('no se abrió Select ORIGREN DE LOS FONDOS')
+        print('no se ejecuto el script ORIGREN DE LOS FONDOS')
 
-    try:
-        ## Selecciona Fondos Propios
-        hacerClick("#mat-option-3")
-    except:
-        print('no se selecciono la opcion de Fondos Propios')
+    # try:
+    #     ## Abre Select ORIGREN DE LOS FONDOS
+    #     hacerClick('#mat-select-1')
+    # except:
+    #     print('no se abrió Select ORIGREN DE LOS FONDOS')
+
+    # try:
+    #     ## Selecciona Fondos Propios
+    #     hacerClick("#mat-option-3")
+    # except:
+    #     print('no se selecciono la opcion de Fondos Propios')
 
     ################        MOTIVO DE LA COMPRA        ################  
 
 
     try:
-        ## Abre Select MOTIVO DE LA COMPRA 
-        hacerClick('#mat-select-2')
+        FUNCIONES.driver.execute_script("""
+            document.querySelector('#mat-select-2').click();
+            document.querySelector('#mat-option-10').click();
+        """)
     except:
-        print('no se abrió select MOTIVO DE LA COMPRA ')
+        print('no se ejecuto el script motivo de compra')
 
-    try:
-        hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
-    except:
-        print('no se selecciono la opcion de Materia Prima')
+    # try:
+    #     ## Abre Select MOTIVO DE LA COMPRA 
+    #     hacerClick('#mat-select-2')
+    # except:
+    #     print('no se abrió select MOTIVO DE LA COMPRA ')
+
+    # try:
+    #     hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
+    # except:
+    #     print('no se selecciono la opcion de Materia Prima')
     
-    print(f"primer formulario lleno en {FUNCIONES.datetime.now().second - actual1} segundos, sin presionar boton")
-
+    print(f"Formulario de selects rellenado en  {FUNCIONES.datetime.now().second - fecha_inicio.second}.{abs(fecha_inicio.microsecond // 100 - FUNCIONES.datetime.now().microsecond // 100)} segundos") 
+    FUNCIONES.Telegram(f"Formulario de selects rellenado en  {FUNCIONES.datetime.now().second - fecha_inicio.second}.{abs(fecha_inicio.microsecond // 100 - FUNCIONES.datetime.now().microsecond // 100)} segundos") 
     try:
 
         ################        DATOS DE LA OPERACION        ################  
@@ -165,7 +188,6 @@ def llenarFormularioCompra(Datos):
             FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs")
         except:
             print("Error al enviar mensaje a Telegram")
-        
         if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): # btn continuar
 
                 ###### ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA ######
@@ -237,6 +259,8 @@ def llenarFormularioCompra(Datos):
     except:
         print('no se presionó el boton')
         input() 
+
+    
 
 
 
@@ -310,8 +334,9 @@ def seleccionarTipoDivisas():
         #print("click en Dólares...")
         Intentos = 0
         while not hacerClick(xpath_dolares) and Intentos < 3:
-            FUNCIONES.VerMensaje()
-            print("Reintentado hacer click en Dólares...")
+            if FUNCIONES.VerMensaje():
+                return False
+            print(f"Reintentado hacer click en Dólares... {Intentos + 1}/3")
             time.sleep(1)
             Intentos += 1
         return True
@@ -344,6 +369,7 @@ def ingresarMonto(Datos):
         
 def clickComprar():
     try:
+        
         hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button')
         return True
     except:
