@@ -8,13 +8,13 @@ import FUNCIONES
 montoIngresado = False
 
 
-def seleccionarElemento(selector):
+def seleccionarElemento(selector, time=3):
     # 1. Identifica si usa XPATH o CSS
     by = selenium.webdriver.common.by.By.XPATH if (selector.startswith('/') or selector.startswith('(')) else selenium.webdriver.common.by.By.CSS_SELECTOR
     
     try:
         # Se busca el overlay
-        selenium.webdriver.support.ui.WebDriverWait(FUNCIONES.driver, 3).until(
+        selenium.webdriver.support.ui.WebDriverWait(FUNCIONES.driver, time).until(
             EC.invisibility_of_element_located((selenium.webdriver.common.by.By.CLASS_NAME, "overlay"))
         )
     except:
@@ -38,7 +38,8 @@ def seleccionarElemento(selector):
 import time
 import random
 
-def hacerClick(selector):
+def hacerClick(selector, show=True):
+    
     try:
         elemento = seleccionarElemento(selector)
         
@@ -48,9 +49,14 @@ def hacerClick(selector):
         elemento.click()
         return True
     except Exception as e:
-        print(f"Error al hacerClick en {selector}: {e}")
-        #obtenerMensajeError()
+        if show:
+            print(f"Error al hacerClick en {selector}: {e}")
+        else:
+            None
         return False
+    
+        
+    
 
 def escribir(selector, texto):
     try:
@@ -79,20 +85,28 @@ def cerrarSesion():
 def llenarFormularioCompra(Datos):
 
     ################        DESDE MI CUENTA        ################
-    
+  
     fecha_inicio = FUNCIONES.datetime.now()
     hora = fecha_inicio.hour
     minutos = fecha_inicio.minute
     segundos = fecha_inicio.second
     milesimas = fecha_inicio.microsecond // 1000
-
-    
-    
     try:
-        hacerClick('//*[@id="mat-select-value-0"]/span') #hace click para elegir cuentas
-    except:
-        print('no se selecciono la primera casilla')
+        msj_pass = seleccionarElemento('//*[@id="mat-select-value-0"]/span | //*[contains(text(), "En estos momentos no hay disponibilidad de divisas para realizar la operación.")] | //*[contains(text(), "Algo ha salido mal...")]' )
 
+        
+        if msj_pass.tag_name == 'span':
+            msj_pass.click()
+
+        if msj_pass.tag_name == 'div':
+            print(f'{FUNCIONES.Fore.RED} {msj_pass.text} {FUNCIONES.datetime.now().hour}:{FUNCIONES.datetime.now().minute} {FUNCIONES.Style.RESET_ALL}')
+            cerrarSesion()
+            return False
+                
+    except:
+        print('no se pudo hacer click en el select de DESDE MI CUENTA')
+        input()
+        
     if Datos['cuenta'] == 'corriente': #verifica si en Datos tiene el tipo de cuenta corriente o ahorro y la seleeciona
         try:
             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
@@ -158,7 +172,7 @@ def llenarFormularioCompra(Datos):
     try:
         FUNCIONES.driver.execute_script("""
             document.querySelector('#mat-select-2').click();
-            document.querySelector('#mat-option-10').click();
+            document.querySelector('#mat-option-14').click();
         """)
     except:
         print('no se ejecuto el script motivo de compra')
@@ -173,9 +187,10 @@ def llenarFormularioCompra(Datos):
     #     hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
     # except:
     #     print('no se selecciono la opcion de Materia Prima')
+    print(f"{fecha_inicio.second}    {FUNCIONES.datetime.now().second}")
+    print(f"{abs(fecha_inicio.microsecond // 100 )}  {FUNCIONES.datetime.now().microsecond // 100}")
+    formularioSelects = f'{FUNCIONES.datetime.now().second - fecha_inicio.second}.{abs(fecha_inicio.microsecond // 100 - FUNCIONES.datetime.now().microsecond // 100)} segundos'
     
-    print(f"Formulario de selects rellenado en  {FUNCIONES.datetime.now().second - fecha_inicio.second}.{abs(fecha_inicio.microsecond // 100 - FUNCIONES.datetime.now().microsecond // 100)} segundos") 
-    FUNCIONES.Telegram(f"Formulario de selects rellenado en  {FUNCIONES.datetime.now().second - fecha_inicio.second}.{abs(fecha_inicio.microsecond // 100 - FUNCIONES.datetime.now().microsecond // 100)} segundos") 
     try:
 
         ################        DATOS DE LA OPERACION        ################  
@@ -183,11 +198,7 @@ def llenarFormularioCompra(Datos):
         Monto_a_Debitar = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[5]/div[2]/div').text
         TASA = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[1]/div[2]/div[1]').text
         print(f"{FUNCIONES.Fore.YELLOW}------- FORMULARIO ABIERTO ------ {FUNCIONES.datetime.now().hour}:{FUNCIONES.datetime.now().minute} ---\n {FUNCIONES.Style.RESET_ALL}")
-        print(f"--- DATOS DE LA OPERACION ---\nMonto a Comprar: {Monto_a_Comprar}$\nMonto a Debitar: {Monto_a_Debitar}bs\nTasa: {TASA}bs")
-        try:
-            FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs")
-        except:
-            print("Error al enviar mensaje a Telegram")
+        # print(f"--- DATOS DE LA OPERACION ---\nMonto a Comprar: {Monto_a_Comprar}$\nMonto a Debitar: {Monto_a_Debitar}bs\nTasa: {TASA}bs")
         if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): # btn continuar
 
                 ###### ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA ######
@@ -249,18 +260,29 @@ def llenarFormularioCompra(Datos):
         
 
     try:
-        seleccionarElemento('//*[@id="mat-mdc-checkbox-0"]').click() #Casilla para marcar
+        FUNCIONES.driver.execute_script("document.evaluate('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-exchange-market-statement/form/div/mat-checkbox//label', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();")
+        #seleccionarElemento('//*[@id="mat-mdc-checkbox-0"]').click() #Casilla para marcar
     except:
         print('no se presionó el boton')
         input()
 
     try:
-        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') #ultimo btn aceptar
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')  #ultimo btn aceptar
+        FormularioLleno =f"Formulario completo lleno en {FUNCIONES.datetime.now().second - segundos}.{abs(FUNCIONES.datetime.now().microsecond // 100 - milesimas)} segundos"                           
     except:
         print('no se presionó el boton')
         input() 
 
     
+    
+
+    try:
+        FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs\select llenos en {formularioSelects}\n{FormularioLleno}")
+    except:
+        print("Error al enviar mensaje a Telegram")
+    
+    print(FormularioLleno)
+   
 
 
 
@@ -333,7 +355,7 @@ def seleccionarTipoDivisas():
     try:
         #print("click en Dólares...")
         Intentos = 0
-        while not hacerClick(xpath_dolares) and Intentos < 3:
+        while not hacerClick(xpath_dolares, show=False) and Intentos < 3:
             if FUNCIONES.VerMensaje():
                 return False
             print(f"Reintentado hacer click en Dólares... {Intentos + 1}/3")

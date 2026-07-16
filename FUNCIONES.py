@@ -57,6 +57,7 @@ if platform.system() != "Windows":
         "--disk-cache-size=1",
         "--media-cache-size=1",
         "--disable-gpu",
+
         # --- ARGUMENTOS EXTREMOS (prueba) ---
         "--single-process",                 # Forza a Chromium a usar UN SOLO proceso (mata el 97% de CPU)
         "--disable-site-isolation-trials",  # Evita que aísle cada pestaña consumiendo más hilos
@@ -81,7 +82,7 @@ else:
     modo_headless = False 
     modo_uc = True            
     version_driver = "keep"
-    modoPls = "eager"
+    modoPls = "none"
     argumentos_extra = (
         "--ignore-certificate-errors,--ignore-ssl-errors,--disable-web-security,"
         "--disable-remote-fonts,--enable-data-reduction-proxy-dev"
@@ -177,13 +178,45 @@ def inicio_sesion(Inicio):
         "userAgent": US
     })
 
+    
     driver.refresh()
     driver.get("about:blank") 
+  
+    # driver.execute_cdp_cmd("Network.enable", {})
+
+
+    # driver.execute_cdp_cmd(
+    #     "Network.setBlockedURLs",
+    #     {
+    #         "urls": [
+    #             "*.png",
+    #             "*.jpg",
+    #             "*.jpeg",
+    #             "*.gif",
+    #             "*.svg",
+    #             "*.ico",  
+    #             "*.woff",
+    #             "*.woff2",
+    #             "*.ttf",  
+    #             "*google-analytics*",
+    #             "*gtm.js*", 
+    #         ]
+    #     },
+    # )
     driver.get("https://www30.mercantilbanco.com/login")
     driver.execute_script("document.body.style.zoom='50%'")
 
+    
+    
+    # driver.execute_script(
+    # """
+    # document.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => el.remove());
+    # document.body.classList.add('no-animations');
+    # """
+    # )
 
     
+   
 
         
    
@@ -209,6 +242,30 @@ def inicio_sesion(Inicio):
             wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="system-error"]/div/div[1]/div[3]/button'))).click()
     except:
         None   
+    driver.execute_script(
+        """
+        let style = document.createElement('style');
+        style.id = 'kill-animations';
+        style.innerHTML = `
+            *, *::before, *::after,
+            .mat-checkbox-frame, .mat-checkbox-background,
+            .mat-ripple-element, .mat-select-panel, .mat-option {
+                transition: none !important;
+                animation: none !important;
+                transition-duration: 0s !important;
+                animation-duration: 0s !important;
+                animation-delay: 0s !important;
+                transform: none !important;
+            }
+            .mat-ripple-element {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+    """
+    )
+   
+    
 
 def ResolverPreguntasSeguridad(Preguntas):
 
@@ -511,13 +568,13 @@ def MercadoDivisas():
         return True # Indica que hubo un error
 
 def VerMensaje():
-    Mensaje = WebDriverWait(driver, 1).until(EC.any_of(
+    Mensaje = (WebDriverWait(driver, 1).until(EC.any_of(
         EC.presence_of_element_located((By.XPATH, "/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/melp-in-card-error/div[1]/div[1]")),
         EC.presence_of_element_located((By.XPATH, "//*[@id='system-error']/div/div[1]/div[1]"))
-    )).text
+    )).text).strip()
     print(f'{Fore.RED} {Mensaje} {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
     
-    if Mensaje == 'En estos momentos no hay disponibilidad de divisas para realizar la operación. Código 9021' or Mensaje == 'Algo ha salido mal...':
+    if any(frase in Mensaje for frase in ['En estos momentos no hay disponibilidad de divisas para realizar la operación. Código 9021', 'Algo ha salido mal...']):
         cerrarSesion()
         return True
 
@@ -538,24 +595,11 @@ def compra(Datos):
         return False
     
     clickComprar()
-    
     try:
-        seleccionarElemento('//*[contains(text(), "Datos de la compra")]')
-    except:
-        if VerMensaje() == False:
-            return False
-
-    
-    try:
-
         fecha_inicio = datetime.now()
-        hora = fecha_inicio.hour
-        minutos = fecha_inicio.minute
-        segundos = fecha_inicio.second
-        milesimas = fecha_inicio.microsecond // 100
-        llenarFormularioCompra(Datos)
-        Telegram(f"Formulario completo lleno en {datetime.now().second - segundos}.{abs(datetime.now().microsecond // 100 - milesimas)} segundos")
-        print(f"Formulario completo lleno en {datetime.now().second - segundos}.{abs(datetime.now().microsecond // 100 - milesimas)} segundos")
+        if llenarFormularioCompra(Datos) == False:
+            return False
+        
 
         # 5. Verificación de resultados (Éxito o Fracaso)
         return verificar_finalizacion(Datos, fecha_inicio)
@@ -570,10 +614,11 @@ def verificar_finalizacion(Datos, fecha_inicio):
 
     try: ### ver si el elemento de exito o error se encuentra y extraer el texto para determinar el resultado como "resultadoCompra" pero durando la misma cantidad de tiempo en ver si alguno de los dos estan
         resultadoCompra = WebDriverWait(driver, 15).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Compra realizada') or contains(text(), 'Compra fue exitosa') or contains(text(), 'no fue exitosa')]"))
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Compra realizada') | //*[contains(text(), 'fue exitosa')] | //*[contains(text(), 'no fue exitosa')]"))
         ).text
+        print(resultadoCompra)
         ###  ya que se extrajo la informacion, procedemos a procesar el texto de "resultadoCompra" para determinar si fue exitoso o no
-        if resultadoCompra == "¡Listo! Compra realizada." or resultadoCompra == "¡Listo! Tu compra fue exitosa.":
+        if resultadoCompra == "¡Listo! Compra realizada" or resultadoCompra == "¡Listo! Tu compra fue exitosa.":
             segundos = (datetime.now() - fecha_inicio).total_seconds()
             print(f"{Fore.GREEN} ¡ÉXITO! {Datos['nombre']} compró en {segundos}s {Style.RESET_ALL}")
             
@@ -590,13 +635,16 @@ def verificar_finalizacion(Datos, fecha_inicio):
                 print(f"{Fore.RED} Compra no exitosa para {Datos['nombre']}: {tipo_error} {Style.RESET_ALL}")
                 Telegram(f"❌ Compra no exitosa para {Datos['nombre']}: {tipo_error}")
             except:
+                if VerMensaje():
+                    return False
                 print("No se pudo capturar el texto del error final.")
                 
             cerrarSesion()
             return False
     except:
+        
         print("No se encontró el resultado de la compra.")
-        input("Presiona Enter para continuar...")
+       
 
     # try:
     #     # Intentar detectar ÉXITO (Wait corto para no perder tiempo) se amplió el tiempo de espera para detectar el mensaje de éxito, ya que a veces tarda un poco más en aparecer
