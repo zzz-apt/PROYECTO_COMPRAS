@@ -17,7 +17,7 @@ modoMadrugadita = True
  
 
 # MODO MADRUGADITA  
-if modoMadrugadita and (horaActual <= 5 or horaActual >= 22):
+if modoMadrugadita and (horaActual <= 5 or horaActual >= 24):
 
     print(Fore.CYAN + 'Modo Madrugadita Activo (06:04/06:05)' + Style.RESET_ALL)
 

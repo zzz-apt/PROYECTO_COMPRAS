@@ -277,7 +277,7 @@ def llenarFormularioCompra(Datos):
     
 
     try:
-        FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs\select llenos en {formularioSelects}\n{FormularioLleno}")
+        FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs\nselect llenos en {formularioSelects}\n{FormularioLleno}")
     except:
         print("Error al enviar mensaje a Telegram")
     
