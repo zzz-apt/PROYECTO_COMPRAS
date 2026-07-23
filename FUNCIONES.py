@@ -357,57 +357,56 @@ def Cierre_Programa():
     exit()
 
 def img(Datos):
-
-    png_bytes = driver.get_screenshot_as_png()
-
-    # 2. bytes a formato de opencv
-    nparr = np.frombuffer(png_bytes, np.uint8)
-    imagen_cv2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    # aqui esta parte es para recortar la imagen, pero mientras las pruebas la dejo como esta (captura completa) 
-    # el formato es [Y_inicio:Y_fin, X_inicio:X_fin] Ejemplo: [100:300, 150:650] 
-    imagen_recortada = imagen_cv2  
-
-    # bytes para Telegram
-    is_success, buffer = cv2.imencode(".png", imagen_recortada)
-    imagen_en_bytes = buffer.tobytes()
-
-    # aqui envia la imagen a telegram sin guardarla localmente
-    TOKEN = "8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs"
-    TEXTO_DESCRIPCION = f'💲 Compra Exitosa 💲'
-    TEXTO_DESCRIPCION_ADMIN = f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'
-    url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
-    fer = "6231499420"
-    ray = "7781699329"
-
-    payloadfer = {"chat_id": fer, "caption": f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'}
-    payloadray = {"chat_id": ray, "caption": f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'}
-    payload_User = {"chat_id": Datos["CHAT_ID"], "caption": f'💲 Compra Exitosa 💲'}
-
-    files = {
-        "photo": ("captura.png", io.BytesIO(imagen_en_bytes), "image/png")
-    }
-
-    # Realizamos los envios
-    if not Datos["CHAT_ID"] == fer:
-        try:
-            response = requests.post(url, data=payloadfer, files=files)
-            print(f"Enviado a Fer: {response.json()}")
-        except Exception as e:
-            print(f"Error enviando a Fer: {e}")
-
-    if not Datos["CHAT_ID"] == ray:
-        try:
-            response = requests.post(url, data=payloadray, files=files)
-            print(f"Enviado a Ray: {response.json()}")
-        except Exception as e:
-            print(f"Error enviando a Ray: {e}")
-        
     try:
-        response = requests.post(url, data=payload_User, files=files)
-        print(f"Enviado a {Datos['nombre']}: {response.json()}")
-    except Exception as e:
-        print(f"Error enviando a {Datos['nombre']}: {e}")
+        png_bytes = driver.get_screenshot_as_png()
+
+        # 2. bytes a formato de opencv
+        nparr = np.frombuffer(png_bytes, np.uint8)
+        imagen_cv2 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        # aqui esta parte es para recortar la imagen, pero mientras las pruebas la dejo como esta (captura completa) 
+        # el formato es [Y_inicio:Y_fin, X_inicio:X_fin] Ejemplo: [100:300, 150:650] 
+        imagen_recortada = imagen_cv2  
+
+        # bytes para Telegram
+        is_success, buffer = cv2.imencode(".png", imagen_recortada)
+        imagen_en_bytes = buffer.tobytes()
+
+        # aqui envia la imagen a telegram sin guardarla localmente
+        TOKEN = "8167604613:AAFPFgIwMbZFBpnz4hO4p9FzK1-n52VSIIs"
+        url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
+        url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
+        fer = "6231499420"
+        ray = "7781699329"
+
+        # Preparamos los destinatarios
+        destinatarios = []
+
+        if Datos["CHAT_ID"] != fer:
+            destinatarios.append((fer, f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'))
+
+        if Datos["CHAT_ID"] != ray:
+            destinatarios.append((ray, f'💲 Compra Exitosa 💲 con {Datos["nombre"]}'))
+
+        # El usuario actual siempre recibe el mensaje
+        destinatarios.append((Datos["CHAT_ID"], '💲 Compra Exitosa 💲'))
+
+        # Peticiones
+        for chat_id, caption in destinatarios:
+            try:
+                # ⚠️ SOLUCIÓN AL ERROR: Recreamos el stream o usamos .seek(0) en cada iteración
+                foto_stream = io.BytesIO(imagen_en_bytes)
+                
+                payload = {"chat_id": chat_id, "caption": caption}
+                files = {"photo": ("captura.png", foto_stream, "image/png")}
+                
+                response = requests.post(url, data=payload, files=files)
+                print(f"Enviado a {chat_id}: {response.json()}")
+                
+            except Exception as e:
+                print(f"Error enviando a {chat_id}: {e}")
+    except:
+        print('no se pudo enviar la imagen')
 
 
 def Telegram(MSG):
@@ -427,7 +426,7 @@ def Telegram(MSG):
     }
 
     response = requests.post(url, data=payload)
-    response = requests.post(url, data=payloadRaymond)
+    # response = requests.post(url, data=payloadRaymond)
     #print(response.json())
 
 def mantenimiento():
@@ -612,11 +611,14 @@ def compra(Datos):
 def verificar_finalizacion(Datos, fecha_inicio):
     """Verifica si la compra fue exitosa o rechazada usando tus validaciones."""
 
-    try: ### ver si el elemento de exito o error se encuentra y extraer el texto para determinar el resultado como "resultadoCompra" pero durando la misma cantidad de tiempo en ver si alguno de los dos estan
-        resultadoCompra = WebDriverWait(driver, 15).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Compra realizada') | //*[contains(text(), 'fue exitosa')] | //*[contains(text(), 'no fue exitosa')]"))
-        ).text
-        print(resultadoCompra)
+    try: 
+        try:### ver si el elemento de exito o error se encuentra y extraer el texto para determinar el resultado como "resultadoCompra" pero durando la misma cantidad de tiempo en ver si alguno de los dos estan
+            resultadoCompra = WebDriverWait(driver, 15).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Compra realizada') or contains(text(), 'fue exitosa') or contains(text(), 'no fue exitosa')]"))
+            ).text
+            print(resultadoCompra)
+        except:
+            print('no se encontro resultado compra')
         ###  ya que se extrajo la informacion, procedemos a procesar el texto de "resultadoCompra" para determinar si fue exitoso o no
         if resultadoCompra == "¡Listo! Compra realizada" or resultadoCompra == "¡Listo! Tu compra fue exitosa.":
             segundos = (datetime.now() - fecha_inicio).total_seconds()

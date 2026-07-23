@@ -52,7 +52,7 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
-            'CHAT_ID': '6231499420', 'Monto': 2000
+            'CHAT_ID': '6231499420', 'Monto': 1000
         },
         'inicio': {'usuario': 'fernandovj7', 'contrasena': 'H700*diefer*', 'id': 'Fer'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Salsa"}
@@ -63,9 +63,9 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Elizabeth',
-            'CHAT_ID': '@Ritz0810', 'Monto': 2000
+            'CHAT_ID': '@Ritz0810', 'Monto': 1500
         },
-        'inicio': {'usuario': 'Elizab10', 'contrasena': 'Augusto.13', 'id': 'Eli'},
+        'inicio': {'usuario': 'Elizab10', 'contrasena': 'Augusto.10', 'id': 'Eli'},
         'preguntas': {
             'PreguntaUnica': False, # Confirmar si esto es False o True
             'pregunta1': '¿Cuál es el segundo nombre de su hermano(a) mayor?', 'respuesta1': 'Agustin',

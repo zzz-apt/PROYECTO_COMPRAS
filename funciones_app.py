@@ -124,19 +124,24 @@ def llenarFormularioCompra(Datos):
 
     
     ################        A MI CUENTA        ################
-    if FUNCIONES.datetime.now().hour == 8: #seleccionar Cuenta extrajera SOLO cuando es hora de la venta de electronicos
         
-        try:
-            hacerClick("#mat-select-3") #hace click para elegir cuentas divisas
-            #print('se selecciono btn para elegir cuenta en divisas')
-        except:
-            print('no se pudo abrir el select de A MI CUENTA')
+    try:
+        FUNCIONES.driver.execute_script("""
+            document.querySelector('#mat-select-value-3').click();                          
+        """)
 
-        try:
-            hacerClick('//mat-option//*[contains(text(), "Cuenta Moneda Extranjera USD - •")]') #hace click para elegir cuentas divisas
-            #print('se selecciono cuenta moneda extranjera')
-        except:
-            print('no se pudo seleccionar la cuenta moneda extranjera')
+
+        # hacerClick('//*[contains(text(), "A mi cuenta")]') #hace click para elegir cuentas divisas
+        # #print('se selecciono btn para elegir cuenta en divisas')
+    except:
+        print('no se pudo abrir el select de A MI CUENTA')
+        print('enter para continuar')
+
+    try:
+        hacerClick('//mat-option//*[contains(text(), "Cuenta Moneda Extranjera USD - •")]') #hace click para elegir cuentas divisas
+        #print('se selecciono cuenta moneda extranjera')
+    except:
+        print('no se pudo seleccionar la cuenta moneda extranjera')
     
 
 
