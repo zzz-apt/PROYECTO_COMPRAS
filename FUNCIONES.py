@@ -168,7 +168,11 @@ def inicio_sesion(Inicio):
 
     print(f'{Fore.YELLOW} IP: {Fore.RED} {IP()}  {Style.RESET_ALL}')
     print(f'{Fore.YELLOW} Ejecutando navegador con Agente: {Style.RESET_ALL} {US} ')
-    
+    driver.execute_cdp_cmd(
+
+        "Page.addScriptToEvaluateOnNewDocument",
+        {"source": "console.log('Script ejecutado antes de cargar');"},
+    )
     
     driver.execute_cdp_cmd('Network.clearBrowserCookies', {})
     driver.execute_cdp_cmd('Network.clearBrowserCache', {})
