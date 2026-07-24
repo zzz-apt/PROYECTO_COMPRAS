@@ -156,17 +156,17 @@ CUENTAS = [
         'nombre_id': 'Olga',
         'activo': False,
         'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'OLGA',
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
             'CHAT_ID': '@none', 'Monto': 2000
         },
-        'inicio': {'usuario': 'ramoneilla', 'contrasena': 'Moak135*.', 'id': 'OLGA'},
+        'inicio': {'usuario': 'ramoneilla', 'contrasena': 'Bendecida77*.', 'id': 'OLGA'},
         'preguntas': {
             'PreguntaUnica': False,
-            'pregunta1': '...', 'respuesta1': 'Pedro chatarra',
-            'pregunta2': '...', 'respuesta2': 'Ricardo arjona',
-            'pregunta3': '...', 'respuesta3': 'Guanipita',
-            'pregunta4': '...', 'respuesta4': 'Agustina',
-            'pregunta5': '...', 'respuesta5': 'Carora'
+            'pregunta1': '¿Cuál es el nombre de su profesor favorito de universidad?', 'respuesta1': 'Pedro chatarra',
+            'pregunta2': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta2': 'Ricardo arjona',
+            'pregunta3': '¿Cuál es el apodo de su mejor amigo de la infancia?', 'respuesta3': 'Guanipita',
+            'pregunta4': '¿Cuál es el nombre de su abuela materna?', 'respuesta4': 'Agustina',
+            'pregunta5': '¿En qué ciudad nació su abuelo materno?', 'respuesta5': 'Carora'
         }
     },
     ## RH
@@ -180,11 +180,11 @@ CUENTAS = [
         'inicio': {'usuario': 'arvm1989', 'contrasena': 'Varmar-2026', 'id': 'RH'},
         'preguntas': {
             'PreguntaUnica': False,
-            'pregunta1': '...', 'respuesta1': 'Ricardo arjona',
-            'pregunta2': '...', 'respuesta2': 'dosycuarentaysiete',
-            'pregunta3': '...', 'respuesta3': 'sharynnel',
-            'pregunta4': '...', 'respuesta4': 'vicente',
-            'pregunta5': '...', 'respuesta5': 'corsa'
+            'pregunta1': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta1': 'Ricardo arjona',
+            'pregunta2': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta2': 'dosycuarentaysiete',
+            'pregunta3': '¿Cuál es el segundo nombre de su hijo(a) mayor?', 'respuesta3': 'sharynnel',
+            'pregunta4': '¿Cuál es el segundo nombre de su padre?', 'respuesta4': 'vicente',
+            'pregunta5': '¿Cuál es su marca de carros preferida?', 'respuesta5': 'corsa'
         }
     },
     ## Hildemary

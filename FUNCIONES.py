@@ -23,8 +23,9 @@ import os
 import io
 from io import BytesIO
 import numpy as np
+from config import *
 Tiempo = 60
-rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
+# rutaGlobal = r"C:\Users\medin\OneDrive\Documentos\ProyectosPython\mercantilDivisas\PROYECTO_COMPRAS" # Windows
 # rutaGlobal = '/home/yako/Documentos/python/PROYECTO_COMPRAS' # Linux
 
 rutaHistorial = rutaGlobal + r'/HISTORIAL'
@@ -159,20 +160,19 @@ def cuenta_regresiva(MIN):
         sys.stdout.write("\r" + " " * 30 + "\r")
         sys.stdout.flush()
 
+inicioLinux = False
+
 def inicio_sesion(Inicio):
     # Cambiar el User Agent para la siguiente petición PUEDE QUE AYUDE A MEJORAR LAS COMPRAS
-    global ip, US
+    global ip, US, inicioLinux
     US = UserAgent().random
     ip = IP()
-    
+    if inicioLinux == False:
+        driver.get("https://www30.mercantilbanco.com/login")
+        inicioLinux = True
 
     print(f'{Fore.YELLOW} IP: {Fore.RED} {IP()}  {Style.RESET_ALL}')
     print(f'{Fore.YELLOW} Ejecutando navegador con Agente: {Style.RESET_ALL} {US} ')
-    driver.execute_cdp_cmd(
-
-        "Page.addScriptToEvaluateOnNewDocument",
-        {"source": "console.log('Script ejecutado antes de cargar');"},
-    )
     
     driver.execute_cdp_cmd('Network.clearBrowserCookies', {})
     driver.execute_cdp_cmd('Network.clearBrowserCache', {})
@@ -430,7 +430,7 @@ def Telegram(MSG):
     }
 
     response = requests.post(url, data=payload)
-    # response = requests.post(url, data=payloadRaymond)
+    response = requests.post(url, data=payloadRaymond)
     #print(response.json())
 
 def mantenimiento():
@@ -571,23 +571,26 @@ def MercadoDivisas():
         return True # Indica que hubo un error
 
 def VerMensaje():
-    Mensaje = (WebDriverWait(driver, 1).until(EC.any_of(
-        EC.presence_of_element_located((By.XPATH, "/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/melp-in-card-error/div[1]/div[1]")),
-        EC.presence_of_element_located((By.XPATH, "//*[@id='system-error']/div/div[1]/div[1]"))
-    )).text).strip()
-    print(f'{Fore.RED} {Mensaje} {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
-    
-    if any(frase in Mensaje for frase in ['En estos momentos no hay disponibilidad de divisas para realizar la operación. Código 9021', 'Algo ha salido mal...']):
-        cerrarSesion()
-        return True
-
-    if Mensaje == 'El tiempo de tu sesión ha finalizado.' or Mensaje == '¡Lamentamos las molestias ocasionadas!':
-        try:
+    try:
+        Mensaje = (WebDriverWait(driver, 1).until(EC.any_of(
+            EC.presence_of_element_located((By.XPATH, "/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/melp-in-card-error/div[1]/div[1]")),
+            EC.presence_of_element_located((By.XPATH, "//*[@id='system-error']/div/div[1]/div[1]"))
+        )).text).strip()
+        print(f'{Fore.RED} {Mensaje} {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
+        
+        if any(frase in Mensaje for frase in ['En estos momentos no hay disponibilidad de divisas para realizar la operación. Código 9021', 'Algo ha salido mal...']):
+            cerrarSesion()
             return True
-        except:
-            print('no se encontro el boton')
-    
-    return False
+
+        if Mensaje == 'El tiempo de tu sesión ha finalizado.' or Mensaje == '¡Lamentamos las molestias ocasionadas!':
+            try:
+                return True
+            except:
+                print('no se encontro el boton')
+
+        return False
+    except:
+        return False
 
 
 def compra(Datos):
@@ -631,7 +634,7 @@ def verificar_finalizacion(Datos, fecha_inicio):
             driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
             Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
             img(Datos)
-            #excluir(Datos['nombre'])
+            excluir(Datos['nombre'])
             cerrarSesion()
             return True
         else:

@@ -414,11 +414,16 @@ from cuentas import CUENTAS
 
 def ejecutarCicloCuentas():
     """Procesa las cuentas activas siguiendo la lógica de éxito (True) y error (False)."""
-    cuentasActivas = [c for c in CUENTAS if c.get('activo', False)]
+    cuentasActivas = [
+        c for c in CUENTAS 
+        if c.get('activo', False) and not FUNCIONES.check(c.get('nombre_id'))
+    ]
+    
 
     global montoIngresado
     
     if not cuentasActivas:
+        print('no hay cuentas activas, finalizando el programa...')
         return
 
     for cuenta in cuentasActivas:
