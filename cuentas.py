@@ -7,7 +7,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
-            'CHAT_ID': '5766960410', 'Monto': 2000
+            'CHAT_ID': '5766960410', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Sharynnel2209', 'contrasena': 'Shary2209*'},
         'preguntas': {
@@ -25,7 +28,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Nathalia',
-            'CHAT_ID': '6505930247', 'Monto': 2000
+            'CHAT_ID': '6505930247', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'hernalivargas', 'contrasena': 'Ximena.2025', 'id': 'Naty'},
         'preguntas': {
@@ -41,7 +47,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Alexander',
-            'CHAT_ID': '6505930247', 'Monto': 2000
+            'CHAT_ID': '6505930247', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'alexcapri', 'contrasena': 'Xncv.2025', 'id': 'Alexander'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "puerto"}
@@ -52,7 +61,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
-            'CHAT_ID': '6231499420', 'Monto': 1000
+            'CHAT_ID': '6231499420', 'Monto': 1000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'fernandovj7', 'contrasena': 'H700*diefer*', 'id': 'Fer'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Salsa"}
@@ -63,7 +75,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Elizabeth',
-            'CHAT_ID': '@Ritz0810', 'Monto': 1500
+            'CHAT_ID': '@Ritz0810', 'Monto': 1500,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Elizab10', 'contrasena': 'Augusto.10', 'id': 'Eli'},
         'preguntas': {
@@ -81,7 +96,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Yesua.123', 'id': 'KAREN'},
         'preguntas': {
@@ -95,7 +113,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
         'preguntas': {
@@ -113,7 +134,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Perseo',
-            'CHAT_ID': '@Ritz0810', 'Monto': 2000
+            'CHAT_ID': '@Ritz0810', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Perseo777', 'contrasena': 'Gnosis.29', 'id': 'Perseo'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "biologia"}
@@ -124,7 +148,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Deleit',
-            'CHAT_ID': None, 'Monto': 1200
+            'CHAT_ID': None, 'Monto': 1200,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'deleitmolina08', 'contrasena': 'Asterisc0*', 'id': 'Deleit'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Gera"}
@@ -135,7 +162,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 9041,
+            'cuentaElectronica': 3601,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'ramonm', 'contrasena': 'Haziel*2', 'id': 'pRAY'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "ramon"}
@@ -146,7 +176,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAY',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'raymondm', 'contrasena': 'Haziel*9', 'id': 'RAY'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "marbelys"}
@@ -157,7 +190,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'ramoneilla', 'contrasena': 'Bendecida77*.', 'id': 'OLGA'},
         'preguntas': {
@@ -175,7 +211,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RH',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'arvm1989', 'contrasena': 'Varmar-2026', 'id': 'RH'},
         'preguntas': {
@@ -193,7 +232,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'HILDE',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'tomas2318', 'contrasena': 'Dios1401.', 'id': 'HILDE'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Grisel"}
@@ -204,7 +246,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NAHOMI',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
@@ -212,10 +257,13 @@ CUENTAS = [
     ## NIURKARIS
     {
         'nombre_id': 'NIURKARIS',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Reyesbarbara13', 'contrasena': 'Martinatini21.', 'id': 'NIURKARIS'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "barbara"}
@@ -226,7 +274,10 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'LEOVER',
-            'CHAT_ID': '@none', 'Monto': 2000
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoDom813.', 'id': 'LEOVER'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "leormary"}
