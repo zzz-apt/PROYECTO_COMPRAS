@@ -105,7 +105,6 @@ def llenarFormularioCompra(Datos):
                 
     except:
         print('no se pudo hacer click en el select de DESDE MI CUENTA')
-        input()
         
     if Datos['cuenta'] == 'corriente': #verifica si en Datos tiene el tipo de cuenta corriente o ahorro y la seleeciona
         try:
@@ -138,7 +137,17 @@ def llenarFormularioCompra(Datos):
         print('enter para continuar')
 
     try:
-        hacerClick('//mat-option//*[contains(text(), "Cuenta Moneda Extranjera USD - •")]') #hace click para elegir cuentas divisas
+        CtaUsd = 'Cuenta Moneda Extranjera USD - ••••'
+
+        if Datos['usarCuenta'] == 'C':
+            CtaUsd += str(Datos['cuentaCash'])
+        elif Datos['usarCuenta'] == 'E':
+            CtaUsd += str(Datos['cuentaElectronica'])
+        else:
+            raise ValueError('El valor de usarCuenta debe ser "C" o "E"')
+
+        hacerClick(f'//mat-option//*[contains(text(), "{CtaUsd}")]') #hace click para elegir cuentas divisas
+
         #print('se selecciono cuenta moneda extranjera')
     except:
         print('no se pudo seleccionar la cuenta moneda extranjera')
@@ -281,10 +290,10 @@ def llenarFormularioCompra(Datos):
     
     
 
-    try:
-        FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs\nselect llenos en {formularioSelects}\n{FormularioLleno}")
-    except:
-        print("Error al enviar mensaje a Telegram")
+    # try:
+    #     FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs\nselect llenos en {formularioSelects}\n{FormularioLleno}")
+    # except:
+    #     print("Error al enviar mensaje a Telegram")
     
     print(FormularioLleno)
    
