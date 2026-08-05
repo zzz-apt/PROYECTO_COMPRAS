@@ -582,7 +582,7 @@ def VerMensaje():
             cerrarSesion()
             return True
 
-        if Mensaje == 'El tiempo de tu sesión ha finalizado.' or Mensaje == '¡Lamentamos las molestias ocasionadas!':
+        if Mensaje == 'El tiempo de tu sesión ha finalizado.' or Mensaje == '¡Lamentamos las molestias ocasionadas!' or Mensaje == 'Por tu seguridad hemos cerrado esta sesión.':
             try:
                 return True
             except:
@@ -642,7 +642,7 @@ def verificar_finalizacion(Datos, fecha_inicio):
                 xpath_err_1 = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'
                 tipo_error = driver.find_element(By.XPATH, xpath_err_1).text
                 print(f"{Fore.RED} Compra no exitosa para {Datos['nombre']}: {tipo_error} {Style.RESET_ALL}")
-                Telegram(f"❌ Compra no exitosa para {Datos['nombre']}: {tipo_error}")
+                # Telegram(f"❌ Compra no exitosa para {Datos['nombre']}: {tipo_error}")
             except:
                 if VerMensaje():
                     return False
