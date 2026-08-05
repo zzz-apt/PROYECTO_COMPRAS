@@ -8,8 +8,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
             'CHAT_ID': '5766960410', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 8550,
+            'cuentaElectronica': None,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Sharynnel2209', 'contrasena': 'Shary2209*'},
@@ -76,8 +76,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Elizabeth',
             'CHAT_ID': '@Ritz0810', 'Monto': 1500,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 2172,
+            'cuentaElectronica': 3699,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Elizab10', 'contrasena': 'Augusto.10', 'id': 'Eli'},
@@ -97,8 +97,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 2311,
+            'cuentaElectronica': 3016,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Yesua.123', 'id': 'KAREN'},
@@ -114,8 +114,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
             'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 7715,
+            'cuentaElectronica': None,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
@@ -159,7 +159,7 @@ CUENTAS = [
     ## Juan Medina (papá de Raymond)
     {
         'nombre_id': 'pRAY',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -257,7 +257,7 @@ CUENTAS = [
     ## NIURKARIS
     {
         'nombre_id': 'NIURKARIS',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -281,6 +281,52 @@ CUENTAS = [
         },
         'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoDom813.', 'id': 'LEOVER'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "leormary"}
+    },
+
+    ## LUIS
+    {
+        'nombre_id': 'LUIS',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'LUIS',
+            'CHAT_ID': '1797917432', 'Monto': 2000,
+            'cuentaCash': 6964,
+            'cuentaElectronica': None,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
+
+        },
+        'inicio': {'usuario': 'Luisepf20', 'contrasena': 'Gordo123..', 'id': 'LUIS'},
+        'preguntas': {
+                    'PreguntaUnica': False,
+                    'pregunta1': '¿Cuál es el nombre del equipo de futbol favorito de su padre?', 'respuesta1': 'barcelona',
+                    'pregunta2': '¿Cuál era el modelo de su primer carro?', 'respuesta2': 'toyota',
+                    'pregunta3': '¿Cuál es el nombre de su sobrino/sobrina mayor?', 'respuesta3': 'santiago',
+                    'pregunta4': '¿Cuál es el nombre de su abuela materna?', 'respuesta4': 'yunaria',
+                    'pregunta5': '¿En qué ciudad nació su abuela materna?', 'respuesta5': 'san francisco'
+                    }
+
+    },
+    ## CHALA
+    {
+        'nombre_id': 'CHALA',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'CHALA',
+            'CHAT_ID': '8592303002', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica
+        },
+        'inicio': {'usuario': 'chala1992', 'contrasena': 'Chala92.', 'id': 'CHALA'},
+        'preguntas': {
+                    'PreguntaUnica': False,
+                    'pregunta1': '¿Cuál es la profesión/ocupación de su madre?', 'respuesta1': 'Maestra',
+                    'pregunta2': '¿Cuál es su marca de carros preferida?', 'respuesta2': 'Chevrolet ',
+                    'pregunta3': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta3': 'Reinaldo',
+                    'pregunta4': '¿Cuál era el modelo de su primer carro?', 'respuesta4': 'Aveo',
+                    'pregunta5': '¿Cuál es el apodo de su mejor amigo de la infancia?', 'respuesta5': 'Chala'
+                    }
+
     }
     
    
