@@ -159,7 +159,7 @@ CUENTAS = [
     ## Juan Medina (papá de Raymond)
     {
         'nombre_id': 'pRAY',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -257,12 +257,12 @@ CUENTAS = [
     ## NIURKARIS
     {
         'nombre_id': 'NIURKARIS',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
             'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 3969,
+            'cuentaElectronica': 3628,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'Reyesbarbara13', 'contrasena': 'Martinatini21.', 'id': 'NIURKARIS'},
