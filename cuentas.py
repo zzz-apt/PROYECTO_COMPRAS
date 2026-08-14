@@ -10,7 +10,7 @@ CUENTAS = [
             'CHAT_ID': '5766960410', 'Monto': 2000,
             'cuentaCash': 8550,
             'cuentaElectronica': None,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'usarCuenta': 'C' ## C = Cash, E = Electronica   
         },
         'inicio': {'usuario': 'Sharynnel2209', 'contrasena': 'Shary2209*'},
         'preguntas': {
@@ -62,8 +62,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
             'CHAT_ID': '6231499420', 'Monto': 1000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 4661,
+            'cuentaElectronica': 2494,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'fernandovj7', 'contrasena': 'H700*diefer*', 'id': 'Fer'},
@@ -191,8 +191,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
             'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 7178,
+            'cuentaElectronica': None,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'ramoneilla', 'contrasena': 'Bendecida77*.', 'id': 'OLGA'},
@@ -233,8 +233,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'HILDE',
             'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': '0794',
+            'cuentaElectronica': 3744,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'tomas2318', 'contrasena': 'Dios1401.', 'id': 'HILDE'},
@@ -257,7 +257,7 @@ CUENTAS = [
     ## NIURKARIS
     {
         'nombre_id': 'NIURKARIS',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
             'CHAT_ID': '@none', 'Monto': 2000,
