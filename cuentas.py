@@ -93,7 +93,7 @@ CUENTAS = [
     ## Karen
     {
         'nombre_id': 'KAREN',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -101,7 +101,7 @@ CUENTAS = [
             'cuentaElectronica': 3016,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
-        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Yesua.123', 'id': 'KAREN'},
+        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.123', 'id': 'KAREN'},
         'preguntas': {
             'PreguntaUnica': True,
             'RespuestaUnica': "karen"
@@ -159,7 +159,7 @@ CUENTAS = [
     ## Juan Medina (papá de Raymond)
     {
         'nombre_id': 'pRAY',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -177,8 +177,8 @@ CUENTAS = [
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAY',
             'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'cuentaCash': 3299,
+            'cuentaElectronica': 2990,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'raymondm', 'contrasena': 'Haziel*9', 'id': 'RAY'},
@@ -330,13 +330,13 @@ CUENTAS = [
     ## JOSELIN AGUIAR
     {
             'nombre_id': 'JOSELIN',
-            'activo': True,
+            'activo': False,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'JOSELIN',
                 'CHAT_ID': '@none', 'Monto': 56000,
                 'cuentaCash': 8441,
                 'cuentaElectronica': 3776,
-                'usarCuenta': 'C' ## C = Cash, E = Electronica
+                'usarCuenta': 'E' ## C = Cash, E = Electronica
             },
             'inicio': {'usuario': 'joselinaguiar', 'contrasena': 'Dios.123', 'id': 'JOSELIN'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "joselin"}
