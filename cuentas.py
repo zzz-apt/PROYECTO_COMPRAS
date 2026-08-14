@@ -240,20 +240,6 @@ CUENTAS = [
         'inicio': {'usuario': 'tomas2318', 'contrasena': 'Dios1401.', 'id': 'HILDE'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Grisel"}
     },
-    ## Nahomi
-    {
-        'nombre_id': 'NAHOMI',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NAHOMI',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
-    },
     ## NIURKARIS
     {
         'nombre_id': 'NIURKARIS',
@@ -268,21 +254,6 @@ CUENTAS = [
         'inicio': {'usuario': 'Reyesbarbara13', 'contrasena': 'Martinatini21.', 'id': 'NIURKARIS'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "barbara"}
     },
-    ## LEOVER
-    {
-        'nombre_id': 'LEOVER',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'LEOVER',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoDom813.', 'id': 'LEOVER'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "leormary"}
-    },
-
     ## LUIS
     {
         'nombre_id': 'LUIS',
@@ -327,7 +298,75 @@ CUENTAS = [
                     'pregunta5': '¿Cuál es el apodo de su mejor amigo de la infancia?', 'respuesta5': 'Chala'
                     }
 
+    },
+    ## Maye
+    {
+            'nombre_id': 'MAYE',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
+                'CHAT_ID': '@none', 'Monto': 2000,
+                'cuentaCash': 7715,
+                'cuentaElectronica': None,
+                'usarCuenta': 'C' ## C = Cash, E = Electronica
+            },
+            'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "maye"}
+    },     
+    ## MIGUEL LUGO
+    {
+            'nombre_id': 'MIGUEL',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MIGUEL',
+                'CHAT_ID': '@none', 'Monto': 2000,
+                'cuentaCash': 5583,
+                'cuentaElectronica': 3768,
+                'usarCuenta': 'C' ## C = Cash, E = Electronica
+            },
+            'inicio': {'usuario': 'arneirys14', 'contrasena': 'Arneirys35*', 'id': 'MIGUEL'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "miguel"}
+    },
+    ## JOSELIN AGUIAR
+    {
+            'nombre_id': 'JOSELIN',
+            'activo': True,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'JOSELIN',
+                'CHAT_ID': '@none', 'Monto': 56000,
+                'cuentaCash': 8441,
+                'cuentaElectronica': 3776,
+                'usarCuenta': 'C' ## C = Cash, E = Electronica
+            },
+            'inicio': {'usuario': 'joselinaguiar', 'contrasena': 'Dios.123', 'id': 'JOSELIN'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "joselin"}
+    },
+    ## Nahomi
+    {
+            'nombre_id': 'NAHOMI',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NAHOMI',
+                'CHAT_ID': '@none', 'Monto': 2000,
+                'cuentaCash': 8862,
+                'cuentaElectronica': 3299,
+                'usarCuenta': 'C' ## C = Cash, E = Electronica
+            },
+            'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
+    },
+    ## LEOVER
+    {
+            'nombre_id': 'LEOVER',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'LEOVER',
+                'CHAT_ID': '@none', 'Monto': 2000,
+                'cuentaCash': 9310,
+                'cuentaElectronica': 3299,
+                'usarCuenta': 'C' ## C = Cash, E = Electronica
+            },
+            'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoSusej.813', 'id': 'LEOVER'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Leormary"}
     }
-    
-   
 ]
