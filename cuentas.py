@@ -22,6 +22,29 @@ CUENTAS = [
             'pregunta5': '¿Cuál es el nombre de su mejor amigo(a) de infancia?', 'respuesta5': 'Valeria'
         }
     },
+
+    ## CLAUDER
+    {
+        'nombre_id': 'Clauder',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Clauder',
+            'CHAT_ID': ' ', 'Monto': 2000,
+            'cuentaCash': None,
+            'cuentaElectronica': None,
+            'usarCuenta': 'C' ## C = Cash, E = Electronica   
+        },
+        'inicio': {'usuario': 'CLAUDERV11', 'contrasena': 'Papillo*11'},
+        'preguntas': {
+            'PreguntaUnica': False,
+            'pregunta1': '¿Cuál es el nombre de su abuela paterna?', 'respuesta1': 'Hortencia ',
+            'pregunta2': '¿Cuál es el nombre de su profesor favorito de universidad?', 'respuesta2': 'Marin',
+            'pregunta3': '¿Cuál es el nombre de la asignatura preferida en bachillerato?', 'respuesta3': 'Matematicas ',
+            'pregunta4': '¿En qué ciudad nació su padre?', 'respuesta4': 'Puerto Cabello',
+            'pregunta5': '¿Cuál es el nombre de su sobrino/sobrina mayor?', 'respuesta5': 'Sharynel'
+        }
+    },
+
     ## Nathalia
     {
         'nombre_id': 'Nathalia',
@@ -93,7 +116,7 @@ CUENTAS = [
     ## Karen
     {
         'nombre_id': 'KAREN',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -159,7 +182,7 @@ CUENTAS = [
     ## Juan Medina (papá de Raymond)
     {
         'nombre_id': 'pRAY',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
             'CHAT_ID': '@none', 'Monto': 2000,
