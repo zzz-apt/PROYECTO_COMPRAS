@@ -171,9 +171,9 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Deleit',
-            'CHAT_ID': None, 'Monto': 1200,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
+            'CHAT_ID': None, 'Monto': 2000,
+            'cuentaCash': 5359,
+            'cuentaElectronica': 3725,
             'usarCuenta': 'C' ## C = Cash, E = Electronica
         },
         'inicio': {'usuario': 'deleitmolina08', 'contrasena': 'Asterisc0*', 'id': 'Deleit'},
