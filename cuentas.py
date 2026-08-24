@@ -1,5 +1,7 @@
 # cuentas.py
 
+
+
 CUENTAS = [
     ## Sharynnel
     {
@@ -7,10 +9,15 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
-            'CHAT_ID': '5766960410', 'Monto': 2000,
+            'CHAT_ID': '5766960410',
             'cuentaCash': 8550,
             'cuentaElectronica': None,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica   
+            'mecanismo' : {
+                        
+                'menudeo' : (None, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
+                'intervencion' : 100000
+
+            },
         },
         'inicio': {'usuario': 'Sharynnel2209', 'contrasena': 'Shary2209*'},
         'preguntas': {
@@ -22,17 +29,47 @@ CUENTAS = [
             'pregunta5': '¿Cuál es el nombre de su mejor amigo(a) de infancia?', 'respuesta5': 'Valeria'
         }
     },
+    ## YOLANDA
+    {
+        'nombre_id': 'Yolanda',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'YOLANDA',
+            'CHAT_ID': 'None', 'Monto': 2000,
+            'cuentaCash': None,
+            'cuentaElectronica': None,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : 1000
 
+            },   
+        },
+        'inicio': {'usuario': 'yolymar2020', 'contrasena': 'H2029*diefer*'},
+        'preguntas': {
+            'PreguntaUnica': False,
+            'pregunta1': '¿Cuál es el nombre de su abuela materna?', 'respuesta1': 'golla ',
+            'pregunta2': '¿En qué ciudad nació su madre?', 'respuesta2': 'cumarebo',
+            'pregunta3': '¿Cuáles son los 4 últimos números de la cédula de su esposo(a)?', 'respuesta3': '6666 ',
+            'pregunta4': '¿Cuándo es el cumpleaños de su hijo(a) mayor?', 'respuesta4': '2208',
+            'pregunta5': '¿Cuál es el segundo nombre de su hijo(a) mayor?', 'respuesta5': 'jesus'
+        }
+    }, 
     ## CLAUDER
     {
         'nombre_id': 'Clauder',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Clauder',
-            'CHAT_ID': ' ', 'Monto': 2000,
+            'CHAT_ID': 'None', 'Monto': 2000,
             'cuentaCash': None,
             'cuentaElectronica': None,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica   
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : 1000
+            
+            },     
         },
         'inicio': {'usuario': 'CLAUDERV11', 'contrasena': 'Papillo*11'},
         'preguntas': {
@@ -44,7 +81,48 @@ CUENTAS = [
             'pregunta5': '¿Cuál es el nombre de su sobrino/sobrina mayor?', 'respuesta5': 'Sharynel'
         }
     },
-
+    ## Ramba
+    {
+        'nombre_id': 'Ramba',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Ramba',
+            'CHAT_ID': 'None', 'Monto': 2000,
+            'cuentaCash': None,
+            'cuentaElectronica': None,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : 1000
+            
+            },    
+        },
+        'inicio': {'usuario': 'cesar4954', 'contrasena': 'Angel*2025'},
+        'preguntas': {
+            'PreguntaUnica': True, 'RespuestaUnica': "ramba",
+        }
+    },
+    ## Blanca
+        {
+            'nombre_id': 'Blanca',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Blanca',
+                'CHAT_ID': 'None', 'Monto': 2000, 
+                'cuentaCash': None,
+                'cuentaElectronica': None,
+                'mecanismo' : {
+                
+                    'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : 1000
+                
+                },   
+            },
+            'inicio': {'usuario': 'hormari', 'contrasena': 'Ca30097811.'},
+            'preguntas': {
+                'PreguntaUnica': True, 'RespuestaUnica': "pelota",
+            }
+        },
     ## Nathalia
     {
         'nombre_id': 'Nathalia',
@@ -54,14 +132,16 @@ CUENTAS = [
             'CHAT_ID': '6505930247', 'Monto': 2000,
             'cuentaCash': 2990,
             'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+            
+            },   
         },
         'inicio': {'usuario': 'hernalivargas', 'contrasena': 'Ximena.2025', 'id': 'Naty'},
         'preguntas': {
             'PreguntaUnica': True, 'RespuestaUnica': "puerto",
-            'pregunta1': '...', 'respuesta1': 'puerto', 'pregunta2': '...', 'respuesta2': 'puerto',
-            'pregunta3': '...', 'respuesta3': 'puerto', 'pregunta4': '...', 'respuesta4': 'puerto',
-            'pregunta5': '...', 'respuesta5': 'puerto'
         }
     },
     ## Alexander
@@ -73,7 +153,12 @@ CUENTAS = [
             'CHAT_ID': '6505930247', 'Monto': 2000,
             'cuentaCash': 2990,
             'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'mecanismo' : {
+            
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+            
+            },   
         },
         'inicio': {'usuario': 'alexcapri', 'contrasena': 'Xncv.2025', 'id': 'Alexander'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "puerto"}
@@ -83,11 +168,16 @@ CUENTAS = [
         'nombre_id': 'Fernando',
         'activo': False,
         'datos': {
-            '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
-            'CHAT_ID': '6231499420', 'Monto': 1000,
+            '2_Cuenntas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
+            'CHAT_ID': '6231499420',
             'cuentaCash': 4661,
             'cuentaElectronica': 2494,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'mecanismo' : {
+
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            }
         },
         'inicio': {'usuario': 'fernandovj7', 'contrasena': 'H700*diefer*', 'id': 'Fer'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Salsa"}
@@ -101,7 +191,12 @@ CUENTAS = [
             'CHAT_ID': '@Ritz0810', 'Monto': 1500,
             'cuentaCash': 2172,
             'cuentaElectronica': 3699,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
         },
         'inicio': {'usuario': 'Elizab10', 'contrasena': 'Augusto.10', 'id': 'Eli'},
         'preguntas': {
@@ -113,170 +208,6 @@ CUENTAS = [
             'pregunta5': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta5': 'Chayanne'
         }
     },
-    ## Karen
-    {
-        'nombre_id': 'KAREN',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2311,
-            'cuentaElectronica': 3016,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.123', 'id': 'KAREN'},
-        'preguntas': {
-            'PreguntaUnica': True,
-            'RespuestaUnica': "karen"
-        }
-    },
-    ## Maye
-    {
-        'nombre_id': 'MAYE',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 7715,
-            'cuentaElectronica': None,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
-        'preguntas': {
-            'PreguntaUnica': False,
-            'pregunta1': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta1': 'cinco',
-            'pregunta2': '¿Cuál es el nombre de su abuela materna?', 'respuesta2': 'Nicolasa', # ESPACIO CORREGIDO
-            'pregunta3': '¿En qué ciudad nació su madre?', 'respuesta3': 'Yaracuy',
-            'pregunta4': '¿Cuál es el segundo nombre de su hermano(a) mayor?', 'respuesta4': 'Emir',
-            'pregunta5': '¿Cuáles son los 4 últimos números de la cédula de su esposo(a)?', 'respuesta5': '3288'
-        }
-    },
-    ## Perseo
-    {
-        'nombre_id': 'Perseo',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Perseo',
-            'CHAT_ID': '@Ritz0810', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'Perseo777', 'contrasena': 'Gnosis.29', 'id': 'Perseo'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "biologia"}
-    },
-    ## Deleit
-    {
-        'nombre_id': 'Deleit',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Deleit',
-            'CHAT_ID': None, 'Monto': 2000,
-            'cuentaCash': 5359,
-            'cuentaElectronica': 3725,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'deleitmolina08', 'contrasena': 'Asterisc0*', 'id': 'Deleit'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Gera"}
-    },
-    ## Juan Medina (papá de Raymond)
-    {
-        'nombre_id': 'pRAY',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 9041,
-            'cuentaElectronica': 3601,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'ramonm', 'contrasena': 'Haziel*2', 'id': 'pRAY'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "ramon"}
-    },
-    ## RAymond
-    {
-        'nombre_id': 'RAY',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAY',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 3299,
-            'cuentaElectronica': 2990,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'raymondm', 'contrasena': 'Haziel*9', 'id': 'RAY'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "marbelys"}
-    },
-    ## Olga
-    {
-        'nombre_id': 'Olga',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 7178,
-            'cuentaElectronica': None,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'ramoneilla', 'contrasena': 'Bendecida77*.', 'id': 'OLGA'},
-        'preguntas': {
-            'PreguntaUnica': False,
-            'pregunta1': '¿Cuál es el nombre de su profesor favorito de universidad?', 'respuesta1': 'Pedro chatarra',
-            'pregunta2': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta2': 'Ricardo arjona',
-            'pregunta3': '¿Cuál es el apodo de su mejor amigo de la infancia?', 'respuesta3': 'Guanipita',
-            'pregunta4': '¿Cuál es el nombre de su abuela materna?', 'respuesta4': 'Agustina',
-            'pregunta5': '¿En qué ciudad nació su abuelo materno?', 'respuesta5': 'Carora'
-        }
-    },
-    ## RH
-    {
-        'nombre_id': 'RH',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RH',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'arvm1989', 'contrasena': 'Varmar-2026', 'id': 'RH'},
-        'preguntas': {
-            'PreguntaUnica': False,
-            'pregunta1': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta1': 'Ricardo arjona',
-            'pregunta2': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta2': 'dosycuarentaysiete',
-            'pregunta3': '¿Cuál es el segundo nombre de su hijo(a) mayor?', 'respuesta3': 'sharynnel',
-            'pregunta4': '¿Cuál es el segundo nombre de su padre?', 'respuesta4': 'vicente',
-            'pregunta5': '¿Cuál es su marca de carros preferida?', 'respuesta5': 'corsa'
-        }
-    },
-    ## Hildemary
-    {
-        'nombre_id': 'HILDE',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'HILDE',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': '0794',
-            'cuentaElectronica': 3744,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'tomas2318', 'contrasena': 'Dios1401.', 'id': 'HILDE'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Grisel"}
-    },
-    ## NIURKARIS
-    {
-        'nombre_id': 'NIURKARIS',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 3969,
-            'cuentaElectronica': 3628,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
-        },
-        'inicio': {'usuario': 'Reyesbarbara13', 'contrasena': 'Martinatini21.', 'id': 'NIURKARIS'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "barbara"}
-    },
     ## LUIS
     {
         'nombre_id': 'LUIS',
@@ -286,7 +217,12 @@ CUENTAS = [
             'CHAT_ID': '1797917432', 'Monto': 2000,
             'cuentaCash': 6964,
             'cuentaElectronica': None,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'mecanismo' : {
+
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
 
         },
         'inicio': {'usuario': 'Luisepf20', 'contrasena': 'Gordo123..', 'id': 'LUIS'},
@@ -309,7 +245,12 @@ CUENTAS = [
             'CHAT_ID': '8592303002', 'Monto': 2000,
             'cuentaCash': 2990,
             'cuentaElectronica': 3299,
-            'usarCuenta': 'C' ## C = Cash, E = Electronica
+            'mecanismo' : {
+
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
         },
         'inicio': {'usuario': 'chala1992', 'contrasena': 'Chala92.', 'id': 'CHALA'},
         'preguntas': {
@@ -322,6 +263,227 @@ CUENTAS = [
                     }
 
     },
+    ## Olga
+    {
+        'nombre_id': 'Olga',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
+            'CHAT_ID': '@none',
+            'cuentaCash': 7178,
+            'cuentaElectronica': None,
+            'mecanismo' : {
+
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },
+            'correo': 'olgaramonarojas40@gmail.com',
+            'cuentaZinli': '4-002-04495246-45'
+        },
+        'inicio': {'usuario': 'ramoneilla', 'contrasena': 'Bendecida77*.', 'id': 'OLGA'},
+        'preguntas': {
+            'PreguntaUnica': False,
+            'pregunta1': '¿Cuál es el nombre de su profesor favorito de universidad?', 'respuesta1': 'Pedro chatarra',
+            'pregunta2': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta2': 'Ricardo arjona',
+            'pregunta3': '¿Cuál es el apodo de su mejor amigo de la infancia?', 'respuesta3': 'Guanipita',
+            'pregunta4': '¿Cuál es el nombre de su abuela materna?', 'respuesta4': 'Agustina',
+            'pregunta5': '¿En qué ciudad nació su abuelo materno?', 'respuesta5': 'Carora'
+        }
+    },
+    ## RH
+    {
+        'nombre_id': 'RH',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RH',
+            'CHAT_ID': '@none',
+            'cuentaCash': 7232,
+            'cuentaElectronica': 4055,
+            'mecanismo' : {
+
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },
+            'correo': 'vargasrhonaldo@gmail.com',
+            'cuentaZinli': '4-002-41493614-57'
+
+        },
+        'inicio': {'usuario': 'arvm1989', 'contrasena': 'Varmar-2026', 'id': 'RH'},
+        'preguntas': {
+            'PreguntaUnica': False,
+            'pregunta1': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta1': 'Ricardo arjona',
+            'pregunta2': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta2': 'dosycuarentaysiete',
+            'pregunta3': '¿Cuál es el segundo nombre de su hijo(a) mayor?', 'respuesta3': 'sharynnel',
+            'pregunta4': '¿Cuál es el segundo nombre de su padre?', 'respuesta4': 'vicente',
+            'pregunta5': '¿Cuál es su marca de carros preferida?', 'respuesta5': 'corsa'
+        }
+    },
+
+
+    ## Karen
+    {
+        'nombre_id': 'KAREN',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 2311,
+            'cuentaElectronica': 3016,
+            'mecanismo' : {
+
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            }
+        },
+        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.123', 'id': 'KAREN'},
+        'preguntas': {
+            'PreguntaUnica': True,
+            'RespuestaUnica': "karen"
+        }
+    },
+    ## Maye
+    {
+        'nombre_id': 'MAYE',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 7715,
+            'cuentaElectronica': None,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
+        'preguntas': {
+            'PreguntaUnica': False,
+            'pregunta1': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta1': 'cinco',
+            'pregunta2': '¿Cuál es el nombre de su abuela materna?', 'respuesta2': 'Nicolasa', # ESPACIO CORREGIDO
+            'pregunta3': '¿En qué ciudad nació su madre?', 'respuesta3': 'Yaracuy',
+            'pregunta4': '¿Cuál es el segundo nombre de su hermano(a) mayor?', 'respuesta4': 'Emir',
+            'pregunta5': '¿Cuáles son los 4 últimos números de la cédula de su esposo(a)?', 'respuesta5': '3288'
+        }
+    },
+    ## Perseo
+    {
+        'nombre_id': 'Perseo',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Perseo',
+            'CHAT_ID': '@Ritz0810', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'Perseo777', 'contrasena': 'Gnosis.29', 'id': 'Perseo'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "biologia"}
+    },
+    ## Deleit
+    {
+        'nombre_id': 'Deleit',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Deleit',
+            'CHAT_ID': None, 'Monto': 2000,
+            'cuentaCash': 5359,
+            'cuentaElectronica': 3725,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'deleitmolina08', 'contrasena': 'Asterisc0*', 'id': 'Deleit'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Gera"}
+    },
+    ## Juan Medina (papá de Raymond)
+    {
+        'nombre_id': 'pRAY',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': True, 'cuenta': 'ahorro', 'nombre': 'pRAY',
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 9041,
+            'cuentaElectronica': 3601,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'ramonm', 'contrasena': 'Haziel*2', 'id': 'pRAY'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "ramon"}
+    },
+    ## RAymond
+    {
+        'nombre_id': 'RAY',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAY',
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 3299,
+            'cuentaElectronica': 2990,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'raymondm', 'contrasena': 'Haziel*9', 'id': 'RAY'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "marbelys"}
+    },
+    ## Hildemary
+    {
+        'nombre_id': 'HILDE',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'HILDE',
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': '0794',
+            'cuentaElectronica': 3744,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'tomas2318', 'contrasena': 'Dios1401.', 'id': 'HILDE'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Grisel"}
+    },
+    ## NIURKARIS
+    {
+        'nombre_id': 'NIURKARIS',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NIURKARIS',
+            'CHAT_ID': '@none', 'Monto': 2000,
+            'cuentaCash': 3969,
+            'cuentaElectronica': 3628,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+            },   
+        },
+        'inicio': {'usuario': 'Reyesbarbara13', 'contrasena': 'Martinatini21.', 'id': 'NIURKARIS'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "barbara"}
+    },
     ## Maye
     {
             'nombre_id': 'MAYE',
@@ -331,7 +493,12 @@ CUENTAS = [
                 'CHAT_ID': '@none', 'Monto': 2000,
                 'cuentaCash': 7715,
                 'cuentaElectronica': None,
-                'usarCuenta': 'C' ## C = Cash, E = Electronica
+                'mecanismo' : {
+            
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+                },   
             },
             'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "maye"}
@@ -342,10 +509,15 @@ CUENTAS = [
             'activo': False,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MIGUEL',
-                'CHAT_ID': '@none', 'Monto': 2000,
+                'CHAT_ID': '@none',
                 'cuentaCash': 5583,
                 'cuentaElectronica': 3768,
-                'usarCuenta': 'C' ## C = Cash, E = Electronica
+                'mecanismo' : {
+                
+                    'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
+    
+                },
             },
             'inicio': {'usuario': 'arneirys14', 'contrasena': 'Arneirys35*', 'id': 'MIGUEL'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "miguel"}
@@ -359,7 +531,12 @@ CUENTAS = [
                 'CHAT_ID': '@none', 'Monto': 56000,
                 'cuentaCash': 8441,
                 'cuentaElectronica': 3776,
-                'usarCuenta': 'E' ## C = Cash, E = Electronica
+                'mecanismo' : {
+            
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+                },   
             },
             'inicio': {'usuario': 'joselinaguiar', 'contrasena': 'Dios.123', 'id': 'JOSELIN'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "joselin"}
@@ -373,7 +550,12 @@ CUENTAS = [
                 'CHAT_ID': '@none', 'Monto': 2000,
                 'cuentaCash': 8862,
                 'cuentaElectronica': 3299,
-                'usarCuenta': 'C' ## C = Cash, E = Electronica
+                'mecanismo' : {
+            
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
+
+                },   
             },
             'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
@@ -384,12 +566,26 @@ CUENTAS = [
             'activo': False,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'LEOVER',
-                'CHAT_ID': '@none', 'Monto': 2000,
+                'CHAT_ID': '@none',
                 'cuentaCash': 9310,
                 'cuentaElectronica': 3299,
-                'usarCuenta': 'C' ## C = Cash, E = Electronica
+                'mecanismo' : {
+                
+                    'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
+
+                },
             },
             'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoSusej.813', 'id': 'LEOVER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Leormary"}
     }
 ]
+
+
+cuentasActivas = [
+        c for c in CUENTAS 
+        if c.get('activo', False) 
+    ]
+
+for c in cuentasActivas:
+    print(f"{c['nombre_id']} - {c['datos']['mecanismo']}")

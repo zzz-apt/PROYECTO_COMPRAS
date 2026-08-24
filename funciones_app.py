@@ -2,7 +2,8 @@ import selenium.webdriver.common.by
 from selenium.webdriver.common.by import By
 
 from selenium.webdriver.support import expected_conditions as EC
-import FUNCIONES  
+import FUNCIONES
+import cuentas  
 
 ## Se usa para ingresar el monto y seleccionar las divisas en el modo madrugadita
 montoIngresado = False
@@ -92,9 +93,8 @@ def llenarFormularioCompra(Datos):
     segundos = fecha_inicio.second
     milesimas = fecha_inicio.microsecond // 1000
     try:
-        msj_pass = seleccionarElemento('//*[@id="mat-select-value-0"]/span | //*[contains(text(), "En estos momentos no hay disponibilidad de divisas para realizar la operación.")] | //*[contains(text(), "Algo ha salido mal...")]' )
+        msj_pass = seleccionarElemento('//*[@id="mat-select-value-0"]/span | //*[contains(text(), "En estos momentos no hay disponibilidad de divisas para realizar la operación.")] | //*[contains(text(), "Algo ha salido mal...")] | //*[contains(text(), "En este momento el Mercado de divisas se encuentra cerrado")] | //*[contains(text(), "El tiempo de tu sesión ha finalizado.")] | //*[contains(text(), "¡Lamentamos las molestias ocasionadas!")] ' )
 
-        
         if msj_pass.tag_name == 'span':
             msj_pass.click()
 
@@ -104,14 +104,15 @@ def llenarFormularioCompra(Datos):
             return False
                 
     except:
-        print('no se pudo hacer click en el select de DESDE MI CUENTA')
-        
+        print('no se pudo hacer click en el select de DESDE MI CUENTA, ni encontro algun mensaje de error')
+        input()
     if Datos['cuenta'] == 'corriente': #verifica si en Datos tiene el tipo de cuenta corriente o ahorro y la seleeciona
         try:
             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
         except:
                 print('no se selecciono cuenta corriente')
                 hacerClick('mat-select-0')
+                input()
 
     if Datos['cuenta'] == 'ahorro':
         try:
@@ -120,42 +121,53 @@ def llenarFormularioCompra(Datos):
         except:
             print('no se selecciono cuenta ahorro')
             hacerClick('mat-select-0')
-
-    
-    ################        A MI CUENTA        ################
-        
-    try:
-        FUNCIONES.driver.execute_script("""
-            document.querySelector('#mat-select-value-3').click();                          
-        """)
-
-
-        # hacerClick('//*[contains(text(), "A mi cuenta")]') #hace click para elegir cuentas divisas
-        # #print('se selecciono btn para elegir cuenta en divisas')
-    except:
-        print('no se pudo abrir el select de A MI CUENTA')
-        print('enter para continuar')
+            input()
 
     try:
-        CtaUsd = 'Cuenta Moneda Extranjera USD - ••••'
+        mecanismo = seleccionarElemento('//*[contains(text(), "Comisión (0,50%) (Bs.)")] | //*[contains(text(), "Comisión (0,20%) (Bs.)")]').text
 
-        if Datos['usarCuenta'] == 'C':
-            CtaUsd += str(Datos['cuentaCash'])
-        elif Datos['usarCuenta'] == 'E':
-            CtaUsd += str(Datos['cuentaElectronica'])
+        if mecanismo == "Comisión (0,50%) (Bs.)":
+            print('Activa Intervencion Electronica')
+            if Datos['cuentaElectronica'] == None: # Value None es porque no tiene cuenta creada
+                # seleccionarElemento('//*[contains(text(), "Autorizo la apertura de mi Cuenta en Moneda Extranjera Electrónica US)]').click() # HACER CLICK EN EL CHECKbtn, da error asi, hay que encontras un identificador
+                pass
+        elif mecanismo == "Comisión (0,20%) (Bs.)":
+            print('Formulario Menudeo')    
+
+            ################        A MI CUENTA        ################
+                
+            try:
+                FUNCIONES.driver.execute_script("""
+                    document.querySelector('#mat-select-value-3').click();                          
+                """)
+                # hacerClick('//*[contains(text(), "A mi cuenta")]') #hace click para elegir cuentas divisas
+                # #print('se selecciono btn para elegir cuenta en divisas')
+            except:
+                print('no se pudo abrir el select de A MI CUENTA')
+
+            try:
+                CtaUsd = 'Cuenta Moneda Extranjera USD - ••••'
+
+                if Datos['mecanismo']['menudeo'][1] == 'C':
+                    CtaUsd += str(Datos['cuentaCash'])
+                elif Datos['usarCuenta'] == 'E':
+                    CtaUsd += str(Datos['cuentaElectronica'])
+                else:
+                    raise ValueError('El valor de usarCuenta debe ser "C" o "E"')
+
+                hacerClick(f'//mat-option//*[contains(text(), "{CtaUsd}")]') #hace click para elegir cuentas divisas
+
+                #print('se selecciono cuenta moneda extranjera')
+            except:
+                print('no se pudo seleccionar la cuenta moneda extranjera')
         else:
-            raise ValueError('El valor de usarCuenta debe ser "C" o "E"')
-
-        hacerClick(f'//mat-option//*[contains(text(), "{CtaUsd}")]') #hace click para elegir cuentas divisas
-
-        #print('se selecciono cuenta moneda extranjera')
-    except:
-        print('no se pudo seleccionar la cuenta moneda extranjera')
-    
+            print('error else: ' + mecanismo)
 
 
+    except Exception as e:
+        print(f'error except: {e}')
 
-            ################        ORIGREN DE LOS FONDOS        ################  
+    ################        ORIGREN DE LOS FONDOS        ################  
 
 
     try:
@@ -167,6 +179,7 @@ def llenarFormularioCompra(Datos):
         """)
     except:
         print('no se ejecuto el script ORIGREN DE LOS FONDOS')
+        input()
 
     # try:
     #     ## Abre Select ORIGREN DE LOS FONDOS
@@ -185,11 +198,12 @@ def llenarFormularioCompra(Datos):
 
     try:
         FUNCIONES.driver.execute_script("""
-            document.querySelector('#mat-select-2').click();
-            document.querySelector('#mat-option-14').click();
-        """)
+                document.querySelector('#mat-select-2').click();
+                document.querySelector('#mat-option-14').click();
+            """)
     except:
         print('no se ejecuto el script motivo de compra')
+        input()
 
     # try:
     #     ## Abre Select MOTIVO DE LA COMPRA 
@@ -327,7 +341,7 @@ def verificacionBalance(Datos):
     except:
         pass
     try:
-        balanceUSD = (seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[2]/div/div[3]").text).strip().split('\n')
+        balanceUSD = (((seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[2]/div/div[3]").text).strip())).split('\n')
         USD = (f"{balanceUSD[0]} -> Saldo: {balanceUSD[3]} $.")
     except:
         pass
@@ -393,7 +407,7 @@ def ingresarMonto(Datos):
         if not seleccionarTipoDivisas():
             return False
         try:
-            escribir("#buy-foreign-currency-form-first input", Datos['Monto'])
+            escribir("#buy-foreign-currency-form-first input", str(Datos))
             return True
             
         except:
@@ -428,23 +442,65 @@ def ejecutarCicloCuentas():
         if c.get('activo', False) and not FUNCIONES.check(c.get('nombre_id'))
     ]
     
-
+    
     global montoIngresado
     
-    if not cuentasActivas:
-        print('no hay cuentas activas, finalizando el programa...')
-        return
+    if not cuentasActivas or cuentasActivas == [] :
+                print('no hay cuentas activas, finalizando el programa...')
+                return
+    
+    for cuenta in cuentasActivas[:]:
 
-    for cuenta in cuentasActivas:
+        
+        
         nombre = cuenta['datos']['nombre']
         
         # 1. Verificación de compra previa
         if FUNCIONES.check(nombre):
             continue
+        ahora = FUNCIONES.datetime.now()
+
+        if cuenta['datos']['mecanismo']['intervencion'] == None and cuenta['datos']['mecanismo']['menudeo'][0] == None :
+                    
+            print(f'{FUNCIONES.Fore.RED}no hay monto ingresado para ningun mecanismo en la cuenta de {nombre} {FUNCIONES.Style.RESET_ALL}')
+            cuentasActivas.remove(cuenta)
+            continue
+
+        if ahora.hour <= 6 and cuenta['datos']['mecanismo']['menudeo'][0] != None  :
+                    print(f"Instancia iniciada, esperando para iniciar sesion a las 06:05 con {nombre}...")
+                    while FUNCIONES.datetime.now().hour < 6 or (FUNCIONES.datetime.now().hour <=6 and FUNCIONES.datetime.now().minute <=2):
+                        time.sleep(1)
+
+        if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] == None :
+            if ahora.hour in (8, 9):
+                if ahora.minute < 30:
+                    print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour}:30 con {nombre}...")
+                    while FUNCIONES.datetime.now().minute < 28:
+                        time.sleep(1)
+                # if ahora.minute >= 30:
+                #     print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour+1}:00  minutos con {nombre}...")
+                #     while FUNCIONES.datetime.now().minute < 58:
+                #         time.sleep(1)
+
+        if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] != None :
+            if ahora.hour in (8, 9):
+                if ahora.minute == 27:
+                    print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour}:30 con {nombre}...")
+                    while FUNCIONES.datetime.now().minute < 28:
+                        time.sleep(1)
+                if ahora.minute == 57:
+                    print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour+1}:00  minutos con {nombre}...")
+                    while FUNCIONES.datetime.now().minute < 58:
+                        time.sleep(1)
+
+        
+        
+
             
         print(f'\n{FUNCIONES.Fore.YELLOW} ------ {nombre} ------ {FUNCIONES.Style.RESET_ALL}')
    
         try:
+            print(f'{FUNCIONES.Fore.YELLOW}IP:{FUNCIONES.Fore.RED}{FUNCIONES.ipProxys()}{FUNCIONES.Style.RESET_ALL}')
             # 2. Proceso de entrada (Inicio de sesión y navegación)
             if FUNCIONES.inicio_sesion(cuenta['inicio']) == False:
                 continue
@@ -461,17 +517,56 @@ def ejecutarCicloCuentas():
 
             # 3. Sincronización de horario 
             ahora = FUNCIONES.datetime.now()
-            if ahora.hour == 6 and ahora.minute < 5:
+            if ahora.hour == 6 and ahora.minute < 5 and cuenta['datos']['mecanismo']['menudeo'][0] != None:
 
                 ## Se ingresa el monto y se selecciona el tipo de divisa
-                if ingresarMonto(cuenta['datos']) == False:
+                if ingresarMonto(cuenta['datos']['mecanismo']['menudeo'][0]) == False:
                     return False
                 
                 montoIngresado = True
-
-                print(f"Esperando apertura (06:05) para {nombre}...")
+            
+                print(f"Esperando apertura MENUDEO (06:05) para {nombre}...")
+                
                 while FUNCIONES.datetime.now().minute < 5:
                     time.sleep(1)
+            
+            if cuenta['datos']['mecanismo']['intervencion'] != None:
+                if ahora.hour == 8 and ahora.minute < 30 :
+                    ## Se ingresa el monto y se selecciona el tipo de divisa
+                    if ingresarMonto(cuenta['datos']['mecanismo']['intervencion']) == False:
+                        return False
+                    
+                    montoIngresado = True
+
+                    print(f"Esperando apertura electronicos (08:30) para {nombre}...")
+                    while FUNCIONES.datetime.now().minute < 30:
+                        time.sleep(1)
+
+                # Por si no habre a las 8:30
+
+                elif ahora.hour == 8 and ahora.minute < 58:
+                    ## Se ingresa el monto y se selecciona el tipo de divisa
+                    if ingresarMonto(cuenta['datos']['mecanismo']['intervencion']) == False:
+                        return False
+                    
+                    montoIngresado = True
+
+                    print(f"Esperando apertura electronicos (09:00) para {nombre}...")
+                    while FUNCIONES.datetime.now().minute > 0:
+                        time.sleep(1)
+
+                # Por si no habre a las 8:30
+
+                elif ahora.hour == 9 and ahora.minute <= 28:
+                    ## Se ingresa el monto y se selecciona el tipo de divisa
+                    if ingresarMonto(cuenta['datos']['mecanismo']['intervencion']) == False:
+                        return False
+                    
+                    montoIngresado = True
+
+                    print(f"Esperando apertura electronicos (09:30) para {nombre}...")
+                    while FUNCIONES.datetime.now().minute < 30:
+                        time.sleep(1)
             
             # 4. Proceso de compra
             # compra() debe retornar True si fue exitosa o False si falló algo
@@ -479,6 +574,9 @@ def ejecutarCicloCuentas():
             
             if exito:
                 print(f"Ciclo completado con éxito para {nombre}")
+                cuentasActivas.remove(cuenta)
+
+
             else:
                 print(f"No se pudo completar la compra para {nombre}")
 
@@ -491,7 +589,12 @@ def ejecutarCicloCuentas():
                 pass
             continue 
 
+    if not cuentasActivas or cuentasActivas == [] :
+                print(f'{FUNCIONES.Fore.BLUE}no hay cuentas activas, finalizando el programa...{FUNCIONES.Style.RESET_ALL}')
+                return
     print(f"\n{FUNCIONES.Fore.CYAN}--- Finalizado Ciclo de Cuentas ---{FUNCIONES.Style.RESET_ALL}")
+    
+    
     ejecutarCicloCuentas()
 
 

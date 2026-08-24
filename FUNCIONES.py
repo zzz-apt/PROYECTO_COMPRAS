@@ -92,9 +92,17 @@ else:
 
 ##########################################################################################
 
+PROXYS = {
+    'local': None,
+    'redmiNote12': 'socks5://100.67.185.66:1080',
+    'ray' : 'socks5://100.78.148.101:1081' #esta dando error
+}
+
+
 driver = Driver(
-    undetectable=modo_uc,     
-    uc=modo_uc,               
+    proxy=PROXYS['local'],
+    undetectable=modo_uc,
+    uc=modo_uc,
     block_images=True,
     window_size=f"{N1},{N2}",  
     headless1=modo_headless,  
@@ -106,7 +114,6 @@ driver = Driver(
     pls=modoPls,
     driver_version=version_driver  # ("system" en Linux, "keep" en Windows)
 )
-
 
 # driver = Driver(
 #     undetectable=True,
@@ -166,12 +173,10 @@ def inicio_sesion(Inicio):
     # Cambiar el User Agent para la siguiente petición PUEDE QUE AYUDE A MEJORAR LAS COMPRAS
     global ip, US, inicioLinux
     US = UserAgent().random
-    ip = IP()
     if inicioLinux == False:
         driver.get("https://www30.mercantilbanco.com/login")
         inicioLinux = True
 
-    print(f'{Fore.YELLOW} IP: {Fore.RED} {IP()}  {Style.RESET_ALL}')
     print(f'{Fore.YELLOW} Ejecutando navegador con Agente: {Style.RESET_ALL} {US} ')
     
     driver.execute_cdp_cmd('Network.clearBrowserCookies', {})
@@ -219,15 +224,11 @@ def inicio_sesion(Inicio):
     # """
     # )
 
-    
-   
-
-        
-   
-
     try:
         if escribir("#username", Inicio['usuario']) == False:
+            print('error username..')
             return False
+            inicio_sesion()
         escribir("#password", Inicio['contrasena'])
         hacerClick(".button-wrapper__btn-primary")
     except:
@@ -242,7 +243,7 @@ def inicio_sesion(Inicio):
         return
 
     try:
-        if wait.until(EC.presence_of_elements_located((By.XPATH, '//*[@id="system-error"]/div/div[1]/div[1]'))).text == 'El tiempo de tu sesión ha finalizado.':
+        if wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="system-error"]/div/div[1]/div[1]'))).text == 'El tiempo de tu sesión ha finalizado.':
             wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="system-error"]/div/div[1]/div[3]/button'))).click()
     except:
         None   
@@ -276,11 +277,14 @@ def ResolverPreguntasSeguridad(Preguntas):
     try:
     
         try:
-
-            seleccionarElemento("#mat-input-3") #verificando si esta en la pantalla de Preguntas de seguridad, si no esta, se va al except y se salta esta parte
-
             if Preguntas['PreguntaUnica'] == True:
-                escribir("#mat-input-3", Preguntas['RespuestaUnica'])
+                try:
+                    escribir("#mat-input-3", Preguntas['RespuestaUnica'])
+                except:
+                    print('no encontro el elemento')
+                    VerMensaje()
+                    return False
+
                 escribir("#mat-input-2", Preguntas['RespuestaUnica'])
 
             else:
@@ -370,7 +374,7 @@ def img(Datos):
 
         # aqui esta parte es para recortar la imagen, pero mientras las pruebas la dejo como esta (captura completa) 
         # el formato es [Y_inicio:Y_fin, X_inicio:X_fin] Ejemplo: [100:300, 150:650] 
-        imagen_recortada = imagen_cv2  
+        imagen_recortada = imagen_cv2
 
         # bytes para Telegram
         is_success, buffer = cv2.imencode(".png", imagen_recortada)
@@ -596,9 +600,15 @@ def VerMensaje():
 def compra(Datos):
     print(f"{Fore.GREEN} ------ INTENTANDO COMPRA: {Datos['nombre']} ------ {Style.RESET_ALL}")
     
-    # 1. Ingresar Monto y seleccionar divisa
-    if ingresarMonto(Datos) == False:
-        return False
+    if Datos['mecanismo']['menudeo'][0] != None:
+        if ingresarMonto(Datos['mecanismo']['menudeo'][0]) == False:
+            return False
+
+    elif Datos['mecanismo']['intervencion']!= None:
+        if ingresarMonto(Datos['mecanismo']['intervencion']) == False:
+            return False
+    else:
+        print('no se selecciono fondo en ningun mecanismo')
     
     clickComprar()
     try:
@@ -630,7 +640,7 @@ def verificar_finalizacion(Datos, fecha_inicio):
         if resultadoCompra == "¡Listo! Compra realizada" or resultadoCompra == "¡Listo! Tu compra fue exitosa.":
             segundos = (datetime.now() - fecha_inicio).total_seconds()
             print(f"{Fore.GREEN} ¡ÉXITO! {Datos['nombre']} compró en {segundos}s {Style.RESET_ALL}")
-            
+            driver.execute_script("document.body.style.zoom='100%'")
             driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
             Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
             img(Datos)
@@ -728,10 +738,19 @@ def CloneMac():
 def IP():
     # Usamos un servicio externo sencillo para leer la IP
     try:
-        ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+        response = requests.get('https://api.ipify.org?format=json')
+        ip = response.json()['ip']
         return ip
     except:
         print('hubo un error al consultar la ip')
+
+def ipProxys():
+    try:
+        driver.get('https://api.ipify.org')
+        return driver.get_text("body").strip()
+    except:
+        print('hubo un error al consultar la ip')
+        
 
 def RandomMac():
     
