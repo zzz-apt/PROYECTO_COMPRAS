@@ -578,6 +578,44 @@ CUENTAS = [
             },
             'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoSusej.813', 'id': 'LEOVER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Leormary"}
+    },
+    ## DAMARIS
+    {
+            'nombre_id': 'DAMARIS',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'DAMARIS',
+                'CHAT_ID': '@none',
+                'cuentaCash': 7250,
+                'cuentaElectronica': 7250,
+                'mecanismo' : {
+                
+                    'menudeo' : (1200, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
+
+                },
+            },
+            'inicio': {'usuario': 'DamarisPerez', 'contrasena': 'Zaid123.*', 'id': 'DAMARIS'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "azul"}
+    },
+    ## KARLA
+    {
+            'nombre_id': 'KARLA',
+            'activo': True,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KARLA',
+                'CHAT_ID': '@none',
+                'cuentaCash': 1358,
+                'cuentaElectronica': 1358,
+                'mecanismo' : {
+                
+                    'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : 100000
+
+                },
+            },
+            'inicio': {'usuario': '5434642115625232', 'contrasena': 'SusejAlex.813', 'id': 'KARLA'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "domini"}
     }
 ]
 
