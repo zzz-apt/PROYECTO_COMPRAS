@@ -1,12 +1,11 @@
 # cuentas.py
 
 
-
 CUENTAS = [
     ## Sharynnel
     {
         'nombre_id': 'Sharynnel',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
             'CHAT_ID': '5766960410',
@@ -14,8 +13,8 @@ CUENTAS = [
             'cuentaElectronica': None,
             'mecanismo' : {
                         
-                'menudeo' : (None, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
-                'intervencion' : 100000
+                'menudeo' : (2000, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
+                'intervencion' : None
 
             },
         },
@@ -35,13 +34,13 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'YOLANDA',
-            'CHAT_ID': 'None', 'Monto': 2000,
+            'CHAT_ID': 'None', 
             'cuentaCash': None,
             'cuentaElectronica': None,
             'mecanismo' : {
             
                 'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : 1000
+                'intervencion' : 100000
 
             },   
         },
@@ -58,7 +57,7 @@ CUENTAS = [
     ## CLAUDER
     {
         'nombre_id': 'Clauder',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Clauder',
             'CHAT_ID': 'None', 'Monto': 2000,
@@ -74,7 +73,7 @@ CUENTAS = [
         'inicio': {'usuario': 'CLAUDERV11', 'contrasena': 'Papillo*11'},
         'preguntas': {
             'PreguntaUnica': False,
-            'pregunta1': '¿Cuál es el nombre de su abuela paterna?', 'respuesta1': 'Hortencia ',
+            'pregunta1': '¿Cuál es el nombre de su abuela paterna?', 'respuesta1': 'Hortencia',
             'pregunta2': '¿Cuál es el nombre de su profesor favorito de universidad?', 'respuesta2': 'Marin',
             'pregunta3': '¿Cuál es el nombre de la asignatura preferida en bachillerato?', 'respuesta3': 'Matematicas ',
             'pregunta4': '¿En qué ciudad nació su padre?', 'respuesta4': 'Puerto Cabello',
@@ -87,13 +86,13 @@ CUENTAS = [
         'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Ramba',
-            'CHAT_ID': 'None', 'Monto': 2000,
+            'CHAT_ID': 'None',
             'cuentaCash': None,
             'cuentaElectronica': None,
             'mecanismo' : {
             
                 'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : 1000
+                'intervencion' : 100000
             
             },    
         },
@@ -166,7 +165,7 @@ CUENTAS = [
     ## Fernando
     {
         'nombre_id': 'Fernando',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuenntas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
             'CHAT_ID': '6231499420',
@@ -266,7 +265,7 @@ CUENTAS = [
     ## Olga
     {
         'nombre_id': 'Olga',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
             'CHAT_ID': '@none',
@@ -294,7 +293,7 @@ CUENTAS = [
     ## RH
     {
         'nombre_id': 'RH',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RH',
             'CHAT_ID': '@none',
@@ -310,7 +309,7 @@ CUENTAS = [
             'cuentaZinli': '4-002-41493614-57'
 
         },
-        'inicio': {'usuario': 'arvm1989', 'contrasena': 'Varmar-2026', 'id': 'RH'},
+        'inicio': {'usuario': 'arvm1989', 'contrasena': 'Varmar-2027', 'id': 'RH'},
         'preguntas': {
             'PreguntaUnica': False,
             'pregunta1': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta1': 'Ricardo arjona',
@@ -320,7 +319,35 @@ CUENTAS = [
             'pregunta5': '¿Cuál es su marca de carros preferida?', 'respuesta5': 'corsa'
         }
     },
-
+    ## DIEGO
+    {
+        'nombre_id': 'Diego',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Diego',
+            'CHAT_ID': '@none',
+            'cuentaCash': None,
+            'cuentaElectronica': None,
+            'mecanismo' : {
+    
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : 1000
+    
+            },
+            'correo': '',
+            'cuentaZinli': ''
+    
+        },
+        'inicio': {'usuario': '11diegov227', 'contrasena': 'H2029*diefer*', 'id': 'RH'},
+        'preguntas': {
+            'PreguntaUnica': False,
+            'pregunta1': '¿Cuál es el nombre de su cantante/grupo favorito en la universidad?', 'respuesta1': 'Ricardo arjona',
+            'pregunta2': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta2': 'dosycuarentaysiete',
+            'pregunta3': '¿Cuál es el segundo nombre de su hijo(a) mayor?', 'respuesta3': 'sharynnel',
+            'pregunta4': '¿Cuál es el segundo nombre de su padre?', 'respuesta4': 'vicente',
+            'pregunta5': '¿Cuál es su marca de carros preferida?', 'respuesta5': 'corsa'
+        }
+    },
 
     ## Karen
     {
@@ -401,7 +428,7 @@ CUENTAS = [
             'mecanismo' : {
             
                 'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : None
+                'intervencion' : 100000
 
             },   
         },
@@ -560,6 +587,27 @@ CUENTAS = [
             'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
     },
+
+    ## DAMARIS
+    {
+            'nombre_id': 'DAMARIS',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'DAMARIS',
+                'CHAT_ID': '@none',
+                'cuentaCash': 7250,
+                'cuentaElectronica': None,
+                'mecanismo' : {
+                
+                    'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : 99000
+
+                },
+            },
+            'inicio': {'usuario': 'DamarisPerez', 'contrasena': 'Zaid123.*', 'id': 'DAMARIS'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "azul"}
+    },
+
     ## LEOVER
     {
             'nombre_id': 'LEOVER',

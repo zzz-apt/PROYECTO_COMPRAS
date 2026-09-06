@@ -1,3 +1,5 @@
+from math import e
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC 
@@ -80,7 +82,7 @@ if platform.system() != "Windows":
     os_binary_location = "/usr/bin/chromium"
 else:
     print("Ejecutando en Windows")
-    modo_headless = False 
+    modo_headless = True
     modo_uc = True            
     version_driver = "keep"
     modoPls = "none"
@@ -95,7 +97,8 @@ else:
 PROXYS = {
     'local': None,
     'redmiNote12': 'socks5://100.67.185.66:1080',
-    'ray' : 'socks5://100.78.148.101:1081' #esta dando error
+    'ray' : 'socks5://100.78.148.101:1081', #esta dando error
+    'ono1' : 'None'
 }
 
 
@@ -114,6 +117,7 @@ driver = Driver(
     pls=modoPls,
     driver_version=version_driver  # ("system" en Linux, "keep" en Windows)
 )
+
 
 # driver = Driver(
 #     undetectable=True,
@@ -225,6 +229,7 @@ def inicio_sesion(Inicio):
     # )
 
     try:
+        print('iniciando sesion')
         if escribir("#username", Inicio['usuario']) == False:
             print('error username..')
             return False
@@ -242,11 +247,6 @@ def inicio_sesion(Inicio):
         hacerClick(".button-wrapper__btn-primary")
         return
 
-    try:
-        if wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="system-error"]/div/div[1]/div[1]'))).text == 'El tiempo de tu sesión ha finalizado.':
-            wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="system-error"]/div/div[1]/div[3]/button'))).click()
-    except:
-        None   
     driver.execute_script(
         """
         let style = document.createElement('style');
@@ -275,57 +275,65 @@ def inicio_sesion(Inicio):
 def ResolverPreguntasSeguridad(Preguntas):
 
     try:
+        print('resolviendo Preguntas de Seguridad')
     
         try:
             if Preguntas['PreguntaUnica'] == True:
-                try:
-                    escribir("#mat-input-3", Preguntas['RespuestaUnica'])
-                except:
-                    print('no encontro el elemento')
-                    VerMensaje()
+                elemento = seleccionarElemento('//*[@id="mat-input-3"] | //*[contains(text(), "El tiempo de tu sesión ha finalizado.")] | //*[contains(text(), "¡Lamentamos las molestias ocasionadas!")] | //*[contains(text(), "Por tu seguridad hemos cerrado esta sesión.")]')
+                if elemento.text == 'El tiempo de tu sesión ha finalizado.' or elemento.text == '¡Lamentamos las molestias ocasionadas!' or elemento.text == 'Por tu seguridad hemos cerrado esta sesión.':
+                    print(f'{Fore.RED} {elemento.text} {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
                     return False
-
-                escribir("#mat-input-2", Preguntas['RespuestaUnica'])
+                
+                else:
+                    elemento.send_keys(Preguntas['RespuestaUnica'])
+                    escribir("#mat-input-2", Preguntas['RespuestaUnica'])
 
             else:
+                elemento = seleccionarElemento('//*[@id="question-1"] | //*[contains(text(), "El tiempo de tu sesión ha finalizado.")] | //*[contains(text(), "¡Lamentamos las molestias ocasionadas!")] | //*[contains(text(), "Por tu seguridad hemos cerrado esta sesión.")]')
 
+                if elemento.text == 'El tiempo de tu sesión ha finalizado.' or elemento.text == '¡Lamentamos las molestias ocasionadas!' or elemento.text == 'Por tu seguridad hemos cerrado esta sesión.':
+                    print(f'{Fore.RED} {elemento.text} {datetime.now().hour}:{datetime.now().minute} {Style.RESET_ALL}')
+                    return False
+
+                else:    
+                    
                 ########## PREGUNTA 1 ##########################
-                if WebDriverWait(driver, 50).until(EC.presence_of_element_located((By.ID, 'question-1'))).text == Preguntas['pregunta1']:
-                    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta1'])
+                    if elemento.text == Preguntas['pregunta1']:
+                        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta1'])
+                        
+
+                    if elemento.text  == Preguntas['pregunta2']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta2'])
+                        
+                                
+                    if elemento.text ==  Preguntas['pregunta3']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta3'])
+                        
                     
+                    if elemento.text  == Preguntas['pregunta4']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta4'])
+                        
 
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-1'))).text == Preguntas['pregunta2']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta2'])
+                    if elemento.text  == Preguntas['pregunta5']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta5'])
+                        
+
+
+                    ########## PREGUNTA 2 ###############################
+                    if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta1']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta1'])
+
+                    if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta2']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta2'])
+                                
+                    if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta3']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta3'])
                     
-                            
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-1'))).text == Preguntas['pregunta3']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta3'])
-                    
-                
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-1'))).text == Preguntas['pregunta4']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta4'])
-                    
+                    if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta4']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta4'])
 
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-1'))).text == Preguntas['pregunta5']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-2"))).send_keys(Preguntas['respuesta5'])
-                    
-
-
-                ########## PREGUNTA 2 ###############################
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta1']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta1'])
-
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta2']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta2'])
-                            
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta3']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta3'])
-                
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta4']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta4'])
-
-                if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta5']:
-                    wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta5'])
+                    if wait.until(EC.presence_of_element_located((By.ID, 'question-2'))).text == Preguntas['pregunta5']:
+                        wait.until(EC.presence_of_element_located((By.ID, "mat-input-3"))).send_keys(Preguntas['respuesta5'])
 
         except:
             print('no encontro el elemento')
@@ -377,7 +385,7 @@ def img(Datos):
         imagen_recortada = imagen_cv2
 
         # bytes para Telegram
-        is_success, buffer = cv2.imencode(".png", imagen_recortada)
+        is_success, buffer = cv2.imencode(".png", np.asarray(imagen_recortada))
         imagen_en_bytes = buffer.tobytes()
 
         # aqui envia la imagen a telegram sin guardarla localmente
@@ -644,9 +652,9 @@ def verificar_finalizacion(Datos, fecha_inicio):
             driver.save_screenshot(rf"{rutaComprasExitosas}/{Datos['nombre']} {datetime.now().date()}.png")
             Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
             img(Datos)
-            excluir(Datos['nombre'])
             cerrarSesion()
             return True
+            excluir(Datos['nombre'])
         else:
             try:
                 xpath_err_1 = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-finalize-transaction/div/div[2]/div/div[3]/div'

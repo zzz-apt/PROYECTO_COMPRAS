@@ -431,7 +431,49 @@ def clickComprar():
             print(f"no se pudo obtener el error {e}")
             return False
 
+def ingresoPuntual(hora, minuto=0, nombre='alguien', cuenta=[]):
+    ahora = FUNCIONES.datetime.now()
+
+    if (cuenta['datos']['mecanismo']['intervencion'] == None and cuenta['datos']['mecanismo']['menudeo'][0] != None) or (cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] == None):
+
+        if ahora.hour < hora or (ahora.hour == hora and ahora.minute <= minuto):
+            print(f"Instancia iniciada, esperando para iniciar sesion a las {hora}:{minuto} con {nombre}...")
+            while (
+                FUNCIONES.datetime.now().hour < 6
+                ) or (
+                    FUNCIONES.datetime.now().hour <= 6 and FUNCIONES.datetime.now().minute < minuto 
+                    ) or (
+                        FUNCIONES.datetime.now().hour < hora
+                        ) or (FUNCIONES.datetime.now().hour == hora and FUNCIONES.datetime.now().minute < minuto): 
+                            time.sleep(1)
+
+        return
+
+    if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] != None :
+        
+        if (ahora.hour == hora and (( minuto - 3) <= ahora.minute <= minuto)) or ahora.hour < 6 or (ahora.hour == 6 and ahora.minute < 5):
+            print(f"Instancia iniciada, esperando para iniciar sesion a las {hora}:{minuto} con {nombre}...")
+            while (FUNCIONES.datetime.now().hour <=5) or (FUNCIONES.datetime.now().hour == 6 and FUNCIONES.datetime.now().minute < minuto ):
+                time.sleep(1)
+                
+
+
+def compraPuntual(hora, minuto, nombre, monto):
+
+    ahora = FUNCIONES.datetime.now()
     
+    if FUNCIONES.datetime.now().hour == hora and FUNCIONES.datetime.now().minute in [minuto, minuto-1, minuto-2, minuto-3, minuto-4, minuto-5, minuto-6, minuto-7, minuto-8, minuto-9, minuto-10, minuto-11, minuto-12 ]:
+        ## Se ingresa el monto y se selecciona el tipo de divisa
+        if ingresarMonto(monto) == False:
+            return False
+
+        montoIngresado = True
+
+        print(f"Esperando apertura [{hora}:{minuto}] para {nombre}...")
+
+        while FUNCIONES.datetime.now().minute < minuto:
+            time.sleep(1)
+
 
 from cuentas import CUENTAS
 
@@ -441,8 +483,7 @@ def ejecutarCicloCuentas():
         c for c in CUENTAS 
         if c.get('activo', False) and not FUNCIONES.check(c.get('nombre_id'))
     ]
-    
-    
+
     global montoIngresado
     
     if not cuentasActivas or cuentasActivas == [] :
@@ -452,7 +493,7 @@ def ejecutarCicloCuentas():
     for cuenta in cuentasActivas[:]:
 
         
-        
+        mecanismo = 'menudeo'
         nombre = cuenta['datos']['nombre']
         
         # 1. Verificación de compra previa
@@ -466,108 +507,60 @@ def ejecutarCicloCuentas():
             cuentasActivas.remove(cuenta)
             continue
 
-        if ahora.hour <= 6 and cuenta['datos']['mecanismo']['menudeo'][0] != None  :
-                    print(f"Instancia iniciada, esperando para iniciar sesion a las 06:05 con {nombre}...")
-                    while FUNCIONES.datetime.now().hour < 6 or (FUNCIONES.datetime.now().hour <=6 and FUNCIONES.datetime.now().minute <=2):
-                        time.sleep(1)
+        print(f'{FUNCIONES.Fore.YELLOW}IP:{FUNCIONES.Fore.RED}{FUNCIONES.ipProxys()}{FUNCIONES.Style.RESET_ALL}')
+        ingresoPuntual(6, 3, nombre, cuenta, )
+            
 
         if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] == None :
-            if ahora.hour in (8, 9):
-                if ahora.minute < 30:
-                    print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour}:30 con {nombre}...")
-                    while FUNCIONES.datetime.now().minute < 28:
-                        time.sleep(1)
-                # if ahora.minute >= 30:
-                #     print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour+1}:00  minutos con {nombre}...")
-                #     while FUNCIONES.datetime.now().minute < 58:
-                #         time.sleep(1)
+            ingresoPuntual(8, 20, nombre, cuenta)
 
-        if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] != None :
-            if ahora.hour in (8, 9):
-                if ahora.minute == 27:
-                    print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour}:30 con {nombre}...")
-                    while FUNCIONES.datetime.now().minute < 28:
-                        time.sleep(1)
-                if ahora.minute == 57:
-                    print(f"Instancia iniciada, esperando para iniciar sesion a las {ahora.hour+1}:00  minutos con {nombre}...")
-                    while FUNCIONES.datetime.now().minute < 58:
-                        time.sleep(1)
+            # Por si no abre a las 8:30.... no se han probado por cierto.
+            # ingresoPuntual(8, 50, nombre, cuenta)
+            # ingresoPuntual(9, 25, nombre, cuenta)
+            # ingresoPuntual(9, 55, nombre, cuenta)
+            mecanismo = 'intervencion'
+
+        # 
 
         
-        
-
-            
         print(f'\n{FUNCIONES.Fore.YELLOW} ------ {nombre} ------ {FUNCIONES.Style.RESET_ALL}')
+        print(f'{FUNCIONES.Fore.YELLOW}IP:{FUNCIONES.Fore.RED}{FUNCIONES.ipProxys()}{FUNCIONES.Style.RESET_ALL}')
    
         try:
-            print(f'{FUNCIONES.Fore.YELLOW}IP:{FUNCIONES.Fore.RED}{FUNCIONES.ipProxys()}{FUNCIONES.Style.RESET_ALL}')
+            
             # 2. Proceso de entrada (Inicio de sesión y navegación)
             if FUNCIONES.inicio_sesion(cuenta['inicio']) == False:
                 continue
             if FUNCIONES.ResolverPreguntasSeguridad(cuenta['preguntas']) == False:
                 continue
 
+            # DESCOMENTAR PARA HACER PRUEBAS DE INICIO DE SESION ANTES DE INICIAR LAS COMPRAS
+
+            # print(f"{FUNCIONES.Fore.YELLOW}--- Sesión iniciada con éxito para {nombre} ---{FUNCIONES.Style.RESET_ALL}")
+            # cerrarSesion() 
+            # cuentasActivas.remove(cuenta)
+            # continue
+            
+
+
             # Si MercadoDivisas devuelve False, algo falló (ej: botón no clicable o página caída)
             if not FUNCIONES.MercadoDivisas():
                 print(f"Error al entrar a Mercado Divisas para {nombre}")
                 cerrarSesion() 
                 continue 
+
             
             montoIngresado = False
 
             # 3. Sincronización de horario 
             ahora = FUNCIONES.datetime.now()
-            if ahora.hour == 6 and ahora.minute < 5 and cuenta['datos']['mecanismo']['menudeo'][0] != None:
+            
+            compraPuntual( 6, 5, nombre, cuenta['datos']['mecanismo']['menudeo'][0] )
 
-                ## Se ingresa el monto y se selecciona el tipo de divisa
-                if ingresarMonto(cuenta['datos']['mecanismo']['menudeo'][0]) == False:
-                    return False
-                
-                montoIngresado = True
-            
-                print(f"Esperando apertura MENUDEO (06:05) para {nombre}...")
-                
-                while FUNCIONES.datetime.now().minute < 5:
-                    time.sleep(1)
-            
             if cuenta['datos']['mecanismo']['intervencion'] != None:
-                if ahora.hour == 8 and ahora.minute < 30 :
-                    ## Se ingresa el monto y se selecciona el tipo de divisa
-                    if ingresarMonto(cuenta['datos']['mecanismo']['intervencion']) == False:
-                        return False
-                    
-                    montoIngresado = True
+                compraPuntual( 8, 30, nombre, cuenta['datos']['mecanismo']['intervencion'])
+                compraPuntual( 9, 30, nombre, cuenta['datos']['mecanismo']['intervencion'])
 
-                    print(f"Esperando apertura electronicos (08:30) para {nombre}...")
-                    while FUNCIONES.datetime.now().minute < 30:
-                        time.sleep(1)
-
-                # Por si no habre a las 8:30
-
-                elif ahora.hour == 8 and ahora.minute < 58:
-                    ## Se ingresa el monto y se selecciona el tipo de divisa
-                    if ingresarMonto(cuenta['datos']['mecanismo']['intervencion']) == False:
-                        return False
-                    
-                    montoIngresado = True
-
-                    print(f"Esperando apertura electronicos (09:00) para {nombre}...")
-                    while FUNCIONES.datetime.now().minute > 0:
-                        time.sleep(1)
-
-                # Por si no habre a las 8:30
-
-                elif ahora.hour == 9 and ahora.minute <= 28:
-                    ## Se ingresa el monto y se selecciona el tipo de divisa
-                    if ingresarMonto(cuenta['datos']['mecanismo']['intervencion']) == False:
-                        return False
-                    
-                    montoIngresado = True
-
-                    print(f"Esperando apertura electronicos (09:30) para {nombre}...")
-                    while FUNCIONES.datetime.now().minute < 30:
-                        time.sleep(1)
-            
             # 4. Proceso de compra
             # compra() debe retornar True si fue exitosa o False si falló algo
             exito = FUNCIONES.compra(cuenta['datos'])
