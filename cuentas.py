@@ -2,10 +2,12 @@
 
 
 CUENTAS = [
-    ## Sharynnel
+    #### CUENTAS DE FERNANDO ####
+    
+    # ## Sharynnel
     {
         'nombre_id': 'Sharynnel',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
             'CHAT_ID': '5766960410',
@@ -102,7 +104,7 @@ CUENTAS = [
         }
     },
     ## Blanca
-        {
+    {
             'nombre_id': 'Blanca',
             'activo': False,
             'datos': {
@@ -121,7 +123,7 @@ CUENTAS = [
             'preguntas': {
                 'PreguntaUnica': True, 'RespuestaUnica': "pelota",
             }
-        },
+    },
     ## Nathalia
     {
         'nombre_id': 'Nathalia',
@@ -165,7 +167,7 @@ CUENTAS = [
     ## Fernando
     {
         'nombre_id': 'Fernando',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuenntas': True, 'cuenta': 'corriente', 'nombre': 'Fernando',
             'CHAT_ID': '6231499420',
@@ -265,7 +267,7 @@ CUENTAS = [
     ## Olga
     {
         'nombre_id': 'Olga',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'olga',
             'CHAT_ID': '@none',
@@ -293,7 +295,7 @@ CUENTAS = [
     ## RH
     {
         'nombre_id': 'RH',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RH',
             'CHAT_ID': '@none',
@@ -348,7 +350,27 @@ CUENTAS = [
             'pregunta5': '¿Cuál es su marca de carros preferida?', 'respuesta5': 'corsa'
         }
     },
+    ## Perseo
+    {
+        'nombre_id': 'Perseo',
+        'activo': False,
+        'datos': {
+            '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Perseo',
+            'CHAT_ID': '@Ritz0810', 'Monto': 2000,
+            'cuentaCash': 2990,
+            'cuentaElectronica': 3299,
+            'mecanismo' : {
+            
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : None
 
+            },   
+        },
+        'inicio': {'usuario': 'Perseo777', 'contrasena': 'Gnosis.29', 'id': 'Perseo'},
+        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "biologia"}
+    },
+
+    ### CUENTAS DE RAYMOND ####
     ## Karen
     {
         'nombre_id': 'KAREN',
@@ -365,7 +387,7 @@ CUENTAS = [
 
             }
         },
-        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.123', 'id': 'KAREN'},
+        'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.1234', 'id': 'KAREN'},
         'preguntas': {
             'PreguntaUnica': True,
             'RespuestaUnica': "karen"
@@ -396,25 +418,6 @@ CUENTAS = [
             'pregunta4': '¿Cuál es el segundo nombre de su hermano(a) mayor?', 'respuesta4': 'Emir',
             'pregunta5': '¿Cuáles son los 4 últimos números de la cédula de su esposo(a)?', 'respuesta5': '3288'
         }
-    },
-    ## Perseo
-    {
-        'nombre_id': 'Perseo',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': True, 'cuenta': 'corriente', 'nombre': 'Perseo',
-            'CHAT_ID': '@Ritz0810', 'Monto': 2000,
-            'cuentaCash': 2990,
-            'cuentaElectronica': 3299,
-            'mecanismo' : {
-            
-                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : None
-
-            },   
-        },
-        'inicio': {'usuario': 'Perseo777', 'contrasena': 'Gnosis.29', 'id': 'Perseo'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "biologia"}
     },
     ## Deleit
     {
@@ -451,7 +454,7 @@ CUENTAS = [
 
             },   
         },
-        'inicio': {'usuario': 'ramonm', 'contrasena': 'Haziel*2', 'id': 'pRAY'},
+        'inicio': {'usuario': 'ramonm', 'contrasena': 'Haziel*9', 'id': 'pRAY'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "ramon"}
     },
     ## RAymond
@@ -587,7 +590,6 @@ CUENTAS = [
             'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
     },
-
     ## DAMARIS
     {
             'nombre_id': 'DAMARIS',
@@ -607,7 +609,6 @@ CUENTAS = [
             'inicio': {'usuario': 'DamarisPerez', 'contrasena': 'Zaid123.*', 'id': 'DAMARIS'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "azul"}
     },
-
     ## LEOVER
     {
             'nombre_id': 'LEOVER',
@@ -627,29 +628,10 @@ CUENTAS = [
             'inicio': {'usuario': 'Leonoguera', 'contrasena': 'LeoSusej.813', 'id': 'LEOVER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Leormary"}
     },
-    ## DAMARIS
-    {
-            'nombre_id': 'DAMARIS',
-            'activo': False,
-            'datos': {
-                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'DAMARIS',
-                'CHAT_ID': '@none',
-                'cuentaCash': 7250,
-                'cuentaElectronica': 7250,
-                'mecanismo' : {
-                
-                    'menudeo' : (1200, 'C'),  # C = Cash, E = Electronica
-                    'intervencion' : None
-
-                },
-            },
-            'inicio': {'usuario': 'DamarisPerez', 'contrasena': 'Zaid123.*', 'id': 'DAMARIS'},
-            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "azul"}
-    },
     ## KARLA
     {
             'nombre_id': 'KARLA',
-            'activo': True,
+            'activo': False,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KARLA',
                 'CHAT_ID': '@none',
@@ -664,6 +646,44 @@ CUENTAS = [
             },
             'inicio': {'usuario': '5434642115625232', 'contrasena': 'SusejAlex.813', 'id': 'KARLA'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "domini"}
+    },
+    ## YENNIFER SUEGRA RAYMOND
+    {
+            'nombre_id': 'YENNIFER',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'YENNIFER',
+                'CHAT_ID': '@none',
+                'cuentaCash': 1382,
+                'cuentaElectronica': None,
+                'mecanismo' : {
+                
+                    'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
+
+                },
+            },
+            'inicio': {'usuario': 'Yennifer3', 'contrasena': 'Lucia.28', 'id': 'YENNIFER'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "lucia"}
+    },
+    ## RAIMER
+    {
+            'nombre_id': 'RAIMER',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'RAIMER',
+                'CHAT_ID': '@none',
+                'cuentaCash': 8575,
+                'cuentaElectronica': None,
+                'mecanismo' : {
+                
+                    'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
+
+                },
+            },
+            'inicio': {'usuario': 'raimerm', 'contrasena': 'Ab123456*', 'id': 'RAIMER'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "raimer"}
     }
 ]
 
