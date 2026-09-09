@@ -82,7 +82,7 @@ if platform.system() != "Windows":
     os_binary_location = "/usr/bin/chromium"
 else:
     print("Ejecutando en Windows")
-    modo_headless = True
+    modo_headless = False
     modo_uc = True            
     version_driver = "keep"
     modoPls = "none"
@@ -98,7 +98,8 @@ PROXYS = {
     'local': None,
     'redmiNote12': 'socks5://100.67.185.66:1080',
     'ray' : 'socks5://100.78.148.101:1081', #esta dando error
-    'ono1' : 'None'
+    'ono1' : 'socks5://100.96.147.59:1080',
+    'karen' : 'socks5://100.122.47.58:1080'
 }
 
 
