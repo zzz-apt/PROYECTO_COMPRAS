@@ -97,7 +97,7 @@ else:
 PROXYS = {
     'local': None,
     'redmiNote12': 'socks5://100.67.185.66:1080',
-    'ray' : 'socks5://100.78.148.101:1081', #esta dando error
+    'ray' : 'socks5://100.78.148.101:1080',
     'ono1' : 'socks5://100.96.147.59:1080',
     'karen' : 'socks5://100.122.47.58:1080'
 }
