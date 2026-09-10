@@ -382,7 +382,7 @@ CUENTAS = [
             'cuentaElectronica': 3016,
             'mecanismo' : {
 
-                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
                 'intervencion' : None
 
             }
@@ -684,6 +684,25 @@ CUENTAS = [
             },
             'inicio': {'usuario': 'raimerm', 'contrasena': 'Ab123456*', 'id': 'RAIMER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "raimer"}
+    },
+    ## Lisbethtabata 
+    {
+            'nombre_id': 'Lisbethtabata ',
+            'activo': False,
+            'datos': {
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Lisbethtabata ',
+                'CHAT_ID': '@none',
+                'cuentaCash': 8931,
+                'cuentaElectronica': None,
+                'mecanismo' : {
+    
+                    'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
+    
+                },
+            },
+            'inicio': {'usuario': 'Lisbethtabata ', 'contrasena': 'Gianziel.06', 'id': 'RAIMER'},
+            'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "dios"}
     }
 ]
 
