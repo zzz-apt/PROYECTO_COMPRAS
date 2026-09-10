@@ -382,7 +382,7 @@ CUENTAS = [
             'cuentaElectronica': 3016,
             'mecanismo' : {
 
-                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
                 'intervencion' : None
 
             }
@@ -701,7 +701,7 @@ CUENTAS = [
     
                 },
             },
-            'inicio': {'usuario': 'Lisbethtabata ', 'contrasena': 'Gianziel.06', 'id': 'RAIMER'},
+            'inicio': {'usuario': 'Lisbethtabata', 'contrasena': 'Gianziel.06', 'id': 'RAIMER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "dios"}
     }
 ]
