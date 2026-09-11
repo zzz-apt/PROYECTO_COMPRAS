@@ -40,7 +40,8 @@ init()
 # ==========================================
 PROXYS = {
     'local': None,
-    'ray' : 'socks5://100.78.148.101:1080',
+    'ray': 'socks5://100.78.148.101:1080',
+    'tecno': 'socks5://100.67.185.66:1080',
 }
 
 CUENTAS = [
@@ -52,14 +53,14 @@ CUENTAS = [
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000,
             'cuentaCash': 2311, 'cuentaElectronica': 3016,
-            'mecanismo': {'menudeo': (2000, 'C'), 'intervencion': None}
+            'mecanismo': {'menudeo': (None, 'C'), 'intervencion': 100000}
         },
         'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.1234', 'id': 'KAREN'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "karen"}
     },
     {
         'nombre_id': 'MIGUEL',
-        'proxy': 'tecno',
+        'proxy': 'ray',
         'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MIGUEL',
@@ -133,6 +134,18 @@ def img(Datos):
                 print(f"Error imagen Telegram: {e}")
     except Exception as e:
         print(f"No se pudo capturar/enviar imagen: {e}")
+
+def obtener_ip_publica_navegador(nombre_id):
+    """Obtiene y muestra la IP pública activa en la sesión del bot al inicio."""
+    try:
+        FUNCIONES.driver.get("https://api.ipify.org?format=json")
+        body_text = FUNCIONES.wait.until(EC.presence_of_element_located((By.TAG_NAME, "pre"))).text
+        ip_detectada = re.search(r'\d+\.\d+\.\d+\.\d+', body_text).group(0)
+        print(f"{Fore.MAGENTA}🌐 [{nombre_id}] IP PÚBLICA ACTIVA: {ip_detectada}{Style.RESET_ALL}")
+        return ip_detectada
+    except Exception as e:
+        print(f"{Fore.YELLOW}[{nombre_id}] No se pudo obtener IP pública inicial: {e}{Style.RESET_ALL}")
+        return "Desconocida"
 
 def inicio_sesion_local(Inicio):
     US = UserAgent().random
@@ -260,22 +273,40 @@ def MercadoDivisas_local():
         return False
 
 def verificar_finalizacion_local(Datos, fecha_inicio):
+    """
+    Validación estricta de resultado para evitar falsos positivos por Código 10 o rechazos.
+    """
     try: 
-        resultadoCompra = FUNCIONES.wait.until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), '¡Listo! Compra realizada') or contains(text(), 'fue exitosa') or contains(text(), 'no fue exitosa')]"))
-        ).text
-        
-        if "exitosa" in resultadoCompra or "realizada" in resultadoCompra:
+        elemento_resultado = FUNCIONES.wait.until(
+            EC.presence_of_element_located((
+                By.XPATH, 
+                "//*[contains(text(), '¡Listo! Compra realizada') or "
+                "contains(text(), 'La compra no fue exitosa') or "
+                "contains(text(), 'no es posible realizar tu operación') or "
+                "contains(text(), 'Código 10')]"
+            ))
+        )
+        texto_resultado = elemento_resultado.text.strip()
+        texto_pagina = FUNCIONES.driver.find_element(By.TAG_NAME, "body").text
+
+        # REGLA 1: Descarte de rechazos o Código 10
+        if "no fue exitosa" in texto_pagina.lower() or "código 10" in texto_pagina.lower() or "no es posible realizar" in texto_pagina.lower():
+            print(f"{Fore.RED}❌ ERROR EN COMPRA [{Datos['nombre']}]: La operación falló (Código 10 o rechazo detectado).{Style.RESET_ALL}")
+            return False
+
+        # REGLA 2: Confirmación estricta de éxito
+        if "¡listo! compra realizada" in texto_resultado.lower() or "operación exitosa" in texto_resultado.lower():
             segundos = (datetime.now() - fecha_inicio).total_seconds()
-            print(f"{Fore.GREEN}¡ÉXITO! {Datos['nombre']} compró en {segundos}s{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}¡ÉXITO CONFIRMADO! {Datos['nombre']} compró en {segundos:.2f}s{Style.RESET_ALL}")
             img(Datos)
             Telegram(f"------ Compra Exitosa con {Datos['nombre']} ------")
             return True
-        else:
-            print(f"{Fore.RED}Compra no exitosa para {Datos['nombre']}{Style.RESET_ALL}")
-            return False
-    except Exception:
-        print("No se encontró pantalla de resultado.")
+
+        print(f"{Fore.RED}No se pudo confirmar éxito explícito para {Datos['nombre']}. Texto: {texto_resultado}{Style.RESET_ALL}")
+        return False
+
+    except Exception as e:
+        print(f"{Fore.RED}Excepción al verificar resultado de la compra: {e}{Style.RESET_ALL}")
         return False
 
 def preparacion_y_disparo_compra(Datos):
@@ -303,7 +334,7 @@ def preparacion_y_disparo_compra(Datos):
     return verificar_finalizacion_local(Datos, fecha_inicio)
 
 # ==========================================
-# 4. WORKER DE CADA NAVEGADOR (VISUAL / HEADLESS FALSE)
+# 4. WORKER DE CADA NAVEGADOR (VENTANA ÚNICA)
 # ==========================================
 def worker_bot(cuenta_config):
     nombre = cuenta_config['nombre_id']
@@ -311,34 +342,43 @@ def worker_bot(cuenta_config):
     proxy_url = PROXYS.get(proxy_clave)
     
     instancia_id = str(uuid.uuid4())[:8]
-    
-    # HEADLESS DESACTIVADO (GUI VISIBLE PARA EVITAR DETECCIONES Y ERRORES DE ELEMENTOS)
     modo_headless = False
-    modo_uc = True
+
+    chrome_args = [
+        "--no-first-run",
+        "--no-service-autorun",
+        "--password-store=basic",
+        "--disable-blink-features=AutomationControlled"
+    ]
 
     if platform.system() != "Windows":
         version_driver = "system"
-        argumentos_extra = (
-            "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu",
+        chrome_args.extend([
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-gpu",
             f"--user-data-dir=/tmp/chrome_{instancia_id}"
-        )
+        ])
         os_binary_location = "/usr/bin/chromium"
     else:
         version_driver = "keep"
-        argumentos_extra = ("--ignore-certificate-errors,--disable-web-security")
+        chrome_args.extend([
+            "--ignore-certificate-errors",
+            "--disable-web-security"
+        ])
         os_binary_location = None
 
     N1, N2 = random.randint(1000, 1200), random.randint(800, 1000)
 
+    # EVITA DUPLICADOS CON uc_subprocess=False
     driver_instancia = Driver(
         proxy=proxy_url,
-        undetectable=modo_uc,
-        uc=modo_uc,
+        uc=True,
+        uc_subprocess=False,
         block_images=False,
         window_size=f"{N1},{N2}",
-        headless1=modo_headless,
         headless=modo_headless,
-        chromium_arg=argumentos_extra,
+        chromium_arg=",".join(chrome_args),
         binary_location=os_binary_location,
         disable_csp=True,
         incognito=True,
@@ -348,12 +388,15 @@ def worker_bot(cuenta_config):
 
     wait_instancia = WebDriverWait(driver_instancia, 15)
 
-    # Asignación al módulo FUNCIONES para el proceso actual
+    # Asignación de variables al módulo global de funciones
     FUNCIONES.driver = driver_instancia
     FUNCIONES.wait = wait_instancia
 
     try:
-        print(f"[{nombre}] Navegador iniciado en modo visible. Esperando hora de login (06:03 AM)...")
+        # 1. REGISTRO DE IP PÚBLICA EN LOGS AL ARRANCAR
+        obtener_ip_publica_navegador(nombre)
+
+        print(f"[{nombre}] Navegador listo. Esperando hora de login (06:03 AM)...")
         esperar_hasta(hora_objetivo=6, min_objetivo=3, seg_objetivo=0)
 
         print(f"[{nombre}] Iniciando sesión...")
@@ -377,7 +420,7 @@ def worker_bot(cuenta_config):
 if __name__ == '__main__':
     procesos = []
 
-    print("Iniciando procesos concurrentes (Headless: False)...")
+    print("Iniciando procesos concurrentes...")
     for cta in CUENTAS:
         if cta['activo']:
             p = Process(target=worker_bot, args=(cta,))
