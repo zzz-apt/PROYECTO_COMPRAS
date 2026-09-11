@@ -12,7 +12,7 @@ CUENTAS = [
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
             'CHAT_ID': '5766960410',
             'cuentaCash': 8550,
-            'cuentaElectronica': None,
+            'cuentaElectronica': 4195,
             'mecanismo' : {
                         
                 'menudeo' : (2000, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
@@ -703,6 +703,8 @@ CUENTAS = [
             },
             'inicio': {'usuario': 'Lisbethtabata', 'contrasena': 'Gianziel.06', 'id': 'RAIMER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "dios"}
+            'cedula': '12427176'
+            'nro_de_cuenta' : '01050073790073367508'
     }
 ]
 
