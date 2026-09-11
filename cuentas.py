@@ -703,6 +703,8 @@ CUENTAS = [
             },
             'inicio': {'usuario': 'Lisbethtabata', 'contrasena': 'Gianziel.06', 'id': 'RAIMER'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "dios"}
+            'cedula': '12427176'
+            'nro_de_cuenta' : '01050073790073367508'
     }
 ]
 
