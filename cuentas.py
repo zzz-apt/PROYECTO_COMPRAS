@@ -12,7 +12,7 @@ CUENTAS = [
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Sharynnel',
             'CHAT_ID': '5766960410',
             'cuentaCash': 8550,
-            'cuentaElectronica': None,
+            'cuentaElectronica': 4195,
             'mecanismo' : {
                         
                 'menudeo' : (2000, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
@@ -374,7 +374,7 @@ CUENTAS = [
     ## Karen
     {
         'nombre_id': 'KAREN',
-        'activo': False,
+        'activo': True,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -382,7 +382,7 @@ CUENTAS = [
             'cuentaElectronica': 3016,
             'mecanismo' : {
 
-                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
                 'intervencion' : None
 
             }
@@ -449,8 +449,8 @@ CUENTAS = [
             'cuentaElectronica': 3601,
             'mecanismo' : {
             
-                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : None
+                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : 100000
 
             },   
         },
@@ -536,7 +536,7 @@ CUENTAS = [
     ## MIGUEL LUGO
     {
             'nombre_id': 'MIGUEL',
-            'activo': False,
+            'activo': True,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MIGUEL',
                 'CHAT_ID': '@none',
