@@ -58,19 +58,26 @@ CUENTAS = [
         'inicio': {'usuario': 'karenlucena31', 'contrasena': 'Dios.1234', 'id': 'KAREN'},
         'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "karen"}
     },
+    ## DAMARIS
     {
-        'nombre_id': 'MIGUEL',
-        'proxy': 'ray',
-        'activo': True,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MIGUEL',
-            'CHAT_ID': '@none',
-            'cuentaCash': 5583, 'cuentaElectronica': 3768,
-            'mecanismo': {'menudeo': (2000, 'C'), 'intervencion': None}
-        },
-        'inicio': {'usuario': 'arneirys14', 'contrasena': 'Arneirys35*', 'id': 'MIGUEL'},
-        'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "miguel"}
+                'nombre_id': 'DAMARIS',
+                'activo': False,
+                'datos': {
+                    '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'DAMARIS',
+                    'CHAT_ID': '@none',
+                    'cuentaCash': 7250,
+                    'cuentaElectronica': None,
+                    'mecanismo' : {
+                    
+                        'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                        'intervencion' : 100000
+    
+                    },
+                },
+                'inicio': {'usuario': 'DamarisPerez', 'contrasena': 'Zaid123.*', 'id': 'DAMARIS'},
+                'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "azul"}
     }
+        
 ]
 
 # ==========================================
