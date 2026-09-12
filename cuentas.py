@@ -15,8 +15,8 @@ CUENTAS = [
             'cuentaElectronica': 4195,
             'mecanismo' : {
                         
-                'menudeo' : (2000, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
-                'intervencion' : None
+                'menudeo' : (None, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
+                'intervencion' : 5000
 
             },
         },
@@ -374,7 +374,7 @@ CUENTAS = [
     ## Karen
     {
         'nombre_id': 'KAREN',
-        'activo': True,
+        'activo': False,
         'datos': {
             '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'KAREN',
             'CHAT_ID': '@none', 'Monto': 2000,
@@ -536,7 +536,7 @@ CUENTAS = [
     ## MIGUEL LUGO
     {
             'nombre_id': 'MIGUEL',
-            'activo': True,
+            'activo': False,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MIGUEL',
                 'CHAT_ID': '@none',
@@ -690,7 +690,7 @@ CUENTAS = [
             'nombre_id': 'Lisbethtabata ',
             'activo': False,
             'datos': {
-                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Lisbethtabata ',
+                '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Lisbethtabata ',
                 'CHAT_ID': '@none',
                 'cuentaCash': 8931,
                 'cuentaElectronica': None,
