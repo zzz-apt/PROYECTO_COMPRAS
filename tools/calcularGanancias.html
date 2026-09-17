@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Arbitraje y Comercio P2P</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .card {
+      background-color: #1e293b;
+      border: 1px solid #334155;
+    }
+    .form-control, .form-select, .input-group-text {
+      background-color: #0f172a;
+      border-color: #334155;
+      color: #f8fafc;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: #0f172a;
+      border-color: #3b82f6;
+      color: #f8fafc;
+      box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+    }
+    .input-group-text {
+      color: #94a3b8;
+    }
+    .kpi-card {
+      border-left: 4px solid #3b82f6;
+    }
+    .kpi-card.success { border-left-color: #10b981; }
+    .kpi-card.warning { border-left-color: #f59e0b; }
+    .kpi-card.info { border-left-color: #06b6d4; }
+    .text-positive { color: #10b981 !important; }
+    .text-accent { color: #3b82f6 !important; }
+    .badge-maker {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+  </style>
+</head>
+<body class="py-4">
+
+  <div class="container max-width-lg">
+    <header class="mb-4 pb-3 border-bottom border-secondary-subtle">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-calculator-fill text-accent fs-2"></i>
+        <div>
+          <h1 class="h3 mb-0 fw-bold">Calculadora de Arbitraje & Electrónicos</h1>
+          <p class="text-secondary small mb-0">Triangulación Binance P2P $\rightarrow$ Proveedor $\rightarrow$ Zinli $\rightarrow$ P2P</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="row g-4">
+      <!-- PARÁMETROS DE ENTRADA -->
+      <div class="col-lg-5">
+        <div class="card h-100 shadow-sm">
+          <div class="card-header bg-transparent border-bottom border-secondary-subtle py-3">
+            <h2 class="h5 mb-0 fw-bold"><i class="bi bi-sliders me-2 text-accent"></i>Parámetros del Ciclo</h2>
+          </div>
+          <div class="card-body">
+            <form id="calcForm">
+
+              <!-- Monto Electrónicos -->
+              <div class="mb-3">
+                <label for="montoElec" class="form-label small fw-semibold">Compra Mercancía (USD)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="montoElec" value="1000" step="10" min="1">
+                </div>
+              </div>
+
+              <!-- Tasa Venta USDT -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label for="tasaVentaUsdt" class="form-label small fw-semibold mb-0">Tasa Venta USDT (VES)</label>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="comisionVentaUsdt">
+                    <label class="form-check-label small text-secondary" for="comisionVentaUsdt">Anuncio (Maker 0.35%)</label>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <span class="input-group-text">Bs.</span>
+                  <input type="number" class="form-control" id="tasaVentaUsdt" value="954" step="0.1">
+                </div>
+              </div>
+
+              <!-- Tasa Proveedor Electrónicos -->
+              <div class="mb-3">
+                <label for="tasaProveedor" class="form-label small fw-semibold">Tasa Dólar Proveedor (VES)</label>
+                <div class="input-group">
+                  <span class="input-group-text">Bs.</span>
+                  <input type="number" class="form-control" id="tasaProveedor" value="851.69" step="0.01">
+                </div>
+              </div>
+
+              <!-- Tasa Zinli a USDT -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label for="tasaZinli" class="form-label small fw-semibold mb-0">Tasa Zinli $\rightarrow$ USDT</label>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="comisionCompraZinli">
+                    <label class="form-check-label small text-secondary" for="comisionCompraZinli">Anuncio (Maker 0.35%)</label>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <span class="input-group-text">Zinli/USDT</span>
+                  <input type="number" class="form-control" id="tasaZinli" value="0.999" step="0.001">
+                </div>
+              </div>
+
+              <!-- Tarifas Maker opcionales -->
+              <div class="mb-3">
+                <label for="feeMakerPct" class="form-label small text-secondary">Comisión Anuncio Maker (%)</label>
+                <input type="number" class="form-control form-control-sm" id="feeMakerPct" value="0.35" step="0.01">
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTADOS Y MÉTRICAS -->
+      <div class="col-lg-7">
+        <div class="d-flex flex-column gap-3">
+
+          <!-- Cards Resumen KPIs -->
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <div class="card p-3 kpi-card warning">
+                <span class="text-secondary small fw-semibold">Brecha de Tasas (Spread)</span>
+                <div class="h3 fw-bold mb-0 text-warning" id="kpiSpread">0.00%</div>
+                <span class="small text-secondary" id="kpiSpreadDiff">0.00 VES de margen</span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card p-3 kpi-card success">
+                <span class="text-secondary small fw-semibold">Ganancia Neta</span>
+                <div class="h3 fw-bold mb-0 text-positive" id="kpiGanancia">+0.00 USDT</div>
+                <span class="small text-positive fw-semibold" id="kpiRoi">ROI: 0.00%</span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card p-3 kpi-card info">
+                <span class="text-secondary small fw-semibold">USDT Vender Inicial</span>
+                <div class="h4 fw-bold mb-0 text-info" id="kpiUsdtVendidos">0.00 USDT</div>
+                <span class="small text-secondary" id="kpiVesGenerados">Bs. 0.00</span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card p-3 kpi-card">
+                <span class="text-secondary small fw-semibold">USDT Finales (vía Zinli)</span>
+                <div class="h4 fw-bold mb-0 text-accent" id="kpiUsdtFinales">0.00 USDT</div>
+                <span class="small text-secondary" id="kpiZinliRecibido">$0.00 USD Zinli</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pasos Detallados -->
+          <div class="card shadow-sm">
+            <div class="card-header bg-transparent border-bottom border-secondary-subtle py-2">
+              <h3 class="h6 mb-0 fw-bold"><i class="bi bi-diagram-3 me-2 text-accent"></i>Desglose del Flujo</h3>
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush small" id="listDesglose">
+                <!-- Se llena mediante JS -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Gráfico comparativo -->
+          <div class="card shadow-sm p-3">
+            <h3 class="h6 mb-2 fw-bold text-secondary">Capital Inicial vs Capital Final</h3>
+            <div style="height: 180px;">
+              <canvas id="chartComparison"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Referencias DOM
+    const inputMontoElec = document.getElementById('montoElec');
+    const inputTasaVenta = document.getElementById('tasaVentaUsdt');
+    const inputTasaProveedor = document.getElementById('tasaProveedor');
+    const inputTasaZinli = document.getElementById('tasaZinli');
+    const checkComisionVenta = document.getElementById('comisionVentaUsdt');
+    const checkComisionCompra = document.getElementById('comisionCompraZinli');
+    const inputFeeMaker = document.getElementById('feeMakerPct');
+
+    // KPIs DOM
+    const elKpiSpread = document.getElementById('kpiSpread');
+    const elKpiSpreadDiff = document.getElementById('kpiSpreadDiff');
+    const elKpiGanancia = document.getElementById('kpiGanancia');
+    const elKpiRoi = document.getElementById('kpiRoi');
+    const elKpiUsdtVendidos = document.getElementById('kpiUsdtVendidos');
+    const elKpiVesGenerados = document.getElementById('kpiVesGenerados');
+    const elKpiUsdtFinales = document.getElementById('kpiUsdtFinales');
+    const elKpiZinliRecibido = document.getElementById('kpiZinliRecibido');
+    const elListDesglose = document.getElementById('listDesglose');
+
+    // Chart JS Instance
+    let chartInstance = null;
+
+    function initChart() {
+      const ctx = document.getElementById('chartComparison').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Inversión Requerida', 'Retorno Final'],
+          datasets: [{
+            label: 'USDT',
+            data: [0, 0],
+            backgroundColor: ['#3b82f6', '#10b981'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+            y: { grid: { display: false }, ticks: { color: '#f8fafc' } }
+          }
+        }
+      });
+    }
+
+    function calcular() {
+      const montoElec = parseFloat(inputMontoElec.value) || 0;
+      const tasaVenta = parseFloat(inputTasaVenta.value) || 0;
+      const tasaProveedor = parseFloat(inputTasaProveedor.value) || 0;
+      const tasaZinli = parseFloat(inputTasaZinli.value) || 0;
+      const feeMakerPct = (parseFloat(inputFeeMaker.value) || 0) / 100;
+
+      if (tasaVenta <= 0 || tasaProveedor <= 0 || tasaZinli <= 0) return;
+
+      // 1. Brecha de tasas (Spread entre Venta USDT y Dólar Proveedor)
+      const diffTasas = tasaVenta - tasaProveedor;
+      const spreadPct = (diffTasas / tasaProveedor) * 100;
+
+      // 2. Bolívares requeridos para comprar la mercancía
+      const vesNecesarios = montoElec * tasaProveedor;
+
+      // 3. USDT a vender
+      // Si publica anuncio (Maker), Binance descuenta comisión, por lo que debe entregar más USDT para recibir el mismo BS
+      let usdtAVenderBruto = vesNecesarios / tasaVenta;
+      let comisionVentaUsdt = 0;
+
+      if (checkComisionVenta.checked) {
+        comisionVentaUsdt = usdtAVenderBruto * feeMakerPct;
+        usdtAVenderBruto += comisionVentaUsdt;
+      }
+
+      // 4. Recompra vía Zinli a USDT
+      let usdtRecompradosBruto = montoElec / tasaZinli;
+      let comisionCompraUsdt = 0;
+
+      if (checkComisionCompra.checked) {
+        comisionCompraUsdt = usdtRecompradosBruto * feeMakerPct;
+      }
+      
+      const usdtRecompradosNetos = usdtRecompradosBruto - comisionCompraUsdt;
+
+      // 5. Ganancia y Rendimiento
+      const gananciaNeta = usdtRecompradosNetos - usdtAVenderBruto;
+      const roi = usdtAVenderBruto > 0 ? (gananciaNeta / usdtAVenderBruto) * 100 : 0;
+
+      // ACTUALIZAR INTERFAZ
+      elKpiSpread.textContent = `+${spreadPct.toFixed(2)}%`;
+      elKpiSpreadDiff.textContent = `+${diffTasas.toFixed(2)} VES por $`;
+
+      elKpiGanancia.textContent = `${gananciaNeta >= 0 ? '+' : ''}${gananciaNeta.toFixed(2)} USDT`;
+      elKpiGanancia.className = `h3 fw-bold mb-0 ${gananciaNeta >= 0 ? 'text-positive' : 'text-danger'}`;
+      elKpiRoi.textContent = `ROI: ${roi.toFixed(2)}%`;
+      elKpiRoi.className = `small fw-semibold ${roi >= 0 ? 'text-positive' : 'text-danger'}`;
+
+      elKpiUsdtVendidos.textContent = `${usdtAVenderBruto.toFixed(2)} USDT`;
+      elKpiVesGenerados.textContent = `Bs. ${vesNecesarios.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+      elKpiUsdtFinales.textContent = `${usdtRecompradosNetos.toFixed(2)} USDT`;
+      elKpiZinliRecibido.textContent = `$${montoElec.toFixed(2)} USD en Zinli`;
+
+      // Actualizar Desglose
+      elListDesglose.innerHTML = `
+        <li class="list-group-item bg-transparent d-flex justify-content-between text-secondary">
+          <span>1. Necesitas en Bs. para mercancía:</span>
+          <strong class="text-white">Bs. ${vesNecesarios.toLocaleString('es-VE', {minimumFractionDigits: 2})}</strong>
+        </li>
+        <li class="list-group-item bg-transparent d-flex justify-content-between text-secondary">
+          <span>2. Venderás en P2P (${checkComisionVenta.checked ? 'Maker con comisión' : 'Taker sin comisión'}):</span>
+          <strong class="text-white">${usdtAVenderBruto.toFixed(2)} USDT ${comisionVentaUsdt > 0 ? `(Inc. ${comisionVentaUsdt.toFixed(2)} fee)` : ''}</strong>
+        </li>
+        <li class="list-group-item bg-transparent d-flex justify-content-between text-secondary">
+          <span>3. Cobras en Zinli por la venta:</span>
+          <strong class="text-white">$${montoElec.toFixed(2)} USD</strong>
+        </li>
+        <li class="list-group-item bg-transparent d-flex justify-content-between text-secondary">
+          <span>4. USDT que entran a Binance (${checkComisionCompra.checked ? 'Maker con comisión' : 'Taker sin comisión'}):</span>
+          <strong class="text-white">${usdtRecompradosNetos.toFixed(2)} USDT ${comisionCompraUsdt > 0 ? `(-${comisionCompraUsdt.toFixed(2)} fee)` : ''}</strong>
+        </li>
+      `;
+
+      // Actualizar Gráfico
+      if (chartInstance) {
+        chartInstance.data.datasets[0].data = [usdtAVenderBruto.toFixed(2), usdtRecompradosNetos.toFixed(2)];
+        chartInstance.update();
+      }
+    }
+
+    // Event Listeners
+    [inputMontoElec, inputTasaVenta, inputTasaProveedor, inputTasaZinli, inputFeeMaker].forEach(el => {
+      el.addEventListener('input', calcular);
+    });
+
+    [checkComisionVenta, checkComisionCompra].forEach(el => {
+      el.addEventListener('change', calcular);
+    });
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', () => {
+      initChart();
+      calcular();
+    });
+  </script>
+</body>
+</html>
