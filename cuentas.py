@@ -15,8 +15,8 @@ CUENTAS = [
             'cuentaElectronica': 4195,
             'mecanismo' : {
                         
-                'menudeo' : (None, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
-                'intervencion' : 5000
+                'menudeo' : (2000, 'C'),  # que cuenta recibir los $.......  C = Cash, E = Electronica
+                'intervencion' : None
 
             },
         },
@@ -382,8 +382,8 @@ CUENTAS = [
             'cuentaElectronica': 3016,
             'mecanismo' : {
 
-                'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : None
+                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
+                'intervencion' : 100000
 
             }
         },
@@ -391,32 +391,6 @@ CUENTAS = [
         'preguntas': {
             'PreguntaUnica': True,
             'RespuestaUnica': "karen"
-        }
-    },
-    ## Maye
-    {
-        'nombre_id': 'MAYE',
-        'activo': False,
-        'datos': {
-            '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'MAYE',
-            'CHAT_ID': '@none', 'Monto': 2000,
-            'cuentaCash': 7715,
-            'cuentaElectronica': None,
-            'mecanismo' : {
-            
-                'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                'intervencion' : None
-
-            },   
-        },
-        'inicio': {'usuario': 'mayelinromero', 'contrasena': '12Noviembre*', 'id': 'MAYE'},
-        'preguntas': {
-            'PreguntaUnica': False,
-            'pregunta1': '¿A qué hora del dia nació su hijo(a) mayor?', 'respuesta1': 'cinco',
-            'pregunta2': '¿Cuál es el nombre de su abuela materna?', 'respuesta2': 'Nicolasa', # ESPACIO CORREGIDO
-            'pregunta3': '¿En qué ciudad nació su madre?', 'respuesta3': 'Yaracuy',
-            'pregunta4': '¿Cuál es el segundo nombre de su hermano(a) mayor?', 'respuesta4': 'Emir',
-            'pregunta5': '¿Cuáles son los 4 últimos números de la cédula de su esposo(a)?', 'respuesta5': '3288'
         }
     },
     ## Deleit
@@ -574,7 +548,7 @@ CUENTAS = [
     ## Nahomi
     {
             'nombre_id': 'NAHOMI',
-            'activo': False,
+            'activo': True,
             'datos': {
                 '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'NAHOMI',
                 'CHAT_ID': '@none', 'Monto': 2000,
@@ -587,7 +561,7 @@ CUENTAS = [
 
                 },   
             },
-            'inicio': {'usuario': '501878200103118461', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
+            'inicio': {'usuario': '5434642125691588', 'contrasena': 'Bendecida7**', 'id': 'NAHOMI'},
             'preguntas': {'PreguntaUnica': True, 'RespuestaUnica': "Samir"}
     },
     ## DAMARIS
@@ -601,8 +575,8 @@ CUENTAS = [
                 'cuentaElectronica': None,
                 'mecanismo' : {
                 
-                    'menudeo' : (None, 'C'),  # C = Cash, E = Electronica
-                    'intervencion' : 99000
+                    'menudeo' : (2000, 'C'),  # C = Cash, E = Electronica
+                    'intervencion' : None
 
                 },
             },
@@ -690,7 +664,7 @@ CUENTAS = [
             'nombre_id': 'Lisbethtabata ',
             'activo': False,
             'datos': {
-                '2_Cuentas': False, 'cuenta': 'ahorro', 'nombre': 'Lisbethtabata ',
+                '2_Cuentas': False, 'cuenta': 'corriente', 'nombre': 'Lisbethtabata ',
                 'CHAT_ID': '@none',
                 'cuentaCash': 8931,
                 'cuentaElectronica': None,
