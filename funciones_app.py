@@ -1,73 +1,45 @@
+import asyncio
+import time
+import random
 import selenium.webdriver.common.by 
 from selenium.webdriver.common.by import By
-
 from selenium.webdriver.support import expected_conditions as EC
 import FUNCIONES
-import cuentas  
+from cuentas import CUENTAS
 
-## Se usa para ingresar el monto y seleccionar las divisas en el modo madrugadita
 montoIngresado = False
 
-
-def seleccionarElemento(selector, time=3):
-    # 1. Identifica si usa XPATH o CSS
+def seleccionarElemento(selector, time_wait=3):
     by = selenium.webdriver.common.by.By.XPATH if (selector.startswith('/') or selector.startswith('(')) else selenium.webdriver.common.by.By.CSS_SELECTOR
     
     try:
-        # Se busca el overlay
-        selenium.webdriver.support.ui.WebDriverWait(FUNCIONES.driver, time).until(
+        selenium.webdriver.support.ui.WebDriverWait(FUNCIONES.driver, time_wait).until(
             EC.invisibility_of_element_located((selenium.webdriver.common.by.By.CLASS_NAME, "overlay"))
         )
-    except:
-        # Si no existe el overlay o ya se quitó
+    except Exception:
         pass
 
-    # 2. Espera que el elemento sea visible y lo selecciona
     elemento = FUNCIONES.wait.until(EC.visibility_of_element_located((by, selector)))
-    
-    # 3. Hace scroll para simular humano
-    # FUNCIONES.driver.execute_script(
-    #    "arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", 
-    #    elemento
-    #)
-
-    # 4. Verifica si es clickeable
     elemento = FUNCIONES.wait.until(EC.element_to_be_clickable((by, selector)))
-    
     return elemento
 
-import time
-import random
-
 def hacerClick(selector, show=True):
-    
     try:
         elemento = seleccionarElemento(selector)
-        
-        # Pausa aleatoria
         time.sleep(random.uniform(0.1, 0.3))
-        
         elemento.click()
         return True
     except Exception as e:
         if show:
             print(f"Error al hacerClick en {selector}: {e}")
-        else:
-            None
         return False
-    
-        
-    
 
 def escribir(selector, texto):
     try:
         elemento = seleccionarElemento(selector)
-        
-        # Se limpia el campo
         elemento.clear()
-        
-        
         elemento.send_keys(texto)
+        return True
     except Exception as e:
         print(f"Error al escribir en {selector}: {e}")
         return False
@@ -76,24 +48,17 @@ def cerrarSesion():
     try:
         hacerClick("/html/body/app/melp-standard-layout/melp-header/div/div[3]/div/div/span")
         hacerClick("//span[text()='Cerrar sesión']")
-        
         print("Se cierra la sesión")
     except Exception as e:
         print(f"No se pudo cerrar sesión: {e}")
 
-
-
 def llenarFormularioCompra(Datos):
-
-    ################        DESDE MI CUENTA        ################
-  
     fecha_inicio = FUNCIONES.datetime.now()
-    hora = fecha_inicio.hour
-    minutos = fecha_inicio.minute
     segundos = fecha_inicio.second
     milesimas = fecha_inicio.microsecond // 1000
+
     try:
-        msj_pass = seleccionarElemento('//*[@id="mat-select-value-0"]/span | //*[contains(text(), "En estos momentos no hay disponibilidad de divisas para realizar la operación.")] | //*[contains(text(), "Algo ha salido mal...")] | //*[contains(text(), "En este momento el Mercado de divisas se encuentra cerrado")] | //*[contains(text(), "El tiempo de tu sesión ha finalizado.")] | //*[contains(text(), "¡Lamentamos las molestias ocasionadas!")] ' )
+        msj_pass = seleccionarElemento('//*[@id="mat-select-value-0"]/span | //*[contains(text(), "En estos momentos no hay disponibilidad de divisas para realizar la operación.")] | //*[contains(text(), "Algo ha salido mal...")] | //*[contains(text(), "En este momento el Mercado de divisas se encuentra cerrado")] | //*[contains(text(), "El tiempo de tu sesión ha finalizado.")] | //*[contains(text(), "¡Lamentamos las molestias ocasionadas!")] ')
 
         if msj_pass.tag_name == 'span':
             msj_pass.click()
@@ -102,529 +67,325 @@ def llenarFormularioCompra(Datos):
             print(f'{FUNCIONES.Fore.RED} {msj_pass.text} {FUNCIONES.datetime.now().hour}:{FUNCIONES.datetime.now().minute} {FUNCIONES.Style.RESET_ALL}')
             cerrarSesion()
             return False
-                
-    except:
-        print('no se pudo hacer click en el select de DESDE MI CUENTA, ni encontro algun mensaje de error')
-        input()
-    if Datos['cuenta'] == 'corriente': #verifica si en Datos tiene el tipo de cuenta corriente o ahorro y la seleeciona
+    except Exception:
+        print('no se pudo hacer click en el select de DESDE MI CUENTA')
+
+    if Datos['cuenta'] == 'corriente':
         try:
             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
-        except:
-                print('no se selecciono cuenta corriente')
-                hacerClick('mat-select-0')
-                input()
+        except Exception:
+            print('no se selecciono cuenta corriente')
 
     if Datos['cuenta'] == 'ahorro':
         try:
             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]")
-            print('se selecciono cuenta ahorro')
-        except:
+        except Exception:
             print('no se selecciono cuenta ahorro')
-            hacerClick('mat-select-0')
-            input()
 
     try:
         mecanismo = seleccionarElemento('//*[contains(text(), "Comisión (0,50%) (Bs.)")] | //*[contains(text(), "Comisión (0,20%) (Bs.)")]').text
 
         if mecanismo == "Comisión (0,50%) (Bs.)":
             print('Activa Intervencion Electronica')
-            if Datos['cuentaElectronica'] == None: # Value None es porque no tiene cuenta creada
-                # seleccionarElemento('//*[contains(text(), "Autorizo la apertura de mi Cuenta en Moneda Extranjera Electrónica US)]').click() # HACER CLICK EN EL CHECKbtn, da error asi, hay que encontras un identificador
-                pass
         elif mecanismo == "Comisión (0,20%) (Bs.)":
             print('Formulario Menudeo')    
-
-            ################        A MI CUENTA        ################
-                
-            try:
-                FUNCIONES.driver.execute_script("""
-                    document.querySelector('#mat-select-value-3').click();                          
-                """)
-                # hacerClick('//*[contains(text(), "A mi cuenta")]') #hace click para elegir cuentas divisas
-                # #print('se selecciono btn para elegir cuenta en divisas')
-            except:
-                print('no se pudo abrir el select de A MI CUENTA')
-
-            try:
-                CtaUsd = 'Cuenta Moneda Extranjera USD - ••••'
-
-                if Datos['mecanismo']['menudeo'][1] == 'C':
-                    CtaUsd += str(Datos['cuentaCash'])
-                elif Datos['usarCuenta'] == 'E':
-                    CtaUsd += str(Datos['cuentaElectronica'])
-                else:
-                    raise ValueError('El valor de usarCuenta debe ser "C" o "E"')
-
-                hacerClick(f'//mat-option//*[contains(text(), "{CtaUsd}")]') #hace click para elegir cuentas divisas
-
-                #print('se selecciono cuenta moneda extranjera')
-            except:
-                print('no se pudo seleccionar la cuenta moneda extranjera')
-        else:
-            print('error else: ' + mecanismo)
-
-
+            CtaUsd = 'Cuenta Moneda Extranjera USD - ••••'
+            if Datos['mecanismo']['menudeo'][1] == 'C':
+                CtaUsd += str(Datos['cuentaCash'])
+            elif Datos['usarCuenta'] == 'E':
+                CtaUsd += str(Datos['cuentaElectronica'])
     except Exception as e:
         print(f'error except: {e}')
 
-    ################        ORIGREN DE LOS FONDOS        ################  
-
-
     try:
-        ## Abre Select ORIGREN DE LOS FONDOS y click
-        #print("abre Origen de fondos")
-        FUNCIONES.driver.execute_script("""
+        FUNCIONES.driver.execute_script(f"""
+            document.querySelector('#mat-select-value-3').click();  
+            document.evaluate('//mat-option//*[contains(text(), "{CtaUsd}")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+
             document.querySelector('#mat-select-1').click();
             document.querySelector('#mat-option-3').click();
-        """)
-    except:
-        print('no se ejecuto el script ORIGREN DE LOS FONDOS')
-        input()
-
-    # try:
-    #     ## Abre Select ORIGREN DE LOS FONDOS
-    #     hacerClick('#mat-select-1')
-    # except:
-    #     print('no se abrió Select ORIGREN DE LOS FONDOS')
-
-    # try:
-    #     ## Selecciona Fondos Propios
-    #     hacerClick("#mat-option-3")
-    # except:
-    #     print('no se selecciono la opcion de Fondos Propios')
-
-    ################        MOTIVO DE LA COMPRA        ################  
-
-
-    try:
-        FUNCIONES.driver.execute_script("""
-                document.querySelector('#mat-select-2').click();
-                document.querySelector('#mat-option-14').click();
-            """)
-    except:
-        print('no se ejecuto el script motivo de compra')
-        input()
-
-    # try:
-    #     ## Abre Select MOTIVO DE LA COMPRA 
-    #     hacerClick('#mat-select-2')
-    # except:
-    #     print('no se abrió select MOTIVO DE LA COMPRA ')
-
-    # try:
-    #     hacerClick("//mat-option//*[contains(text(), 'Materia Prima')]")
-    # except:
-    #     print('no se selecciono la opcion de Materia Prima')
-    print(f"{fecha_inicio.second}    {FUNCIONES.datetime.now().second}")
-    print(f"{abs(fecha_inicio.microsecond // 100 )}  {FUNCIONES.datetime.now().microsecond // 100}")
-    formularioSelects = f'{FUNCIONES.datetime.now().second - fecha_inicio.second}.{abs(fecha_inicio.microsecond // 100 - FUNCIONES.datetime.now().microsecond // 100)} segundos'
     
+            document.querySelector('#mat-select-2').click();
+            document.querySelector('#mat-option-14').click();
+        """)
+    except Exception:
+        print('no se ejecuto el script ORIGEN DE LOS FONDOS')
+
     try:
-
-        ################        DATOS DE LA OPERACION        ################  
-        Monto_a_Comprar = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div[1]/div/div[2]/div[2]/div').text
-        Monto_a_Debitar = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[5]/div[2]/div').text
-        TASA = seleccionarElemento('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[1]/div[2]/div[1]').text
-        print(f"{FUNCIONES.Fore.YELLOW}------- FORMULARIO ABIERTO ------ {FUNCIONES.datetime.now().hour}:{FUNCIONES.datetime.now().minute} ---\n {FUNCIONES.Style.RESET_ALL}")
-        # print(f"--- DATOS DE LA OPERACION ---\nMonto a Comprar: {Monto_a_Comprar}$\nMonto a Debitar: {Monto_a_Debitar}bs\nTasa: {TASA}bs")
-        if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): # btn continuar
-
-                ###### ESCENARIO EN QUE NO TENGA SUFICIENTE DINERO EN LA CUENTA ######
+        if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'):
+            print('no se pudo presionar el boton de continuar')
             try:  
                 seleccionarElemento("//*[contains(text(), 'El monto a comprar es mayor al saldo disponible de tu cuenta.')]")
                 print(f"{FUNCIONES.Fore.RED} ------ El monto a comprar es mayor al saldo en la cuenta de {Datos['cuenta']} ------ {FUNCIONES.Style.RESET_ALL}")
-                if Datos['2_Cuentas']: # Verifica si hay otra cuenta para intentar con esa, aprovechando el formulario    
+                if Datos.get('2_Cuentas'):
                     print(FUNCIONES.Fore.YELLOW + '------ Cambiando Cuenta ------' + FUNCIONES.Style.RESET_ALL)
-                        
                     try:
                         seleccionarElemento('//*[@id="mat-select-0"]').click()
-                    except:
-                        print('no se selecciono la primera casilla')
+                    except Exception:
+                        pass
                     
                     if Datos['cuenta'] == 'corriente':
                         try:
                             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta de Ahorro')]")
-                            print('se selecciono cuenta Ahorro')
-                            if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): #btn aceptar
-                                print(f"{FUNCIONES.Fore.RED} ------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------ {FUNCIONES.Style.RESET_ALL}")
-                                verificacionBalance(Datos['nombre'])
+                            if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'):
+                                verificacionBalance(Datos)
                                 cerrarSesion()
                                 return False
-                              
-                        except:
-                            print('no se selecciono cuenta Ahorro')
+                        except Exception:
+                            pass
 
                     if Datos['cuenta'] == 'ahorro':
                         try:
                             hacerClick("//div[@id='mat-select-0-panel']//*[contains(text(), 'Cuenta Corriente')]")
-                            print('se selecciono cuenta Corriente')
-                            if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'): #btn aceptar
-                                FUNCIONES.Telegram("------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------")
-                                print(f"{FUNCIONES.Fore.RED} ------ No se pudo continuar con ningun tipo de cuenta debido a fondo insuficiente ------ {FUNCIONES.Style.RESET_ALL}")
-                                verificacionBalance(Datos['nombre'])
+                            if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'):
+                                FUNCIONES.Telegram("------ No se pudo continuar por fondo insuficiente ------")
+                                verificacionBalance(Datos)
                                 cerrarSesion()
                                 return False
-                        except:
-                            print('no se selecciono cuenta corriente')
+                        except Exception:
+                            pass
                 else:
-                    print(f"{FUNCIONES.Fore.RED} ------ No hay otra cuenta para intentar la compra ------ {FUNCIONES.Style.RESET_ALL}")
-                    verificacionBalance(Datos['nombre'])
+                    verificacionBalance(Datos)
                     cerrarSesion()
                     return False
-                        
-                
-            except:      
+            except Exception:      
                 print('hay dinero en la cuenta pero hubo un error el formulario')
-        
-    except:
-        print('no se presionó el botonnn')
-        input()
+    except Exception:
+        print('no se presionó el boton')
 
     try:
-        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]') #btn aceptar
-    except:
-        print('no se presionó el boton')
-        input()
-        
+        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')
+    except Exception:
+        pass
 
     try:
-        FUNCIONES.driver.execute_script("document.evaluate('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-exchange-market-statement/form/div/mat-checkbox//label', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();")
-        #seleccionarElemento('//*[@id="mat-mdc-checkbox-0"]').click() #Casilla para marcar
-    except:
-        print('no se presionó el boton')
-        input()
+        FUNCIONES.driver.execute_script("""const click = path => new Promise(res => {
+  const i = setInterval(() => {
+    const el = document.evaluate(path, document, null, 9, null).singleNodeValue;
+    if (el) { clearInterval(i); el.click(); res(); }
+  }, 100);
+});
 
-    try:
-        hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]')  #ultimo btn aceptar
-        FormularioLleno =f"Formulario completo lleno en {FUNCIONES.datetime.now().second - segundos}.{abs(FUNCIONES.datetime.now().microsecond // 100 - milesimas)} segundos"                           
-    except:
-        print('no se presionó el boton')
-        input() 
+(async () => {
+  await click('//*[@id="mat-mdc-checkbox-0-input"]');
+  await click('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]');
+})();""")
+    except Exception:
+        pass
 
-    
-    
-
-    # try:
-    #     FUNCIONES.Telegram(f"🚀 --- FORMULARIO ABIERTO --- 🚀\n👤Usuario:{Datos['nombre']}\n 📋Cuenta: {Datos['cuenta']}\n💰 Monto a Comprar: {Monto_a_Comprar}$\n📉 Monto a Debitar: {Monto_a_Debitar}bs\n📊 Tasa: {TASA}bs\nselect llenos en {formularioSelects}\n{FormularioLleno}")
-    # except:
-    #     print("Error al enviar mensaje a Telegram")
-    
-    print(FormularioLleno)
-   
-
-
-
+    return True
 
 def verificacionBalance(Datos):
     try:
         seleccionarElemento("//*[contains(text(), 'Resumen financiero')]")
-    except:
+    except Exception:
         FUNCIONES.driver.get("https://www30.mercantilbanco.com/summary")
 
     listaBalancesSucios = []
     Balances = []
-    try:
-        balance1 = seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[2]").text 
-        listaBalancesSucios.append(balance1)
-    except:
-        pass 
+    for idx in range(2, 5):
+        try:
+            bal = seleccionarElemento(f"//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[{idx}]").text 
+            listaBalancesSucios.append(bal)
+        except Exception:
+            pass
 
-    try:
-        balance2 = seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[3]").text
-        listaBalancesSucios.append(balance2)
-    except:
-        pass
-
-    try:
-        balance3 = seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[1]/div/div[4]").text
-        listaBalancesSucios.append(balance3)
-    except:
-        pass
+    USD = ""
     try:
         balanceUSD = (((seleccionarElemento("//*[@id='summary']/div/div[1]/melp-summary-all-products/melp-product-list-detail[2]/div/div[3]").text).strip())).split('\n')
-        USD = (f"{balanceUSD[0]} -> Saldo: {balanceUSD[3]} $.")
-    except:
+        USD = f"{balanceUSD[0]} -> Saldo: {balanceUSD[3]} $."
+    except Exception:
         pass
-    try: 
-        
-        ####################################
-        '''
-        Cada balance es una lista en donde:
-        [0] = Nombre de la cuenta
-        [1] = 'Más opciones'
-        [2] = 'Bs.'
-        [3] = Monto de la cuenta
-        '''
-        #####################################
 
+    try:
         for balance_individual in listaBalancesSucios:
-
-  
             lineas = [linea.strip() for linea in balance_individual.strip().split('\n') if linea.strip()]
-            
-     
             nombre_cuenta = lineas[0]
             monto_cuenta = lineas[3] 
-            
-
             Balances.append(f"{nombre_cuenta} -> Saldo: {monto_cuenta} Bs.")
 
         balancesTotales = "\n".join(Balances)
-        MSJ = f"--- BALANCE DE LA CUENTA {Datos['nombre']}--- \n{balancesTotales}\n{USD} "
+        MSJ = f"--- BALANCE DE LA CUENTA {Datos['nombre']}--- \n{balancesTotales}\n{USD}"
         print(MSJ)
         FUNCIONES.Telegram(MSJ)
     except Exception as e:
         print(f"No se pudo verificar el balance: {e}")
-        return False
-
 
 def seleccionarTipoDivisas():
     xpath_dolares = "//*[contains(text(), 'Dólares')]"
     try:
-        #print("click en Dólares...")
         Intentos = 0
         while not hacerClick(xpath_dolares, show=False) and Intentos < 3:
             if FUNCIONES.VerMensaje():
                 return False
-            print(f"Reintentado hacer click en Dólares... {Intentos + 1}/3")
             time.sleep(1)
             Intentos += 1
         return True
-        
-    except Exception as e:
-        print(f"No se pudo hacer clic en Dólares: {e}")
-        #driver.save_screenshot("error_click.png")
-        elementoError = seleccionarElemento(".sub-title")
-        print(f"Error: {elementoError.text}")
-        FUNCIONES.VerMensaje()
+    except Exception:
         return False
-    
+
 def ingresarMonto(Datos):
     global montoIngresado
-    if montoIngresado == False:
-    
-        # Primero selecciona el tipo de moneda o divisa
+    if not montoIngresado:
         if not seleccionarTipoDivisas():
             return False
         try:
             escribir("#buy-foreign-currency-form-first input", str(Datos))
             return True
-            
-        except:
-            print('no se pudo ingresar el monto')
+        except Exception:
             return False
-    
     return True
-        
-        
+
 def clickComprar():
     try:
-        
         hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button')
         return True
-    except:
-        print('no se pudo dar click en el botón luego de colocar el monto')
-        try:
-            obtenerMensajeError()
-            return False
-        except Exception as e:
-            print(f"no se pudo obtener el error {e}")
-            return False
+    except Exception:
+        return False
 
-def ingresoPuntual(hora, minuto=0, nombre='alguien', cuenta=[]):
+
+# FUNCIONES ASYNCRONAS
+
+async def ingresoPuntualAsync(hora, minuto=0, nombre='alguien', cuenta=None):
     ahora = FUNCIONES.datetime.now()
 
-    if (cuenta['datos']['mecanismo']['intervencion'] == None and cuenta['datos']['mecanismo']['menudeo'][0] != None) or (cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] == None):
+    if (cuenta['datos']['mecanismo']['intervencion'] is None and cuenta['datos']['mecanismo']['menudeo'][0] is not None) or \
+       (cuenta['datos']['mecanismo']['intervencion'] is not None and cuenta['datos']['mecanismo']['menudeo'][0] is None):
 
         if ahora.hour < hora or (ahora.hour == hora and ahora.minute <= minuto):
             print(f"Instancia iniciada, esperando para iniciar sesion a las {hora}:{minuto} con {nombre}...")
-            while (
-                FUNCIONES.datetime.now().hour < 6
-                ) or (
-                    FUNCIONES.datetime.now().hour <= 6 and FUNCIONES.datetime.now().minute < minuto 
-                    ) or (
-                        FUNCIONES.datetime.now().hour < hora
-                        ) or (FUNCIONES.datetime.now().hour == hora and FUNCIONES.datetime.now().minute < minuto): 
-                            time.sleep(1)
-
+            while (FUNCIONES.datetime.now().hour < 6) or \
+                  (FUNCIONES.datetime.now().hour <= 6 and FUNCIONES.datetime.now().minute < minuto) or \
+                  (FUNCIONES.datetime.now().hour < hora) or \
+                  (FUNCIONES.datetime.now().hour == hora and FUNCIONES.datetime.now().minute < minuto): 
+                await asyncio.sleep(1)
         return
 
-    if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] != None :
-        
-        if (ahora.hour == hora and (( minuto - 3) <= ahora.minute <= minuto)) or ahora.hour < 6 or (ahora.hour == 6 and ahora.minute < 5):
+    if cuenta['datos']['mecanismo']['intervencion'] is not None and cuenta['datos']['mecanismo']['menudeo'][0] is not None:
+        if (ahora.hour == hora and ((minuto - 3) <= ahora.minute <= minuto)) or ahora.hour < 6 or (ahora.hour == 6 and ahora.minute < 5):
             print(f"Instancia iniciada, esperando para iniciar sesion a las {hora}:{minuto} con {nombre}...")
-            while (FUNCIONES.datetime.now().hour <=5) or (FUNCIONES.datetime.now().hour == 6 and FUNCIONES.datetime.now().minute < minuto ):
-                time.sleep(1)
-                
+            while (FUNCIONES.datetime.now().hour <= 5) or (FUNCIONES.datetime.now().hour == 6 and FUNCIONES.datetime.now().minute < minuto):
+                await asyncio.sleep(1)
 
-
-def compraPuntual(hora, minuto, nombre, monto):
-
-    ahora = FUNCIONES.datetime.now()
+async def compraPuntualAsync(hora, minuto, nombre, monto):
+    global montoIngresado
     
-    if FUNCIONES.datetime.now().hour == hora and FUNCIONES.datetime.now().minute in [minuto, minuto-1, minuto-2, minuto-3, minuto-4, minuto-5, minuto-6, minuto-7, minuto-8, minuto-9, minuto-10, minuto-11, minuto-12 ]:
-        ## Se ingresa el monto y se selecciona el tipo de divisa
-        if ingresarMonto(monto) == False:
+    ahora = FUNCIONES.datetime.now()
+
+    # Si estamos en la hora esperada y aun no hemos llegado al minuto de apertura (osea: son las 8:20 y abren a las 8:30)
+    if ahora.hour == hora and ahora.minute < minuto:
+        # 1. se ingresa el monto para estar ready
+        if not ingresarMonto(monto):
             return False
 
         montoIngresado = True
+        print(f"{FUNCIONES.Fore.YELLOW}Esperando apertura de las {hora}:{minuto:02d} para {nombre}...{FUNCIONES.Style.RESET_ALL}")
 
-        print(f"Esperando apertura [{hora}:{minuto}] para {nombre}...")
+        # 2. Bucle asyncrono para que no afecte al monitor de sesion activa
+        while True:
+            momento_actual = FUNCIONES.datetime.now()
+            if momento_actual.hour > hora or (momento_actual.hour == hora and momento_actual.minute >= minuto):
+                print(f"{FUNCIONES.Fore.GREEN} Procediendo con la compra...{FUNCIONES.Style.RESET_ALL}")
+                break
+            await asyncio.sleep(1)
 
-        while FUNCIONES.datetime.now().minute < minuto:
-            time.sleep(1)
+    # si de casualidad la función se ejecuta justo en el minuto o después, se asegura el monto. Uno es salado, hay que prevenir
+    elif ahora.hour == hora and ahora.minute >= minuto:
+        if not ingresarMonto(monto):
+            return False
+        montoIngresado = True
 
+async def ejecutarCicloCuentas():
+    """La misma funcion para procesar las cuentas pero asyncrona para que no afecte al monitor"""
+    global montoIngresado
 
-from cuentas import CUENTAS
-
-def ejecutarCicloCuentas():
-    """Procesa las cuentas activas siguiendo la lógica de éxito (True) y error (False)."""
     cuentasActivas = [
         c for c in CUENTAS 
         if c.get('activo', False) and not FUNCIONES.check(c.get('nombre_id'))
     ]
 
-    global montoIngresado
-    
-    if not cuentasActivas or cuentasActivas == [] :
-                print('no hay cuentas activas, finalizando el programa...')
-                return
-    
-    for cuenta in cuentasActivas[:]:
+    if not cuentasActivas:
+        print('No hay cuentas activas, finalizando el programa...')
+        return
 
-        
-        mecanismo = 'menudeo'
+    session_bot = await FUNCIONES.MercantilSeleniumSession.get_instance()
+
+    for cuenta in cuentasActivas[:]:
         nombre = cuenta['datos']['nombre']
-        
-        # 1. Verificación de compra previa
+
         if FUNCIONES.check(nombre):
             continue
-        ahora = FUNCIONES.datetime.now()
 
-        if cuenta['datos']['mecanismo']['intervencion'] == None and cuenta['datos']['mecanismo']['menudeo'][0] == None :
-                    
-            print(f'{FUNCIONES.Fore.RED}no hay monto ingresado para ningun mecanismo en la cuenta de {nombre} {FUNCIONES.Style.RESET_ALL}')
+        if cuenta['datos']['mecanismo']['intervencion'] is None and cuenta['datos']['mecanismo']['menudeo'][0] is None:
+            print(f'{FUNCIONES.Fore.RED}No hay monto ingresado para ningún mecanismo en la cuenta de {nombre}{FUNCIONES.Style.RESET_ALL}')
             cuentasActivas.remove(cuenta)
             continue
 
         print(f'{FUNCIONES.Fore.YELLOW}IP:{FUNCIONES.Fore.RED}{FUNCIONES.ipProxys()}{FUNCIONES.Style.RESET_ALL}')
-        ingresoPuntual(6, 3, nombre, cuenta, )
-            
+        await ingresoPuntualAsync(6, 3, nombre, cuenta)
 
-        if cuenta['datos']['mecanismo']['intervencion'] != None and cuenta['datos']['mecanismo']['menudeo'][0] == None :
-            ingresoPuntual(8, 20, nombre, cuenta)
+        if cuenta['datos']['mecanismo']['intervencion'] is not None and cuenta['datos']['mecanismo']['menudeo'][0] is None:
+            await ingresoPuntualAsync(8, 20, nombre, cuenta)
 
-            # Por si no abre a las 8:30.... no se han probado por cierto.
-            # ingresoPuntual(8, 50, nombre, cuenta)
-            # ingresoPuntual(9, 25, nombre, cuenta)
-            # ingresoPuntual(9, 55, nombre, cuenta)
-            mecanismo = 'intervencion'
-
-        # 
-
-        
         print(f'\n{FUNCIONES.Fore.YELLOW} ------ {nombre} ------ {FUNCIONES.Style.RESET_ALL}')
-        print(f'{FUNCIONES.Fore.YELLOW}IP:{FUNCIONES.Fore.RED}{FUNCIONES.ipProxys()}{FUNCIONES.Style.RESET_ALL}')
-   
+
         try:
+            #Inicio de sesión
+            login_exito = await asyncio.to_thread(FUNCIONES.inicio_sesion, cuenta['inicio'])
             
-            # 2. Proceso de entrada (Inicio de sesión y navegación)
-            if FUNCIONES.inicio_sesion(cuenta['inicio']) == False:
-                continue
-            if FUNCIONES.ResolverPreguntasSeguridad(cuenta['preguntas']) == False:
+            if not login_exito:
+                print(f"{FUNCIONES.Fore.RED}Falló el inicio de sesión para {nombre}. Pasando a la siguiente cuenta.{FUNCIONES.Style.RESET_ALL}")
                 continue
 
-            # DESCOMENTAR PARA HACER PRUEBAS DE INICIO DE SESION ANTES DE INICIAR LAS COMPRAS
-
-            # print(f"{FUNCIONES.Fore.YELLOW}--- Sesión iniciada con éxito para {nombre} ---{FUNCIONES.Style.RESET_ALL}")
-            # cerrarSesion() 
-            # # cuentasActivas.remove(cuenta)
-            # continue
+            # Preguntas de seguridad
+            preguntas_exito = await asyncio.to_thread(FUNCIONES.ResolverPreguntasSeguridad, cuenta['preguntas'])
             
+            if not preguntas_exito:
+                print(f"{FUNCIONES.Fore.RED}Falló la resolución de preguntas de seguridad para {nombre}.{FUNCIONES.Style.RESET_ALL}")
+                continue
 
+            # INICIANDO MONITOR DE SESION ACTIVA
+            session_bot.iniciar_monitor()
 
-            # Si MercadoDivisas devuelve False, algo falló (ej: botón no clicable o página caída)
-            if not FUNCIONES.MercadoDivisas():
-                print(f"Error al entrar a Mercado Divisas para {nombre}")
-                cerrarSesion() 
+            # Mercado Divisas
+            if not await asyncio.to_thread(FUNCIONES.MercadoDivisas):
+                print(f"{FUNCIONES.Fore.RED}Error al entrar a Mercado Divisas para {nombre}{FUNCIONES.Style.RESET_ALL}")
+                await asyncio.to_thread(cerrarSesion)
                 continue 
 
-            
             montoIngresado = False
 
-            # 3. Sincronización de horario 
-            ahora = FUNCIONES.datetime.now()
-            
-            compraPuntual( 6, 5, nombre, cuenta['datos']['mecanismo']['menudeo'][0] )
+            # Esperas de horario y Compra
+            await compraPuntualAsync(6, 5, nombre, cuenta['datos']['mecanismo']['menudeo'][0])
 
-            if cuenta['datos']['mecanismo']['intervencion'] != None:
-                compraPuntual( 8, 30, nombre, cuenta['datos']['mecanismo']['intervencion'])
-                compraPuntual( 9, 30, nombre, cuenta['datos']['mecanismo']['intervencion'])
+            if cuenta['datos']['mecanismo']['intervencion'] is not None:
+                await compraPuntualAsync(8, 30, nombre, cuenta['datos']['mecanismo']['intervencion'])
 
-            # 4. Proceso de compra
-            # compra() debe retornar True si fue exitosa o False si falló algo
-            exito = FUNCIONES.compra(cuenta['datos'])
-            
+            print("[4] Ejecutando formulario y confirmación de compra...")
+            exito = await asyncio.to_thread(FUNCIONES.compra, cuenta['datos'])
+
             if exito:
-                print(f"Ciclo completado con éxito para {nombre}")
+                print(f"{FUNCIONES.Fore.GREEN}¡Ciclo completado con éxito para {nombre}!{FUNCIONES.Style.RESET_ALL}")
                 cuentasActivas.remove(cuenta)
-
-
             else:
-                print(f"No se pudo completar la compra para {nombre}")
+                print(f"{FUNCIONES.Fore.RED}No se pudo completar la compra para {nombre}{FUNCIONES.Style.RESET_ALL}")
 
         except Exception as e:
-            print(f"Error crítico en el ciclo de {nombre}: {e}")
-            # Si algo explota fuera de los try-except internos, forzamos cierre para no bloquear la siguiente cuenta
+            print(f"{FUNCIONES.Fore.RED}Error crítico en el ciclo de {nombre}: {e}{FUNCIONES.Style.RESET_ALL}")
             try:
-                cerrarSesion()
-            except:
+                await asyncio.to_thread(cerrarSesion)
+            except Exception:
                 pass
             continue 
 
-    if not cuentasActivas or cuentasActivas == [] :
-                print(f'{FUNCIONES.Fore.BLUE}no hay cuentas activas, finalizando el programa...{FUNCIONES.Style.RESET_ALL}')
-                return
+    # Detener monitor al completar la ronda de la lista
+    await session_bot.detener_monitor()
+
+    if not cuentasActivas:
+        print(f'{FUNCIONES.Fore.BLUE}No hay más cuentas activas, finalizando el programa...{FUNCIONES.Style.RESET_ALL}')
+        return
+
     print(f"\n{FUNCIONES.Fore.CYAN}--- Finalizado Ciclo de Cuentas ---{FUNCIONES.Style.RESET_ALL}")
     
-    
-    ejecutarCicloCuentas()
-
-
-def obtenerMensajeError():
-    error = seleccionarElemento(".title").text
-    try:
-        codigoError = seleccionarElemento('.error-code').text
-    except Exception:
-        # Si no existe, busca el subtítulo
-        codigoError = seleccionarElemento('.subtitle').text
-
-    print(f"Error: {error} {codigoError}")
-    cerrarSesion()
-    return True 
-
-def tipoMercado():
-    # 2. Esperar y detectar el porcentaje/método (Usando tu XPath original)
-    xpath_comision = '/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[1]/melp-data-transaction/div/div/div[4]/div[1]'
-        
-    elemento_porcentaje = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, xpath_comision))
-    )
-    porcentaje = elemento_porcentaje.text
-    print(f"Porcentaje detectado: {porcentaje}")
-
-    # Mapeo de métodos según el texto capturado
-    metodos_dict = {
-        'Comisión (0,20%) (Bs.)': 'MENUDEO',
-        'Comisión (0,12%) (Bs.)': 'MESA DE CAMBIO',
-        'Comisión (0,15%) (Bs.)': 'INTERVENCIÓN'
-    }
-    metodo = metodos_dict.get(porcentaje, 'DESCONOCIDO')
-        
-    # Registro en estadísticas y logs
-    if metodo not in Estadisticas['metodos']:
-        Estadisticas['metodos'].append(metodo)
-
-    txt(f' ------- Abierto ------ {metodo} : {datetime.now().hour}:{datetime.now().minute}')
-    Telegram(f'------ Formulario Abierto ------ {metodo} ------ Texto porcentaje: {porcentaje}')
-    print(f'{Fore.YELLOW} ----------- DATOS DE LA COMPRA ------ {metodo} ----- {Style.RESET_ALL}')
+    # Siguiente ciclo
+    await ejecutarCicloCuentas()
