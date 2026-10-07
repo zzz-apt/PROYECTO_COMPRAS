@@ -99,7 +99,8 @@ PROXYS = {
     'redmiNote12': 'socks5://100.67.185.66:1080',
     'ray' : 'socks5://100.78.148.101:1080',
     'ono1' : 'socks5://100.96.147.59:1080',
-    'karen' : 'socks5://100.122.47.58:1080'
+    'karen' : 'socks5://100.122.47.58:1080',
+    'laptop_fernando' : 'socks5://100.80.146.29:1080'
 }
 
 
@@ -231,9 +232,8 @@ def inicio_sesion(Inicio):
 
     try:
         print('iniciando sesion')
-        if escribir("#username", Inicio['usuario']) == False:
-            print('error username..')
-            return False
+        while escribir("#username", Inicio['usuario']) == False:
+            print('Error al ingresar el usuario, Reintentando')
             inicio_sesion()
         escribir("#password", Inicio['contrasena'])
         hacerClick(".button-wrapper__btn-primary")

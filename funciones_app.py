@@ -538,7 +538,7 @@ def ejecutarCicloCuentas():
 
             # print(f"{FUNCIONES.Fore.YELLOW}--- Sesión iniciada con éxito para {nombre} ---{FUNCIONES.Style.RESET_ALL}")
             # cerrarSesion() 
-            # cuentasActivas.remove(cuenta)
+            # # cuentasActivas.remove(cuenta)
             # continue
             
 
