@@ -97,7 +97,7 @@ PROXYS = {
 }
 
 driver = Driver(
-    proxy=PROXYS['local'],
+    proxy=PROXYS['ono1'],
     undetectable=modo_uc,
     uc=modo_uc,
     block_images=True,

@@ -87,6 +87,16 @@ def llenarFormularioCompra(Datos):
 
         if mecanismo == "Comisión (0,50%) (Bs.)":
             print('Activa Intervencion Electronica')
+            try:
+                FUNCIONES.driver.execute_script(f"""            
+            document.querySelector('#mat-select-1').click();
+            document.querySelector('#mat-option-3').click();
+            
+            document.querySelector('#mat-select-2').click();
+            document.querySelector('#mat-option-14').click();
+            """)
+            except Exception:
+                print('no se ejecuto el script ORIGEN DE LOS FONDOS')
         elif mecanismo == "Comisión (0,20%) (Bs.)":
             print('Formulario Menudeo')    
             CtaUsd = 'Cuenta Moneda Extranjera USD - ••••'
@@ -94,22 +104,23 @@ def llenarFormularioCompra(Datos):
                 CtaUsd += str(Datos['cuentaCash'])
             elif Datos['usarCuenta'] == 'E':
                 CtaUsd += str(Datos['cuentaElectronica'])
+            try:
+                FUNCIONES.driver.execute_script(f"""
+        document.querySelector('#mat-select-value-3').click();  
+        document.evaluate('//mat-option//*[contains(text(), "{CtaUsd}")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+        
+        document.querySelector('#mat-select-1').click();
+        document.querySelector('#mat-option-3').click();
+        
+        document.querySelector('#mat-select-2').click();
+        document.querySelector('#mat-option-14').click();
+        """)
+            except Exception:
+                print('no se ejecuto el script ORIGEN DE LOS FONDOS')
     except Exception as e:
         print(f'error except: {e}')
 
-    try:
-        FUNCIONES.driver.execute_script(f"""
-            document.querySelector('#mat-select-value-3').click();  
-            document.evaluate('//mat-option//*[contains(text(), "{CtaUsd}")]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
-
-            document.querySelector('#mat-select-1').click();
-            document.querySelector('#mat-option-3').click();
     
-            document.querySelector('#mat-select-2').click();
-            document.querySelector('#mat-option-14').click();
-        """)
-    except Exception:
-        print('no se ejecuto el script ORIGEN DE LOS FONDOS')
 
     try:
         if not hacerClick('/html/body/app/melp-standard-layout/div/div/melp-buy-foreign-currency/melp-standard-card-layout/div/div/div[1]/div[2]/melp-button-wrapper/div/div[2]/button[2]'):
